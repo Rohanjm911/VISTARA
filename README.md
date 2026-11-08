@@ -82,15 +82,20 @@
 
 ## 2. Key Capabilities & Modules
 
+<p align="center">
+  <img src="assets/cinema-banner-animated.svg" alt="Cinema Universe & Theatrical Playback Engine" width="100%" />
+</p>
+
 | Module | Features & Capabilities |
 | :--- | :--- |
 | **Dashboard** | Dynamic customizable widgets, *Continue Watching* with accurate progress tracking, *Recently Added*, library statistics, storage usage graphs, and real-time background task monitors. |
-| **Cinema** | Grid/List view, movie details, cast & crew, genres, release dates, runtime, community ratings, bookmarks, and **First-Class Multi-Edition Support** (e.g., 4K UHD, 1080p, Director's Cut grouped under a single movie card without duplicate clutter). |
-| **TV Shows** | Series banners, season selector, episode lists, episode progress tracking, auto season/episode filename identification (`S01E02`, `1x02`, `Season 1 Episode 2`), and next-episode autoplay. |
-| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (5 styles: Spectrum Bars, Liquid Wave, Radial Halo, Cosmic Embers, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
+| **Cinema Universe** | **Full Library View (100+ Movies Uncapped)**, live in-page instant filter search, dynamic page size dropdown (*All 100+*, *200*, *48*, *24*), "Load More" pagination footer, direct-card hover play button, and **First-Class Multi-Edition Support** (e.g., 4K UHD, 1080p, Director's Cut grouped under a single movie card without duplicate clutter). |
+| **Smart Poster & Metadata Engine** | **Automated Online Theatrical Posters & Plot Synopses** (OMDB & Cinemeta open catalogs). Integrated 3-tab poster picker modal (online suggestions, custom file upload, direct image URL), single-click "⚡ Auto Fetch Posters" bulk tool, and background online metadata enrichment during library scanning. |
+| **TV Series Universe** | Series banners, season selector, episode lists, episode progress tracking, automated series poster & synopsis auto-fetch, auto season/episode filename identification (`S01E02`, `1x02`, `Season 1 Episode 2`), and next-episode autoplay. |
+| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (Beat-Synced Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
 | **Photo Gallery** | Chronological timeline, smart album grouping, full-screen lightbox viewer with zoom/rotate, EXIF metadata drawer (aperture, ISO, focal length, camera make/model), and multi-selection. |
 | **Libraries Engine** | Multi-folder support per library, incremental scanning, real-time SignalR progress updates, duplicate detection via fast SHA-256 headers, and safe preservation of missing files. |
-| **Player Pipeline** | 3-tier streaming architecture (**DirectPlay** $\rightarrow$ **Remux** $\rightarrow$ **HLS Transcode**) with automatic detection of GPU acceleration (**NVIDIA NVENC, Intel QSV, AMD AMF, DXVA2, D3D11VA**), borderless Fullscreen toggle (<kbd>F</kbd> / <kbd>F11</kbd>), responsive volume slider, and online open-source subtitles. |
+| **Player Pipeline** | 3-tier streaming architecture (**DirectPlay** $\rightarrow$ **0% CPU DirectStream Remux** $\rightarrow$ **Adaptive HLS / Progressive Transcode**) with automatic detection of GPU acceleration (**NVIDIA NVENC, Intel QSV, AMD AMF, DXVA2, D3D11VA**) with 10-bit YUV420P conversion, borderless Fullscreen toggle (<kbd>F</kbd> / <kbd>F11</kbd>), responsive volume slider, and online open-source subtitles. |
 
 ---
 
@@ -209,6 +214,10 @@ Double-click **`VISTARA.exe`** directly in the root directory:
 * Automatically verifies that the backend server is active on `http://127.0.0.1:5178`; boots it in the background if needed.
 * Seamlessly launches the native desktop client (`Vistara.Desktop.exe`).
 
+> [!TIP]
+> **100% Standalone & Zero Configuration:**
+> VISTARA runs completely offline without any internet connection, user registration, or cloud dependencies. The bundled executable manages its own embedded SQLite database and ASP.NET Core API daemon seamlessly.
+
 ### Option B: 100% Silent Script Launch
 Double-click **`VISTARA_SILENT.vbs`** in the root directory:
 * Zero black console/terminal windows.
@@ -318,15 +327,19 @@ The scanning engine (`LibraryScannerService`) operates concurrently in backgroun
   <img src="assets/player-animated.svg" alt="VISTARA Music Studio & Synced Lyrics Experience" width="100%" />
 </p>
 
+<p align="center">
+  <img src="assets/rainbow-visualizer.svg" alt="Beat-Synced 60 FPS Rainbow Audio Spectrum" width="100%" />
+</p>
+
 VISTARA elevates music listening into an audiophile studio experience:
 * **Immersive Now Playing Modal:** Auto-opens on track playback, presenting the grand album cover in a high-contrast vinyl showcase, track metadata, format badges, and instant favourite toggling.
 * **Up Next Queue & Embedded Lyrics:** Switch between the vinyl stage, the interactive draggable queue, and embedded synchronized lyrics at any time.
 * **Master Web Audio Analyser:** Hooked directly into the master audio pipeline (`fftSize = 256`, `smoothingTimeConstant = 0.85`), delivering real-time frequency and time-domain signals to hardware-accelerated HTML5 `<canvas>` renderers.
 * **5 Real-Time 60 FPS Visualizer Modes:**
-  1. **Spectrum Bars (`bars`)**: 48-band logarithmic frequency analyzer with floating peak caps, physics gravity drop, and violet-to-cyan color gradients.
-  2. **Liquid Wave (`wave`)**: Smooth cubic Bezier spline ribbons dancing to harmonic audio dynamics with ethereal cyan and purple glow.
-  3. **Radial Halo (`halo`)**: 360-degree circular orbital spectrum radiating behind the album artwork, pulsing to real-time sub-bass kick energy.
-  4. **Cosmic Embers (`embers`)**: Deep-space starry particle field with velocity surges and constellation webs reacting to rhythm frequencies.
+  1. **Beat-Synced Rainbow Spectrum Bars (`bars`)**: 32-to-48 band frequency analyzer across a full 310° rainbow spectrum with individual vertical bar gradients, floating laser caps with physical gravitational drop, and sub-bass kick velocity surges.
+  2. **Cosmic Rainbow Embers (`embers`)**: 360-degree rainbow particle cloud with kinetic velocity surges reacting to sub-bass transients, synaptic glowing constellation webs, and expanding central sonic shockwaves.
+  3. **Liquid Wave (`wave`)**: Smooth cubic Bezier spline ribbons dancing to harmonic audio dynamics with ethereal cyan and purple glow.
+  4. **Radial Halo (`halo`)**: 360-degree circular orbital spectrum radiating behind the album artwork, pulsing to real-time sub-bass kick energy.
   5. **Vintage Stereo VU Meter (`vu`)**: Dual analog ballistic needle meters with channel separation, needle inertia, and calibrated red danger zones (+0 dB to +3 dB).
 * **One-Click Mode Switcher:** Dedicated visualizer selector pill row in the player deck or hotkey <kbd>V</kbd> to cycle modes instantly with persistence in `localStorage`.
 
@@ -344,10 +357,9 @@ VISTARA elevates music listening into an audiophile studio experience:
 
 ### Adaptive Playback, Fullscreen & Hardware Acceleration
 1. **Direct Play:** If the client natively supports the media container and codecs (e.g. MP4 with H.264 video and AAC audio), the file is served directly using HTTP Range requests (`206 Partial Content`) with zero CPU overhead.
-2. **Remuxing:** If the video and audio codecs are compatible but the container format is unsupported (e.g. MKV to MP4), FFmpeg transmuxes the streams without re-encoding video.
-3. **Adaptive HLS Transcoding:** If the codecs are unsupported by the client, FFmpeg transcodes the stream into fragmented HLS on the fly.
-4. **Hardware Acceleration Engine:** Automatically probes system GPUs at boot for **NVIDIA NVENC** (`h264_nvenc`, `hevc_nvenc`), **Intel QuickSync** (`h264_qsv`, `hevc_qsv`), **AMD AMF**, **D3D11VA**, or **DXVA2**, shifting processing load away from the CPU.
-5. **Seamless Borderless Fullscreen:** Desktop WebView2 and HTML5 fullscreen synchronisation (<kbd>F</kbd> / <kbd>F11</kbd>) with multi-monitor awareness and custom smooth volume attenuation.
+2. **0% CPU DirectStream Remuxing:** For MKV and other containers carrying compatible H.264 video, FFmpeg executes instant on-the-fly stream remuxing (`-c:v copy -c:a aac -f mp4 pipe:1`). Video tracks pass through without decoding, guaranteeing 0% CPU consumption and immediate frame delivery (~10ms).
+3. **Adaptive HLS & Hardware-Accelerated Transcoding:** If the codecs are unsupported (e.g., 10-bit HEVC x265 on web engines lacking hardware 10-bit decoders), FFmpeg utilizes GPU acceleration (**NVIDIA NVENC** with `-preset p2 -pix_fmt yuv420p`, **Intel QuickSync**, or **AMD AMF**) to transcode on the fly with zero lag.
+4. **Seamless Borderless Fullscreen:** Desktop WebView2 and HTML5 fullscreen synchronisation (<kbd>F</kbd> / <kbd>F11</kbd>) with multi-monitor awareness and custom smooth volume attenuation.
 
 ### Open-Source Online Subtitle Engine (Movies & TV Series)
 * **Zero-Key, Community-Driven Protocol:** Integrates the open-source OpenSubtitles v3 and Cinemeta community metadata index. No API keys, no user account, and no registration required.
