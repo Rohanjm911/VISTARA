@@ -29,12 +29,17 @@ import { SettingsPage } from './pages/SettingsPage';
 import { LibraryDto } from './types';
 
 export const AppContent: React.FC = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const skipSplash = urlParams.get('nosplash') === '1';
+  const urlTab = urlParams.get('tab') as NavTab | null;
+
   const [currentTab, setCurrentTab] = useState<NavTab>(() => {
+    if (urlTab) return urlTab;
     return (localStorage.getItem('vistara_active_tab') as NavTab) || 'dashboard';
   });
   const [isWizardOpen, setIsWizardOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState<boolean>(true);
-  const [isAppRevealed, setIsAppRevealed] = useState<boolean>(false);
+  const [showSplash, setShowSplash] = useState<boolean>(() => !skipSplash);
+  const [isAppRevealed, setIsAppRevealed] = useState<boolean>(() => !!skipSplash);
 
   useEffect(() => {
     localStorage.setItem('vistara_startup_splash', 'true');

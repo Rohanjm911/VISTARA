@@ -32,15 +32,16 @@
 ## Table of Contents
 
 1. [Overview & Core Philosophy](#1-overview--core-philosophy)
-2. [Key Capabilities & Modules](#2-key-capabilities--modules)
-3. [Supported Media Formats & Codecs Matrix](#3-supported-media-formats--codecs-matrix)
+2. [Desktop Application Showcase](#2-desktop-application-showcase)
+3. [Key Capabilities & Modules](#3-key-capabilities--modules)
+4. [Supported Media Formats & Codecs Matrix](#4-supported-media-formats--codecs-matrix)
    - [Video Formats & Capabilities](#-video-formats--capabilities)
    - [Audio Formats & Lossless Studio Pipeline](#-audio-formats--lossless-studio-pipeline)
    - [Photo & Graphic Formats](#-photo--graphic-formats)
-4. [Technology Stack & Architecture](#4-technology-stack--architecture)
-5. [Quick Start — Running VISTARA](#5-quick-start--running-vistara)
-6. [Directory & Project Layout](#6-directory--project-layout)
-7. [Detailed Features](#7-detailed-features)
+5. [Technology Stack & Architecture](#5-technology-stack--architecture)
+6. [Quick Start — Running VISTARA](#6-quick-start--running-vistara)
+7. [Directory & Project Layout](#7-directory--project-layout)
+8. [Detailed Features](#8-detailed-features)
    - [Zero-Login & Local Security Barrier](#zero-login--local-security-barrier)
    - [Cinematic Startup Screen & Synthesized Soundscape](#cinematic-startup-screen--synthesized-soundscape)
    - [Media Library Scanner & File Protection](#media-library-scanner--file-protection)
@@ -54,11 +55,11 @@
    - [Adaptive Playback, Fullscreen & Hardware Acceleration](#adaptive-playback-fullscreen--hardware-acceleration)
    - [Open-Source Online Subtitle Engine](#open-source-online-subtitle-engine-movies--tv-series)
    - [Open-Source Synced Lyrics Engine (LRCLIB)](#open-source-synced-lyrics-engine-lrclib-integration)
-8. [Keyboard Shortcuts Matrix](#8-keyboard-shortcuts-matrix)
-9. [Building from Source](#9-building-from-source)
-10. [Automated Testing & Verification](#10-automated-testing--verification)
-11. [Documentation Suite](#11-documentation-suite)
-12. [Troubleshooting & Support](#12-troubleshooting--support)
+9. [Keyboard Shortcuts Matrix](#9-keyboard-shortcuts-matrix)
+10. [Building from Source](#10-building-from-source)
+11. [Automated Testing & Verification](#11-automated-testing--verification)
+12. [Documentation Suite](#12-documentation-suite)
+13. [Troubleshooting & Support](#13-troubleshooting--support)
 
 ---
 
@@ -80,7 +81,86 @@
 
 ---
 
-## 2. Key Capabilities & Modules
+## 2. Desktop Application Showcase
+
+Real, uncompressed 1080p desktop screenshots of VISTARA in production operation:
+
+### 🏠 1. Personal Dashboard Universe
+<p align="center">
+  <img src="assets/screenshots/01-dashboard.png" alt="VISTARA Modern Desktop Dashboard" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **Theatrical Featured Spotlight:** Displays high-priority watch recommendations with plot synopsis, release metadata, and direct "Resume Watching" action.
+> - **Continue Watching Tray:** Instant resume capability with accurate percentage indicators and remaining runtime.
+> - **Library Telemetry:** Real-time counts across Cinema (72 films), TV Series (6 shows / 176 episodes), Hi-Fi Audio (416 tracks / 393 albums), and Photo Vaults.
+> - **Unified Dual-Tone Palette:** Crafted in solid Midnight Charcoal (`#10151B` / `#151A21`) and Electric Teal (`#35C6B0`) with zero gradients.
+
+---
+
+### 🎬 2. Cinema Universe (100+ Movies Uncapped)
+<p align="center">
+  <img src="assets/screenshots/02-cinema.png" alt="Cinema Universe with Theatrical Spotlight and Auto Fetch Posters" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **Uncapped Library View:** Loads all indexed titles with smooth scrolling and dynamic page sizing (*All 100+*, *200*, *48*, *24*).
+> - **Live In-Page Instant Search:** Sub-millisecond title filtering directly in the header bar.
+> - **Auto Fetch Posters Engine:** Single-click bulk enrichment from open-source theatrical catalogs (OMDB & Cinemeta).
+> - **Edition & Quality Badging:** High-definition resolution tags (1080p, FHD, 4K UHD) and release year indicators.
+
+---
+
+### 🎵 3. Music Studio & Interactive Scrubber
+<p align="center">
+  <img src="assets/screenshots/03-music.png" alt="Music Studio with Table/Compact/Grid View Modes and Equalizer" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **3 Listing View Modes:** Seamlessly switch between **Table View** (full metadata & sorting), **Compact View** (high-density power browsing), and **Card Grid View** (cover artwork grid).
+> - **Interactive Audio Scrubber:** Micro-equalizer jumping bars next to active timestamps, energy shimmer beam gliding across the fill bar, and soundwave halo ripple on the scrubber knob.
+> - **Studio Equalizer Integration:** Direct access to the 10-band Web Audio graphic equalizer with genre presets.
+> - **Audiophile Pipeline:** Embedded cover art extraction, ID3/Vorbis metadata parsing, and queue management.
+
+---
+
+### 🛡️ 4. Media Health & Integrity Monitor
+<p align="center">
+  <img src="assets/screenshots/04-media-health.png" alt="Production Media Integrity Monitor with Cryptographic Verification" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **Real-Time Storage Diagnostics:** Tracks monitored assets (664 files / 165.7 GB verified safe), coverage percentages, modified items, missing files, and corruption flags.
+> - **Verification Strategies:** Trigger **Smart Incremental** scans (verifying mtime/size), **Deep Full Hash** passes (streaming SHA-256), or **Container Header Scans** (FFprobe).
+> - **Disconnected Drive Preservation:** External USB drives and portable storage are safely classified as `DriveDisconnected`—**never** marked as deleted or missing.
+> - **Audit Event Feed & CSV Export:** Real-time log of security events and single-click CSV/JSON report exports.
+
+---
+
+### 📺 5. Television & Web Series Universe
+<p align="center">
+  <img src="assets/screenshots/06-tv-shows.png" alt="Television and Web Series Hub with Seasons and Episodes" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **Complete Series Management:** Organized season browsing (*Dexter*, *Loki*, *Mr. Robot*, *Moon Knight*) with total episode counters.
+> - **Automated Episode Recognition:** Parses standard naming formats (`S01E02`, `1x02`, `Season 1 Episode 2`).
+> - **Theatrical Poster Integration:** Automated high-resolution cover artwork and series synopses.
+
+---
+
+### ⚙️ 6. Unified Dual-Tone Settings
+<p align="center">
+  <img src="assets/screenshots/05-settings.png" alt="Unified Dual-Tone Appearance Settings" width="100%" />
+</p>
+
+> **Key Capabilities Displayed:**
+> - **Strict Visual Discipline:** Enforces a single, strictly controlled dual-tone identity: **Cinematic Dark** (`#10151B` / `#151A21` Obsidian & OLED Matte) paired exclusively with **Electric Teal** (`#35C6B0`).
+> - **Zero Distraction:** Eliminates competing accent palettes and bright gradients to keep the focus entirely on the cinematic media experience.
+
+---
+
+## 3. Key Capabilities & Modules
 
 <p align="center">
   <img src="assets/cinema-banner-animated.svg" alt="Cinema Universe & Theatrical Playback Engine" width="100%" />
@@ -100,7 +180,7 @@
 
 ---
 
-## 3. Supported Media Formats & Codecs Matrix
+## 4. Supported Media Formats & Codecs Matrix
 
 VISTARA features an adaptive hybrid media pipeline that combines zero-overhead native direct playback with hardware-accelerated on-the-fly streaming. Original media files on disk are **never modified, re-tagged, or altered**.
 
@@ -162,7 +242,7 @@ VISTARA features an audiophile-grade audio pipeline with **dual-layer self-heali
 
 ---
 
-## 4. Technology Stack & Architecture
+## 5. Technology Stack & Architecture
 
 ```
 +-------------------------------------------------------------------------+
@@ -204,7 +284,7 @@ VISTARA features an audiophile-grade audio pipeline with **dual-layer self-heali
 
 ---
 
-## 5. Quick Start — Running VISTARA
+## 6. Quick Start — Running VISTARA
 
 VISTARA includes several pre-configured launch options depending on your preference:
 
@@ -241,7 +321,7 @@ If you prefer browsing inside Microsoft Edge, Google Chrome, Brave, or Firefox:
 
 ---
 
-## 6. Directory & Project Layout
+## 7. Directory & Project Layout
 
 ```
 VISTARA/
@@ -291,7 +371,7 @@ VISTARA/
 
 ---
 
-## 7. Detailed Features
+## 8. Detailed Features
 
 ### Zero-Login & Local Security Barrier
 Unlike traditional media servers, VISTARA does not require usernames, passwords, or cloud registrations. Security is transparent and automated:
@@ -385,7 +465,7 @@ VISTARA elevates music listening into an audiophile studio experience:
 
 ---
 
-## 8. Keyboard Shortcuts Matrix
+## 9. Keyboard Shortcuts Matrix
 
 | Shortcut | Scope | Action |
 | :--- | :--- | :--- |
@@ -405,7 +485,7 @@ VISTARA elevates music listening into an audiophile studio experience:
 
 ---
 
-## 9. Building from Source
+## 10. Building from Source
 
 ### Prerequisites
 * Windows 10 or 11 (64-bit)
@@ -449,7 +529,7 @@ To build the complete solution, frontend bundle, run tests, and package the dist
 
 ---
 
-## 10. Automated Testing & Verification
+## 11. Automated Testing & Verification
 
 The project includes unit test suites and integration verification tools:
 
@@ -471,7 +551,7 @@ npm test -- --run
 
 ---
 
-## 11. Documentation Suite
+## 12. Documentation Suite
 
 For detailed technical specifications, operational procedures, and developer guides, consult the dedicated manuals located in the [`docs/`](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/) directory:
 
@@ -493,7 +573,7 @@ For detailed technical specifications, operational procedures, and developer gui
 
 ---
 
-## 12. Troubleshooting & Support
+## 13. Troubleshooting & Support
 
 ### Common Scenarios
 
