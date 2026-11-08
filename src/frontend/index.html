@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VISTARA — Personal Media Universe</title>
+    <style>
+      /* Absolute 100% app-wide scrollbar removal while keeping full scrollability */
+      html, body, #root, *, *::before, *::after {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      ::-webkit-scrollbar,
+      *::-webkit-scrollbar,
+      ::-webkit-scrollbar-thumb,
+      *::-webkit-scrollbar-thumb,
+      ::-webkit-scrollbar-track,
+      *::-webkit-scrollbar-track,
+      ::-webkit-scrollbar-corner,
+      *::-webkit-scrollbar-corner {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        -webkit-appearance: none !important;
+      }
+    </style>
+  </head>
+  <body class="bg-[#0b0d11] text-[#f3f4f6] font-sans antialiased overflow-hidden select-none">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

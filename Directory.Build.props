@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net8.0</TargetFramework>
+    <RollForward>LatestMajor</RollForward>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <NuGetAudit>false</NuGetAudit>
+    <NoWarn>$(NoWarn);CS8602</NoWarn>
+  </PropertyGroup>
+</Project>

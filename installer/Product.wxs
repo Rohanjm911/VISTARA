@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Name="VISTARA — Personal Media Universe"
+           Language="1033"
+           Version="1.0.0.0"
+           Manufacturer="Vistara Project"
+           UpgradeCode="4A2A22C5-9706-4441-A821-E8A73B6FDF54">
+
+    <Package InstallerVersion="500"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Platform="x64"
+             Description="VISTARA — Local-First Personal Media Universe for Windows" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate EmbedCab="yes" />
+
+    <Feature Id="ProductFeature" Title="VISTARA" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+      <ComponentRef Id="ApplicationShortcut" />
+      <ComponentRef Id="DesktopShortcut" />
+    </Feature>
+
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="Vistara">
+          <Directory Id="DESKTOPFOLDER" Name="desktop" />
+          <Directory Id="SERVERFOLDER" Name="server" />
+        </Directory>
+      </Directory>
+      <Directory Id="ProgramMenuFolder">
+        <Directory Id="ApplicationProgramsFolder" Name="Vistara" />
+      </Directory>
+      <Directory Id="DesktopFolder" Name="Desktop" />
+    </Directory>
+
+    <DirectoryRef Id="ApplicationProgramsFolder">
+      <Component Id="ApplicationShortcut" Guid="7C59CD0F-2309-4D88-B394-AE565E9110B8">
+        <Shortcut Id="ApplicationStartMenuShortcut"
+                  Name="VISTARA"
+                  Description="Personal Media Universe"
+                  Target="[INSTALLFOLDER]desktop\Vistara.Desktop.exe"
+                  WorkingDirectory="[INSTALLFOLDER]desktop" />
+        <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall" />
+        <RegistryValue Root="HKCU" Key="Software\Vistara" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcut" Guid="D6170FE4-D736-47A6-A2FD-C4DF37FAAA89">
+        <Shortcut Id="ApplicationDesktopShortcut"
+                  Name="VISTARA"
+                  Description="Personal Media Universe"
+                  Target="[INSTALLFOLDER]desktop\Vistara.Desktop.exe"
+                  WorkingDirectory="[INSTALLFOLDER]desktop" />
+        <RegistryValue Root="HKCU" Key="Software\Vistara" Name="desktopShortcut" Type="integer" Value="1" KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <Component Id="LauncherBat" Guid="90F57122-C89C-433E-BD64-1D9FF2EFE00B">
+        <File Id="VistaraBat" Source="..\dist\Vistara-v1.0.0-win-x64\VISTARA.bat" KeyPath="yes" />
+      </Component>
+    </ComponentGroup>
+  </Product>
+</Wix>
+

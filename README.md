@@ -72,7 +72,7 @@
 * **Zero-Login Experience:** No login screens, no account creation, no password prompts. Opens directly into the Dashboard.
 * **No Docker Required:** Self-contained native Windows executables without container overhead or virtualization dependencies.
 * **Original Media File Safety:** Read-only access to user files. Original audio, video, and image assets are NEVER altered, remuxed in-place, or deleted without explicit confirmation.
-* **Strict Visual Identity (No Gradients):** High-contrast cinematic dark theme built with solid matte dark surfaces (`#0b0d11`, `#12151b`, `#181c24`), clean borders (`#242a36`), and vibrant solid accents (`#7c3aed`).
+* **Unified Dual-Tone Identity (Zero Gradients):** High-contrast cinematic dark theme built with solid matte dark surfaces (`#10151B`, `#151A21`, `#1B222B`), clean borders (`#242a36`), and signature solid Electric Teal accent (`#35C6B0`). Absolute zero gradients.
 * **Dual Operating Modes:**
   * **Desktop Mode:** WPF container with Microsoft Edge WebView2, custom title bar, fullscreen toggle (`F11`), and system tray minimization.
   * **Browser Mode:** Accessible from any browser at `http://127.0.0.1:5178/`, sharing the identical backend and SQLite database.
@@ -92,9 +92,10 @@
 | **Cinema Universe** | **Full Library View (100+ Movies Uncapped)**, live in-page instant filter search, dynamic page size dropdown (*All 100+*, *200*, *48*, *24*), "Load More" pagination footer, direct-card hover play button, and **First-Class Multi-Edition Support** (e.g., 4K UHD, 1080p, Director's Cut grouped under a single movie card without duplicate clutter). |
 | **Smart Poster & Metadata Engine** | **Automated Online Theatrical Posters & Plot Synopses** (OMDB & Cinemeta open catalogs). Integrated 3-tab poster picker modal (online suggestions, custom file upload, direct image URL), single-click "⚡ Auto Fetch Posters" bulk tool, and background online metadata enrichment during library scanning. |
 | **TV Series Universe** | Series banners, season selector, episode lists, episode progress tracking, automated series poster & synopsis auto-fetch, auto season/episode filename identification (`S01E02`, `1x02`, `Season 1 Episode 2`), and next-episode autoplay. |
-| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (Beat-Synced Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
+| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **3 View Modes (Table, Compact, Grid)**, **Interactive Audio Progress Bar** (micro-equalizer bars, energy shimmer beam, soundwave halo & pulse ripple, floating seek tooltip), **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (Beat-Synced Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
 | **Photo Gallery** | Chronological timeline, smart album grouping, full-screen lightbox viewer with zoom/rotate, EXIF metadata drawer (aperture, ISO, focal length, camera make/model), and multi-selection. |
 | **Libraries Engine** | Multi-folder support per library, incremental scanning, real-time SignalR progress updates, duplicate detection via fast SHA-256 headers, and safe preservation of missing files. |
+| **Media Integrity Monitor** | Enterprise library protection: streaming SHA-256 fingerprinting, corruption detection via FFprobe/FFmpeg, unexpected modification detection, disconnected external drive preservation (never deleted), Recovery Assistant with candidate scoring and 1-click relinking, and CSV/JSON health reporting. |
 | **Player Pipeline** | 3-tier streaming architecture (**DirectPlay** $\rightarrow$ **0% CPU DirectStream Remux** $\rightarrow$ **Adaptive HLS / Progressive Transcode**) with automatic detection of GPU acceleration (**NVIDIA NVENC, Intel QSV, AMD AMF, DXVA2, D3D11VA**) with 10-bit YUV420P conversion, borderless Fullscreen toggle (<kbd>F</kbd> / <kbd>F11</kbd>), responsive volume slider, and online open-source subtitles. |
 
 ---
@@ -453,19 +454,20 @@ To build the complete solution, frontend bundle, run tests, and package the dist
 The project includes unit test suites and integration verification tools:
 
 ### Backend Unit Tests
-Execute all xUnit unit tests verifying security paths, database indexes, hardware acceleration probing, and models:
+Execute all xUnit unit tests verifying security paths, database indexes, streaming SHA-256 integrity hashing, corruption detection, disconnected drive preservation, hardware acceleration probing, and models:
 ```powershell
 dotnet test tests/Vistara.UnitTests/Vistara.UnitTests.csproj -c Release
 ```
-*Current test suite status:* **24 passed, 0 failed, 100% success rate.**
+*Current test suite status:* **29 passed, 0 failed, 100% success rate.**
 
 ### Frontend Unit Tests
-Execute the Vitest suite covering React components and API clients:
+Execute the Vitest suite covering React components, theme constraints, disconnected drive status handling, and API clients:
 ```powershell
 cd src/frontend
-npm test
+npm test -- --run
 ```
-*Current test suite status:* **4 passed, 0 failed, 100% success rate.**
+*Current test suite status:* **8 passed, 0 failed, 100% success rate.**
+*Combined total:* **37 passed, 0 failed (100% green).**
 
 ---
 

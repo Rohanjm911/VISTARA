@@ -1,0 +1,108 @@
+<Window x:Class="Vistara.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="VISTARA — Personal Media Universe" 
+        Icon="app.ico"
+        Height="800" Width="1280"
+        MinHeight="600" MinWidth="900"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="False"
+        Background="{DynamicResource DarkBg}">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="DarkBg" Color="#06070a"/>
+        <SolidColorBrush x:Key="PanelBg" Color="#0e1017"/>
+        <SolidColorBrush x:Key="TitleBarBg" Color="#0e1017"/>
+        <SolidColorBrush x:Key="BorderColor" Color="#2a303c"/>
+        <SolidColorBrush x:Key="AccentColor" Color="#7c3aed"/>
+        <SolidColorBrush x:Key="TextPrimary" Color="#f3f4f6"/>
+        <SolidColorBrush x:Key="TextSecondary" Color="#9ca3af"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="TitleBarRow" Height="38"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Custom Title Bar -->
+        <Border x:Name="TitleBarBorder" Grid.Row="0" Background="{DynamicResource TitleBarBg}" BorderBrush="{DynamicResource BorderColor}" BorderThickness="0,0,0,1" MouseDown="TitleBar_MouseDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- V Logo & Brand Title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Margin="12,0,0,0">
+                    <!-- Modern geometric V logo path -->
+                    <Path Data="M 2 2 L 8 16 L 14 2 L 11 2 L 8 10 L 5 2 Z" Fill="{DynamicResource AccentColor}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                    <TextBlock Text="VISTARA" FontWeight="Bold" FontSize="13" Foreground="{DynamicResource TextPrimary}" VerticalAlignment="Center"/>
+                    <TextBlock Text="— Personal Media Universe" FontSize="11" Foreground="{DynamicResource TextSecondary}" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                </StackPanel>
+
+                <!-- Drag area -->
+                <Rectangle Grid.Column="1" Fill="Transparent"/>
+
+                <!-- Window Control Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <!-- Open in Browser Button -->
+                    <Button Width="36" Height="38" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}" Click="OpenInBrowser_Click" ToolTip="Open in Default Browser">
+                        <TextBlock Text="🌐" FontSize="12"/>
+                    </Button>
+                    <!-- Fullscreen Toggle Button -->
+                    <Button Width="36" Height="38" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}" Click="Fullscreen_Click" ToolTip="Toggle Fullscreen (F11)">
+                        <TextBlock Text="⛶" FontSize="13"/>
+                    </Button>
+                    <!-- Minimize Button -->
+                    <Button Width="42" Height="38" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}" Click="Minimize_Click">
+                        <TextBlock Text="—" FontSize="12"/>
+                    </Button>
+                    <!-- Maximize/Restore Button -->
+                    <Button x:Name="BtnMaximize" Width="42" Height="38" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}" Click="Maximize_Click">
+                        <TextBlock x:Name="TxtMaximize" Text="□" FontSize="13"/>
+                    </Button>
+                    <!-- Close Button -->
+                    <Button Width="46" Height="38" Background="Transparent" BorderThickness="0" Foreground="{DynamicResource TextSecondary}" Click="Close_Click">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#dc2626"/>
+                                        <Setter Property="Foreground" Value="White"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <TextBlock Text="✕" FontSize="12"/>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- WebView2 Browser Host -->
+        <wv2:WebView2 x:Name="MainWebView" Grid.Row="1"/>
+
+        <!-- Native Startup Splash Screen while WebView2 initializes -->
+        <Grid x:Name="SplashOverlay" Grid.Row="1" Background="{DynamicResource DarkBg}" Visibility="Visible">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid Width="96" Height="96" Margin="0,0,0,24">
+                    <Border BorderBrush="{DynamicResource BorderColor}" BorderThickness="1" CornerRadius="16">
+                        <Border.RenderTransform>
+                            <RotateTransform Angle="45" CenterX="48" CenterY="48"/>
+                        </Border.RenderTransform>
+                    </Border>
+                    <Path Data="M 28 30 L 48 70 L 68 30 L 58 30 L 48 50 L 38 30 Z" Fill="{DynamicResource AccentColor}" HorizontalAlignment="Center" VerticalAlignment="Center" Stretch="Uniform" Width="44" Height="44"/>
+                </Grid>
+                <TextBlock Text="VISTARA" FontWeight="Bold" FontSize="26" Foreground="{DynamicResource TextPrimary}" HorizontalAlignment="Center"/>
+                <TextBlock Text="PERSONAL MEDIA UNIVERSE" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource TextSecondary}" HorizontalAlignment="Center" Margin="0,8,0,24"/>
+                <ProgressBar IsIndeterminate="True" Width="180" Height="2" Foreground="{DynamicResource AccentColor}" Background="{DynamicResource PanelBg}" BorderThickness="0" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
+

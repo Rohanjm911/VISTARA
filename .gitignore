@@ -1,0 +1,43 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.log
+
+# Visual Studio / Rider / VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.userprefs
+
+# Node & Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm
+src/frontend/dist/
+
+# Release & Distribution Output (publish binaries belong in GitHub Releases)
+dist/
+
+# Local databases and runtime state
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini

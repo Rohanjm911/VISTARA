@@ -1,0 +1,161 @@
+# VISTARA — Release Notes
+
+## Version 1.2.0 • Media Integrity Monitor & Unified Dual-Tone Design
+
+<p align="center">
+  <img src="../assets/banner-animated.svg" alt="VISTARA Live Engine & Audio Spectrum" width="100%" />
+</p>
+
+<p align="center">
+  <img src="../assets/soundwave-divider.svg" alt="VISTARA Audio Waveform" width="100%" />
+</p>
+
+---
+
+## 1. Release Overview
+
+**VISTARA — Personal Media Universe (v1.2.0)** brings enterprise-grade media library safety, a unified dual-tone aesthetic, and advanced audio interaction:
+- **Production-Ready Media Integrity Monitor (v1.0):** Continuous background verification, streaming SHA-256 fingerprinting, deep corruption detection via FFprobe & FFmpeg, disconnected drive safety guards, automated recovery candidate discovery, and CSV/JSON health reporting.
+- **Unified Dual-Tone Design System (v2.1):** Single, distraction-free visual identity pairing **Midnight Charcoal surfaces (`#10151B` / `#151A21` / `#1B222B`)** with **Electric Teal (`#35C6B0`)** accenting. Zero gradients app-wide.
+- **Interactive Audio Scrubber Engine:** Micro-equalizer jumping indicators, energy shimmer beam glide across active fill tracks, dynamic soundwave halo with breathing pulse on scrubber knobs, and floating timestamp tooltips.
+- **Music Studio 3 View Modes:** Switch between Detailed Table View (`Table`), Power-Browsing Compact Rows (`Compact`), and Card Grid View (`Grid`).
+
+---
+
+## 2. What's New in Version 1.2.0
+
+### 🛡️ Media Integrity Monitor (v1.0)
+* **Streaming SHA-256 Fingerprinting:**
+  * Memory-efficient buffered streaming hashing (`64KB` buffers) for multi-gigabyte 4K Blu-ray remuxes and lossless FLAC files.
+  * Smart incremental vs. full verification strategies: verifies size and timestamps before re-hashing unchanged assets.
+* **Multi-Tier Corruption Detection:**
+  * Categorizes files into confirmed corruption, zero-byte truncated containers, unreadable filesystem blocks, missing streams, and temporary access errors.
+  * Deep container inspection via `FFprobe` and optional direct stream decode tests via `FFmpeg`.
+* **Disconnected Drive Preservation:**
+  * External HDDs, SSDs, and network drives are detected at the root volume level.
+  * Disconnected drives are assigned `DriveDisconnected` status—**never marked as deleted or missing**. All metadata, poster artwork, and watch progress are strictly preserved.
+* **Recovery Assistant & Secure Relinking:**
+  * Candidate discovery algorithm matches moved or renamed files by filename similarity and exact byte size.
+  * 1-click candidate relinking with strict path security validation (`IPathSecurityValidator`) preventing directory traversal.
+* **Real-Time SignalR Health Push:**
+  * Live scan progress telemetry, instant issue detection notifications, and scan completion broadcasts.
+* **Exportable Health Reports:**
+  * Comprehensive CSV and JSON report exports detailing healthy, modified, missing, corrupted, and disconnected media.
+
+### 🎨 Unified Dual-Tone Design System (v2.1)
+* **Single Color Identity:** Pure Midnight Charcoal (`#10151B` base, `#151A21` card surface, `#242A36` borders) accented exclusively with solid Electric Teal (`#35C6B0`).
+* **Absolute Zero Gradients:** Removed all linear and radial gradients in favor of high-contrast solid matte finishes.
+* **Simplified Settings:** Settings → Appearance now locks directly to Cinematic Dark and Electric Teal, eliminating competing theme palettes.
+* **Distraction-Free Layout:** Removed legacy Anime catalog from sidebar and navigation, focusing entirely on personal Cinema, TV Shows, Music, and Photos.
+
+### 🎶 Music Studio & Player Polish
+* **Listing View Mode Selector:**
+  * **Table View (`Table`):** Comprehensive columns with Title, Artist, Album, Duration, and sorting headers.
+  * **Compact View (`Compact`):** Streamlined rows optimized for rapid navigation through 400+ tracks.
+  * **Card Grid View (`Grid`):** Cover artwork grid with hover play overlays.
+* **Animated Audio Progress Bar:**
+  * 3-bar jumping mini equalizer indicator next to the current playback time.
+  * Dynamic soundwave ping and pulse ripple radiating from the scrubber thumb while playing.
+  * Energy shimmer glide running continuously through the played track fill.
+  * Floating seek tooltip displaying precise target timestamps on hover.
+
+---
+
+## 3. Version 1.1.0 • Feature & Performance Update
+
+<p align="center">
+  <img src="../assets/banner-animated.svg" alt="VISTARA Live Engine & Audio Spectrum" width="100%" />
+</p>
+
+<p align="center">
+  <img src="../assets/soundwave-divider.svg" alt="VISTARA Audio Waveform" width="100%" />
+</p>
+
+---
+
+## 1. Release Overview
+
+**VISTARA — Personal Media Universe (v1.1.0)** delivers groundbreaking performance, visual enhancements, and playback optimizations:
+- Full **Cinema Universe Uncapped 100+ Grid** with live search filtering and dynamic page sizing.
+- **Automated Online Theatrical Posters & Plot Synopses** powered by OMDB & Cinemeta open catalogs.
+- **Beat-Synced 60 FPS Rainbow Audio Visualizers** (Spectrum Bars & Cosmic Rainbow Embers) that react to sub-bass kick dynamics.
+- **0% CPU DirectStream Remuxing** for MKV files and hardware-accelerated 10-bit YUV420P NVENC transcoding.
+- **1-Click Standalone Desktop Launcher** (`VISTARA.exe`) with automated background API daemon orchestration.
+
+---
+
+## 2. What's New in Version 1.1.0
+
+<p align="center">
+  <img src="../assets/cinema-banner-animated.svg" alt="Cinema Universe & Theatrical Playback Engine" width="100%" />
+</p>
+
+### 🎬 Cinema Universe & Poster Engine
+* **Uncapped 100+ Library Grid:** Removed the default 24-movie limitation. Cinema now displays all movies (100+ titles) smoothly with instant scrolling.
+* **Dynamic Page Size Control:** Seamlessly switch between *All (100+)*, *200*, *48*, or *24* items per page with an interactive footer "Load More" button.
+* **Live In-Page Instant Search:** Filter titles immediately as you type directly in the Cinema header bar.
+* **Direct-Card Hover Play:** Hover over any movie poster to launch playback instantly with a single click.
+* **Online Poster & Synopsis Engine:**
+  * Automated lookup from OMDB and Cinemeta open catalogs without requiring API keys or account registration.
+  * Integrated **3-Tab Poster Picker Modal**: choose from *Online Suggestions*, *Local File Upload*, or *Direct Image URL*.
+  * **⚡ Auto Fetch Posters Bulk Tool**: One-click command to automatically fetch and apply high-res posters and plot summaries across the entire library.
+  * **Scanner Auto-Enrichment**: Newly indexed movies and TV shows are automatically enriched with online posters and synopses during background scanning.
+
+### 🎵 Music Studio & Beat-Synced Visualizers
+
+<p align="center">
+  <img src="../assets/rainbow-visualizer.svg" alt="Beat-Synced Rainbow Spectrum" width="100%" />
+</p>
+
+* **Beat-Synced Rainbow Spectrum Bars:**
+  * 32-to-48 frequency bands mapped across a full 310° rainbow spectrum with per-bar gradient lighting.
+  * Floating white laser caps with physical gravity deceleration and sub-bass velocity kicks.
+* **Cosmic Rainbow Embers:**
+  * 360-degree rainbow hue particle cloud reacting to rhythm and transient audio spikes.
+  * Synaptic glowing constellation web lines connecting active particle clusters.
+  * Expanding central sonic shockwaves pulsing on heavy sub-bass beats.
+* **LRCLIB Synced Karaoke Lyrics:**
+  * Real-time line-by-line synchronized scrolling with glowing accent lighting and click-to-seek playback.
+  * Offline SQLite lyrics caching for instant subsequent playback.
+
+### ⚡ Media Engine & Streaming Optimizations
+* **0% CPU DirectStream Remuxing:**
+  * On-the-fly container remuxing (`-c:v copy -c:a aac -f mp4 pipe:1`) for `.mkv` files containing compatible H.264 video.
+  * Zero video decoding or encoding required, resulting in ~10ms startup and 0% CPU consumption.
+* **Hardware-Accelerated 10-bit YUV420P Transcoding:**
+  * Resolved NVENC pixel format constraints by dynamically mapping 10-bit HEVC sources to `-pix_fmt yuv420p` with `-preset p2`.
+  * Guarantees smooth, jitter-free playback of 10-bit x265 HDR content across all web engines.
+* **Self-Healing Audio Recovery:**
+  * Automatic fallback to pristine 320 kbps stream when encountering non-standard container tags or corrupted embedded picture blocks.
+
+### 🚀 Standalone 1-Click Launch Experience
+* **Headless Executable (`VISTARA.exe`):** Launches silently as a Windows GUI Subsystem (`WinExe`) with zero flashing console windows.
+* **Automated Daemon Management:** Verifies loopback port `5178` and spins up the backend API process automatically if not active.
+* **Zero Configuration:** Ready out-of-the-box with embedded SQLite WAL database and full offline playback capability.
+
+---
+
+## 3. Version 1.0.0 • Initial Milestone Archive
+
+### Core Platform Architecture
+- Modular monolith backend built on ASP.NET Core 8 and Entity Framework Core 8.
+- Native WPF desktop host with evergreen Microsoft Edge WebView2 runtime.
+- High-performance SQLite database with Write-Ahead Logging (WAL) and FTS5 full-text search.
+- Multi-threaded non-blocking library scanner with missing-file safety guards.
+- Transparent Zero-Login security barrier bound strictly to `127.0.0.1:5178`.
+
+---
+
+## 4. Supported Codecs & Containers
+
+| Media Type | Formats & Codecs |
+| :--- | :--- |
+| **Video Containers** | MP4, MKV, WebM, MOV, AVI, MPEG-TS, VOB, WMV, FLV |
+| **Video Codecs** | H.264 (AVC), H.265 (HEVC 8/10-bit), VP8, VP9, AV1, MPEG-2, VC-1 |
+| **Audio Formats** | FLAC (16/24-bit 192kHz), MP3 (320k), WAV, AAC, M4A, ALAC, OGG, OPUS, WMA, AIFF |
+| **Photo Formats** | JPEG, PNG, WebP, GIF, BMP, TIFF, Apple HEIC, AVIF, RAW (CR2, NEF, ARW) |
+| **Subtitle Formats** | Embedded SRT/ASS/SSA, External SRT, W3C WebVTT |
+
+---
+
+*VISTARA — Personal Media Universe © 2026. Built with precision for Windows.*

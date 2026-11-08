@@ -1,0 +1,447 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-color: #10151b;
+  --surface-color: #151a21;
+  --surface-secondary: #1b222b;
+  --surface-tertiary: #222b35;
+  --border-color: #242a36;
+  --border-secondary: #303a45;
+  --hover-color: #222b35;
+  --text-primary: #f4f7f8;
+  --text-secondary: #a4afb9;
+  --text-muted: #6b7885;
+  --input-bg: #151a21;
+  --input-border: #303a45;
+  --input-text: #f4f7f8;
+  --input-placeholder: #6b7885;
+  --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
+  --dropdown-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  --accent-color: #35c6b0;
+  --color-accent: #35c6b0;
+  --accent-hover: #2ba895;
+  color-scheme: dark;
+}
+
+.light {
+  --bg-color: #f8fafc;
+  --surface-color: #ffffff;
+  --surface-secondary: #f1f5f9;
+  --surface-tertiary: #e2e8f0;
+  --border-color: #e2e8f0;
+  --border-secondary: #cbd5e1;
+  --hover-color: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --input-bg: #ffffff;
+  --input-border: #cbd5e1;
+  --input-text: #0f172a;
+  --input-placeholder: #94a3b8;
+  --card-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --dropdown-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  color-scheme: light;
+}
+
+/* Smooth macOS-style transition between color modes */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+              color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* ========================================================================== */
+/* LIGHT MODE COMPREHENSIVE DESIGN OVERRIDES (Crisp, High-Contrast Studio UI) */
+/* ========================================================================== */
+
+/* Base App Backgrounds (Slate-50) */
+.light body,
+.light #root,
+.light [class*="bg-[#06080d]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#080b11]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0a0c12]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0b0d11]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0b0d12]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0b0e14]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0c0f16]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0c1017]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0d1017]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0e1116]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0e1118]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0e121a]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0f1219]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#0f141d]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#10141d]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#10141f]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *) {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+/* Surface Level 1 - Elevated Cards, Modals, Dialogs, Sidebar (Pure Crisp White) */
+.light [class*="bg-[#111520]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#111827]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#12151b]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#121620]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#121622]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#131927]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#141822]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#141824]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#151924]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#151a24]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#161a22]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#161a24]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#161b26]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *) {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+/* Surface Level 2 - Subcards, Inputs, Controls, Hover Containers (Slate-100) */
+.light [class*="bg-[#181c24]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *):not(.bg-accent):not([class*="bg-accent"]),
+.light [class*="bg-[#181c26]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#181d28]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#181d29]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#181d2a]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#181e2b]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#18202d]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#182030]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#192132]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1a202c]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1a2130]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *) {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+/* Surface Level 3 - Interactive Hover & Sliders (Slate-200) */
+.light [class*="bg-[#1e2430]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1e2433]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1e2533]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1f242f]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#1f2533]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#202530]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#202634]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#222834]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#222938]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#242a36]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#252c3c]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#252d40]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#282f3d]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#283040]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#2e374a]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#323948]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="bg-[#374151]"]:not(#video-player-container *):not(.video-modal *):not(.startup-splash *) {
+  background-color: #e2e8f0 !important;
+}
+
+/* Hover background states */
+.light [class*="hover:bg-[#181c24]"]:hover:not(.bg-accent *),
+.light [class*="hover:bg-[#1f242f]"]:hover:not(.bg-accent *),
+.light [class*="hover:bg-[#242a36]"]:hover:not(.bg-accent *),
+.light [class*="hover:bg-[#252d40]"]:hover:not(.bg-accent *),
+.light [class*="hover:bg-[#222938]"]:hover:not(.bg-accent *) {
+  background-color: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* All Dark Borders Override (Slate-200) */
+.light [class*="border-[#"]:not(#video-player-container *):not(.video-modal *):not(.border-accent *):not([class*="border-purple"]):not([class*="border-emerald"]):not([class*="border-cyan"]):not([class*="border-amber"]):not([class*="border-red"]):not([class*="border-rose"]):not([class*="border-blue"]) {
+  border-color: #e2e8f0 !important;
+}
+
+.light [class*="hover:border-[#"]:hover {
+  border-color: #cbd5e1 !important;
+}
+
+/* Typography Hierarchy in Light Mode */
+.light [class*="text-white"]:not(.bg-accent *):not(.bg-accent):not([class*="bg-accent"]):not(.bg-purple-600 *):not(.bg-emerald-600 *):not(.bg-red-500 *):not(#video-player-container *):not(.video-modal *):not(.startup-splash *),
+.light [class*="text-[#f3f4f6]"],
+.light [class*="text-[#f9fafb]"] {
+  color: #0f172a !important;
+}
+
+.light [class*="text-[#d1d5db]"],
+.light [class*="text-gray-300"],
+.light [class*="text-slate-300"] {
+  color: #334155 !important;
+}
+
+.light [class*="text-gray-400"],
+.light [class*="text-[#9ca3af]"],
+.light [class*="text-[#6b7280]"],
+.light [class*="text-[#4b5563]"] {
+  color: #64748b !important;
+}
+
+/* Form Controls & Inputs in Light Mode */
+.light input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.light textarea,
+.light select {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+.light input:focus,
+.light textarea:focus,
+.light select:focus {
+  border-color: var(--accent-color) !important;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.15) !important;
+}
+
+/* Range Sliders in Light Mode */
+.light input[type="range"] {
+  background-color: #e2e8f0 !important;
+}
+
+/* Preserving Crisp White Text in Accent & Colored Elements */
+.light .text-white.bg-accent,
+.light .bg-accent,
+.light .bg-accent *,
+.light [class*="bg-accent"],
+.light [class*="bg-accent"] *,
+.light [class*="bg-[var(--color-accent)]"],
+.light [class*="bg-[var(--color-accent)]"] *,
+.light [class*="bg-[var(--accent-color)]"],
+.light [class*="bg-[var(--accent-color)]"] *,
+.light .bg-purple-600,
+.light .bg-purple-600 *,
+.light .bg-emerald-600,
+.light .bg-emerald-600 *,
+.light .bg-red-500,
+.light .bg-red-500 *,
+.light .bg-rose-600,
+.light .bg-rose-600 * {
+  color: #ffffff !important;
+}
+
+/* Video Player Modal & Splash Screen MUST stay pitch black theater */
+.light #video-player-container,
+.light #video-player-container *,
+.light .video-modal,
+.light .video-modal *,
+.light .startup-splash,
+.light .startup-splash * {
+  color-scheme: dark !important;
+}
+
+.light #video-player-container,
+.light .video-modal,
+.light .startup-splash {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+
+/* ========================================================================== */
+/* Completely Remove / Hide Scrollbars App-Wide (Preserving 100% Scrollability) */
+/* ========================================================================== */
+html,
+body,
+#root,
+*,
+*::before,
+*::after,
+div,
+section,
+main,
+article,
+aside,
+ul,
+ol {
+  scrollbar-width: none !important; /* Standard modern CSS: Chrome 121+, Edge 121+, Firefox 64+, Safari 18.2+ */
+  -ms-overflow-style: none !important; /* Legacy IE / Edge */
+}
+
+/* WebKit / Chromium (Blink) / WebView2 */
+*::-webkit-scrollbar,
+::-webkit-scrollbar,
+body::-webkit-scrollbar,
+div::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  -webkit-appearance: none !important;
+}
+
+*::-webkit-scrollbar-track,
+::-webkit-scrollbar-track {
+  display: none !important;
+  background: transparent !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+*::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-thumb {
+  display: none !important;
+  background: transparent !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+*::-webkit-scrollbar-corner,
+::-webkit-scrollbar-corner {
+  display: none !important;
+  background: transparent !important;
+}
+
+.no-scrollbar {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Accessible light-dismiss modal backdrop */
+dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* Refined Vistara Cards & Interactive Elements (Clean Solid Surfaces) */
+.vistara-card {
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vistara-card:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-2px);
+}
+
+.vistara-card-interactive {
+  cursor: pointer;
+  background-color: var(--surface-color);
+  border: 1px solid var(--border-color);
+  border-radius: 0.75rem;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vistara-card-interactive:hover {
+  background-color: var(--surface-secondary);
+  border-color: var(--border-secondary);
+  transform: translateY(-2px);
+}
+
+/* Clean Professional Typography */
+.heading-display {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.heading-page {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.heading-section {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+.text-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Subtle Micro-Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Animated Equalizer Bars for Now Playing indicator */
+@keyframes eqBar1 {
+  0%, 100% { height: 4px; }
+  50% { height: 16px; }
+}
+@keyframes eqBar2 {
+  0%, 100% { height: 14px; }
+  50% { height: 6px; }
+}
+@keyframes eqBar3 {
+  0%, 100% { height: 7px; }
+  50% { height: 18px; }
+}
+@keyframes eqBar4 {
+  0%, 100% { height: 15px; }
+  50% { height: 4px; }
+}
+.animate-eq-bar-1 { animation: eqBar1 0.8s ease-in-out infinite; }
+.animate-eq-bar-2 { animation: eqBar2 0.7s ease-in-out infinite 0.15s; }
+.animate-eq-bar-3 { animation: eqBar3 0.9s ease-in-out infinite 0.3s; }
+.animate-eq-bar-4 { animation: eqBar4 0.65s ease-in-out infinite 0.2s; }
+
+/* Subtle rotation for music spools */
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spinSlow 20s linear infinite;
+}
+
+/* Audio progress energy gleam animation */
+@keyframes streamGlide {
+  0% { transform: translateX(-150%) skewX(-20deg); opacity: 0; }
+  25% { opacity: 0.55; }
+  75% { opacity: 0.55; }
+  100% { transform: translateX(500%) skewX(-20deg); opacity: 0; }
+}
+.animate-stream-glide {
+  animation: streamGlide 2.4s ease-in-out infinite;
+}
+
+/* Solid vinyl disc with crisp concentric border rings */
+.vinyl-grooves {
+  background-color: #12151b;
+  border: 4px solid #1a202c;
+  box-shadow: inset 0 0 0 12px #0f1218, inset 0 0 0 24px #1a202c, inset 0 0 0 36px #0f1218;
+}
+
+/* Reduced motion accessibility rule */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+

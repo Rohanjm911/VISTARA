@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vistara.Core\Vistara.Core.csproj" />
+    <ProjectReference Include="..\Vistara.Infrastructure\Vistara.Infrastructure.csproj" />
+    <ProjectReference Include="..\Vistara.MediaEngine\Vistara.MediaEngine.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/backend/Vistara.Core/Vistara.Core.csproj" />
+    <Project Path="src/backend/Vistara.Infrastructure/Vistara.Infrastructure.csproj" />
+    <Project Path="src/backend/Vistara.MediaEngine/Vistara.MediaEngine.csproj" />
+    <Project Path="src/backend/Vistara.Services/Vistara.Services.csproj" />
+    <Project Path="src/backend/Vistara.Api/Vistara.Api.csproj" />
+    <Project Path="src/desktop/Vistara.Desktop/Vistara.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Vistara.UnitTests/Vistara.UnitTests.csproj" />
+  </Folder>
+</Solution>
