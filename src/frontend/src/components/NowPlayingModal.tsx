@@ -341,12 +341,12 @@ export const NowPlayingModal: React.FC = () => {
     return parsePlainLyrics(activeTrack?.lyrics);
   }, [activeTrack?.lyrics]);
 
-  // Full automatic smart-sync: auto-fetch synced lyrics when Lyrics tab is viewed OR when side lyrics reveal
+  // Full automatic smart-sync: auto-fetch synced lyrics eagerly when Player or Lyrics tab is viewed
   useEffect(() => {
-    if ((activeTab === 'lyrics' || (activeTab === 'player' && sideLyricsRevealed)) && activeTrack && !parsedLyrics && !lyricsLoading && !isAutoFetching) {
+    if ((activeTab === 'lyrics' || activeTab === 'player') && activeTrack && !parsedLyrics && !lyricsLoading && !isAutoFetching) {
       handleAutoFetchSyncedLyrics();
     }
-  }, [activeTab, sideLyricsRevealed, activeTrack?.id, parsedLyrics]);
+  }, [activeTab, activeTrack?.id, parsedLyrics]);
 
   // Auto-translate if user has translation enabled
   useEffect(() => {
@@ -410,16 +410,16 @@ export const NowPlayingModal: React.FC = () => {
     }
   }, [currentLyricIndex, activeTab]);
 
-  // Reveal side lyrics 2-3 seconds after audio starts playing
+  // Reveal side lyrics 2-3 seconds after audio starts playing (or immediately if already past 2s)
   useEffect(() => {
-    if (!isPlaying) return;
-
-    if (currentTime >= 2.5) {
+    if (currentTime >= 2.0) {
       setSideLyricsRevealed(true);
       return;
     }
 
-    const remainingDelay = Math.max(0, (2.5 - currentTime) * 1000);
+    if (!isPlaying) return;
+
+    const remainingDelay = Math.max(0, (2.0 - currentTime) * 1000);
     const timer = setTimeout(() => {
       setSideLyricsRevealed(true);
     }, remainingDelay);
@@ -779,10 +779,17 @@ export const NowPlayingModal: React.FC = () => {
                         </button>
 
                         <button
-                          onClick={() => setUserDismissedSideLyrics((prev) => !prev)}
+                          onClick={() => {
+                            if (!sideLyricsRevealed || userDismissedSideLyrics) {
+                              setSideLyricsRevealed(true);
+                              setUserDismissedSideLyrics(false);
+                            } else {
+                              setUserDismissedSideLyrics(true);
+                            }
+                          }}
                           className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm border ${
                             sideLyricsRevealed && !userDismissedSideLyrics
-                              ? 'bg-accent/20 text-accent border-accent/40'
+                              ? 'bg-accent/20 text-accent border-accent/40 font-semibold'
                               : 'bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border-[#232c3d]'
                           }`}
                           title={sideLyricsRevealed && !userDismissedSideLyrics ? 'Hide side lyrics' : 'Show lyrics beside cassette tape'}
@@ -882,10 +889,17 @@ export const NowPlayingModal: React.FC = () => {
                         </button>
 
                         <button
-                          onClick={() => setUserDismissedSideLyrics((prev) => !prev)}
+                          onClick={() => {
+                            if (!sideLyricsRevealed || userDismissedSideLyrics) {
+                              setSideLyricsRevealed(true);
+                              setUserDismissedSideLyrics(false);
+                            } else {
+                              setUserDismissedSideLyrics(true);
+                            }
+                          }}
                           className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm border ${
                             sideLyricsRevealed && !userDismissedSideLyrics
-                              ? 'bg-accent/20 text-accent border-accent/40'
+                              ? 'bg-accent/20 text-accent border-accent/40 font-semibold'
                               : 'bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border-[#232c3d]'
                           }`}
                           title={sideLyricsRevealed && !userDismissedSideLyrics ? 'Hide side lyrics' : 'Show lyrics beside cassette tape'}

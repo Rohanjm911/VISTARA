@@ -107,8 +107,8 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
           const falloff = Math.exp(-i / (barCount * 0.85));
           rawVal = (0.2 + 0.55 * wave1 * beat + 0.25 * wave2) * falloff;
         } else {
-          // Subtle resting ambient state when paused
-          const restingWave = Math.sin(phaseRef.current * 0.7 + i * 0.5) * 0.04 + 0.08;
+          // Organic resting ambient pulse when paused so the rainbow mini visualizer stays alive
+          const restingWave = Math.sin(phaseRef.current * 1.2 + i * 0.45) * 0.12 + 0.22;
           rawVal = restingWave;
         }
 
@@ -127,13 +127,13 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
         const x = i * (barWidth + spacing) + (width - (barCount * (barWidth + spacing) - spacing)) / 2;
         const y = height - barHeight;
 
-        // Beat-synced 310-degree rainbow spectrum bar with dynamic chromatic gradient
-        const barHue = (t * 310 + huePhase) % 360;
-        const lightness = Math.min(74, 56 + smooth[i] * 14 + beatSpike * 12);
+        // Beat-synced full 360-degree saturated chromatic rainbow spectrum bar with dynamic neon gradient
+        const barHue = (t * 360 + huePhase) % 360;
+        const lightness = Math.min(78, 58 + smooth[i] * 16 + beatSpike * 14);
         const grad = ctx.createLinearGradient(0, height, 0, Math.max(0, y));
-        grad.addColorStop(0, `hsla(${barHue}, 95%, 45%, 0.88)`);
-        grad.addColorStop(0.5, `hsla(${(barHue + 25) % 360}, 95%, 58%, 0.96)`);
-        grad.addColorStop(1, `hsla(${(barHue + 50) % 360}, 100%, ${lightness}%, 1)`);
+        grad.addColorStop(0, `hsla(${barHue}, 100%, 48%, 0.90)`);
+        grad.addColorStop(0.5, `hsla(${(barHue + 15) % 360}, 100%, 60%, 0.96)`);
+        grad.addColorStop(1, `hsla(${(barHue + 30) % 360}, 100%, ${lightness}%, 1)`);
         ctx.fillStyle = grad;
         drawPill(ctx, x, y, barWidth, barHeight, Math.min(barWidth / 2, 2.5));
 
