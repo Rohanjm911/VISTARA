@@ -89,6 +89,9 @@ export const SettingsPage: React.FC = () => {
   const [startupSoundEnabled, setStartupSoundEnabled] = useState<boolean>(() => {
     return cinematicSound.isSoundEnabled();
   });
+  const [startupVoiceEnabled, setStartupVoiceEnabled] = useState<boolean>(() => {
+    return cinematicSound.isVoiceEnabled();
+  });
   const [introSoundProfile, setIntroSoundProfile] = useState<IntroSoundProfile>(() => {
     return cinematicSound.getProfile();
   });
@@ -782,6 +785,7 @@ export const SettingsPage: React.FC = () => {
               </div>
 
               <div className="pt-4 border-t border-[#1e232d] space-y-4">
+                {/* Row 1: Sound Toggle */}
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-sm font-semibold text-white">Startup Sound Effect</h3>
@@ -810,6 +814,36 @@ export const SettingsPage: React.FC = () => {
                       className="w-4 h-4 accent-[var(--color-accent)] cursor-pointer"
                     />
                   </div>
+                </div>
+
+                {/* Row 2: Voice Whisper Toggle */}
+                <div className="flex items-center justify-between py-3 px-4 rounded-lg bg-[#0e1118] border border-[#1e2430]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-[var(--color-accent)]/15 flex items-center justify-center flex-shrink-0">
+                      <span className="text-sm">🎤</span>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-white">
+                        "Vistara" Voice Whisper
+                        <span className="ml-2 text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#1a2535] text-[var(--color-accent)] border border-[var(--color-accent)]/30">
+                          French Siren
+                        </span>
+                      </h3>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Studio-mastered seductive female whisper saying <em>"Vistara"</em> over the chord impact
+                      </p>
+                    </div>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={startupVoiceEnabled}
+                    onChange={(e) => {
+                      const val = e.target.checked;
+                      setStartupVoiceEnabled(val);
+                      cinematicSound.setVoiceEnabled(val);
+                    }}
+                    className="w-4 h-4 accent-[var(--color-accent)] cursor-pointer flex-shrink-0"
+                  />
                 </div>
 
                 {/* Sound Profile Selector */}

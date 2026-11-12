@@ -73,6 +73,7 @@ class AudioMasterEngine {
 
   // --- Intro Settings ---
   private introSoundEnabled: boolean = true;
+  private introVoiceEnabled: boolean = true;
   private introSoundProfile: IntroSoundProfile = 'cyber_horizon';
   private isIntroActive: boolean = false;
   private introMasterGain: GainNode | null = null;
@@ -100,6 +101,7 @@ class AudioMasterEngine {
     if (typeof window !== 'undefined') {
       // Load stored preferences
       this.introSoundEnabled = localStorage.getItem('vistara_startup_sound') !== 'false';
+      this.introVoiceEnabled = localStorage.getItem('vistara_startup_voice') !== 'false';
 
       const savedIntroProfile = localStorage.getItem('vistara_intro_sound_profile') as IntroSoundProfile;
       if (
@@ -247,6 +249,17 @@ class AudioMasterEngine {
     }
   }
 
+  public isIntroVoiceEnabled(): boolean {
+    return this.introVoiceEnabled;
+  }
+
+  public setIntroVoiceEnabled(enabled: boolean): void {
+    this.introVoiceEnabled = enabled;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vistara_startup_voice', enabled ? 'true' : 'false');
+    }
+  }
+
   /**
    * Dispatches to the active or requested intro sound profile.
    */
@@ -320,6 +333,7 @@ class AudioMasterEngine {
    * Mastered with warm proximity EQ, silky air band, and intimate Haas stereo imaging.
    */
   private playVoiceWhisper(ctx: AudioContext, master: GainNode, triggerTime: number): void {
+    if (!this.introVoiceEnabled) return;
     this.preloadVoiceBuffer()
       .then((buffer) => {
         if (!buffer) {
@@ -1591,6 +1605,8 @@ export const audioMaster = new AudioMasterEngine();
 export const cinematicSound = {
   isSoundEnabled: () => audioMaster.isIntroSoundEnabled(),
   setSoundEnabled: (en: boolean) => audioMaster.setIntroSoundEnabled(en),
+  isVoiceEnabled: () => audioMaster.isIntroVoiceEnabled(),
+  setVoiceEnabled: (en: boolean) => audioMaster.setIntroVoiceEnabled(en),
   getProfile: () => audioMaster.getIntroSoundProfile(),
   setProfile: (p: IntroSoundProfile) => audioMaster.setIntroSoundProfile(p),
   prepare: () => audioMaster.unlock(),
