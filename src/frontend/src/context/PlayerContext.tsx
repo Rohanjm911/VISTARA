@@ -120,13 +120,46 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [activeVideo, setActiveVideo] = useState<MediaFilePlaybackInfoDto | null>(null);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
 
-  const [activeTrack, setActiveTrack] = useState<TrackDto | null>(null);
-  const [queue, setQueue] = useState<TrackDto[]>([]);
-  const [queueIndex, setQueueIndex] = useState(0);
+  const [activeTrack, setActiveTrack] = useState<TrackDto | null>(() => {
+    try {
+      const saved = localStorage.getItem('vistara_last_track');
+      if (saved) return JSON.parse(saved) as TrackDto;
+    } catch {}
+    return null;
+  });
+  const [queue, setQueue] = useState<TrackDto[]>(() => {
+    try {
+      const saved = localStorage.getItem('vistara_last_queue');
+      if (saved) return JSON.parse(saved) as TrackDto[];
+    } catch {}
+    return [];
+  });
+  const [queueIndex, setQueueIndex] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('vistara_last_queue_index');
+      if (saved !== null) return parseInt(saved, 10) || 0;
+    } catch {}
+    return 0;
+  });
 
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('vistara_last_track_time');
+      if (saved !== null) return parseFloat(saved) || 0;
+    } catch {}
+    return 0;
+  });
+  const [duration, setDuration] = useState<number>(() => {
+    try {
+      const saved = localStorage.getItem('vistara_last_track');
+      if (saved) {
+        const parsed = JSON.parse(saved) as TrackDto;
+        return parsed.durationSeconds && parsed.durationSeconds > 0 ? parsed.durationSeconds : 0;
+      }
+    } catch {}
+    return 0;
+  });
   const [volume, setVolumeState] = useState(0.85);
   const [isMuted, setIsMuted] = useState(false);
   const [playbackSpeed, setPlaybackSpeedState] = useState(1.0);
@@ -634,9 +667,68 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setQueue((prev) => [...prev, track]);
   };
 
+  // Persist last played track, queue & position to localStorage
+  useEffect(() => {
+    try {
+      if (activeTrack) {
+        localStorage.setItem('vistara_last_track', JSON.stringify(activeTrack));
+      }
+    } catch {}
+  }, [activeTrack]);
+
+  useEffect(() => {
+    try {
+      if (queue.length > 0) {
+        const sliced = queue.slice(0, 100);
+        localStorage.setItem('vistara_last_queue', JSON.stringify(sliced));
+        localStorage.setItem('vistara_last_queue_index', String(Math.min(queueIndex, sliced.length - 1)));
+      }
+    } catch {}
+  }, [queue, queueIndex]);
+
+  useEffect(() => {
+    if (!activeTrack) return;
+    const timer = setTimeout(() => {
+      try {
+        localStorage.setItem('vistara_last_track_time', String(Math.floor(currentTime)));
+      } catch {}
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [currentTime, activeTrack]);
+
+  // If no last-played track exists in localStorage yet, preload the first track from library so MiniPlayer is never empty
+  useEffect(() => {
+    if (activeTrack) return;
+    apiRequest<{ items: TrackDto[] }>('/api/v1/music/tracks?pageSize=20').then((res) => {
+      if (res.success && res.data?.items && res.data.items.length > 0) {
+        const first = res.data.items[0];
+        setActiveTrack((prev) => prev || first);
+        setQueue((prev) => (prev.length > 0 ? prev : res.data!.items));
+        setDuration((prev) => (prev > 0 ? prev : first.durationSeconds || 0));
+      }
+    }).catch(() => {});
+  }, []);
+
   const clearQueue = () => {
     setQueue([]);
     setQueueIndex(0);
+  };
+
+  const ensureAudioSourceLoaded = (audio: HTMLAudioElement, track: TrackDto, resumeAt?: number) => {
+    if (!audio.src || !audio.src.includes(track.mediaFileId)) {
+      audio.src = `/api/v1/stream/${track.mediaFileId}`;
+      audio.volume = isMuted ? 0 : volume;
+      audio.playbackRate = playbackSpeed;
+      if (resumeAt && resumeAt > 0) {
+        const onLoaded = () => {
+          try {
+            audio.currentTime = resumeAt;
+          } catch {}
+          audio.removeEventListener('loadedmetadata', onLoaded);
+        };
+        audio.addEventListener('loadedmetadata', onLoaded);
+      }
+    }
   };
 
   const togglePlayPause = () => {
@@ -653,6 +745,7 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
             audioContextRef.current.resume().catch(() => {});
           }
+          ensureAudioSourceLoaded(activeAudio, activeTrack, currentTime);
           activeAudio.play().then(() => setIsPlaying(true)).catch((err) => {
             console.warn('Play resume failed, trying fallback stream:', err);
             if (activeAudio && activeTrack && !activeAudio.src.includes('transcode=true')) {
@@ -672,6 +765,9 @@ export const PlayerProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setCurrentTime(target);
     const activeAudio = activeDeckRef.current === 'A' ? deckARef.current : deckBRef.current;
     if (activeAudio && !activeVideo) {
+      if (activeTrack) {
+        ensureAudioSourceLoaded(activeAudio, activeTrack, target);
+      }
       try {
         activeAudio.currentTime = target;
       } catch {}
