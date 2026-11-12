@@ -7,7 +7,6 @@ import {
   Film,
   FolderSync,
   Heart,
-  Image,
   LayoutDashboard,
   ListMusic,
   Music,
@@ -21,7 +20,6 @@ export type NavTab =
   | 'cinema'
   | 'tv'
   | 'music'
-  | 'gallery'
   | 'playlists'
   | 'watchlist'
   | 'favourites'
@@ -53,7 +51,6 @@ const NAV_GROUPS: NavGroup[] = [
       { id: 'cinema', label: 'Cinema', icon: <Film className="w-4 h-4" /> },
       { id: 'tv', label: 'TV Shows', icon: <Tv className="w-4 h-4" /> },
       { id: 'music', label: 'Music', icon: <Music className="w-4 h-4" /> },
-      { id: 'gallery', label: 'Gallery', icon: <Image className="w-4 h-4" /> },
     ],
   },
   {

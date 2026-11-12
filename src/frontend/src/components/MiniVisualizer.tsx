@@ -127,10 +127,14 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
         const x = i * (barWidth + spacing) + (width - (barCount * (barWidth + spacing) - spacing)) / 2;
         const y = height - barHeight;
 
-        // Beat-synced 310-degree rainbow spectrum bar color
+        // Beat-synced 310-degree rainbow spectrum bar with dynamic chromatic gradient
         const barHue = (t * 310 + huePhase) % 360;
-        const lightness = Math.min(72, 54 + smooth[i] * 14 + beatSpike * 12);
-        ctx.fillStyle = `hsl(${barHue}, 90%, ${lightness}%)`;
+        const lightness = Math.min(74, 56 + smooth[i] * 14 + beatSpike * 12);
+        const grad = ctx.createLinearGradient(0, height, 0, Math.max(0, y));
+        grad.addColorStop(0, `hsla(${barHue}, 95%, 45%, 0.88)`);
+        grad.addColorStop(0.5, `hsla(${(barHue + 25) % 360}, 95%, 58%, 0.96)`);
+        grad.addColorStop(1, `hsla(${(barHue + 50) % 360}, 100%, ${lightness}%, 1)`);
+        ctx.fillStyle = grad;
         drawPill(ctx, x, y, barWidth, barHeight, Math.min(barWidth / 2, 2.5));
 
         // Floating peak cap (Clean solid white)

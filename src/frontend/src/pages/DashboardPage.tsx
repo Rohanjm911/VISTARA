@@ -12,7 +12,6 @@ import {
   Flame,
   HardDrive,
   Heart,
-  Image,
   Info,
   Layers,
   LayoutGrid,
@@ -411,7 +410,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
   const moviePct = Math.round(((data?.storageUsage?.moviesSizeBytes || 0) / totalStorage) * 100);
   const tvPct = Math.round(((data?.storageUsage?.tvShowsSizeBytes || 0) / totalStorage) * 100);
   const musicPct = Math.round(((data?.storageUsage?.musicSizeBytes || 0) / totalStorage) * 100);
-  const photoPct = Math.round(((data?.storageUsage?.photosSizeBytes || 0) / totalStorage) * 100);
 
   return (
     <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-7 select-none">
@@ -697,7 +695,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
 
       {/* 3. Unified Deep Slate Library Telemetry Strip */}
       {prefs.widgets.stats && data?.statistics && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {[
             {
               tab: 'cinema' as const,
@@ -722,14 +720,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               value: data.statistics.totalTracks,
               unit: 'Tracks',
               sub: `${data.statistics.totalAlbums} albums · Lossless Studio`,
-            },
-            {
-              tab: 'gallery' as const,
-              icon: Image,
-              label: 'Photo Vault',
-              value: data.statistics.totalPhotos,
-              unit: 'Photos',
-              sub: `${formatBytes(data.storageUsage?.photosSizeBytes || 0)} media archives`,
             },
           ].map((stat) => {
             const IconComp = stat.icon;
@@ -1230,15 +1220,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               title={`Music: ${formatBytes(data.storageUsage.musicSizeBytes)} (${musicPct}%)`}
               className="h-full bg-emerald-500 transition-all duration-500"
             />
-            <div
-              style={{ width: `${photoPct}%` }}
-              title={`Photos: ${formatBytes(data.storageUsage.photosSizeBytes)} (${photoPct}%)`}
-              className="h-full bg-amber-500 transition-all duration-500"
-            />
           </div>
 
           {/* Storage Breakdown Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
             <div className="p-3 bg-[#181c24] rounded-xl border border-[#242a36]/80 flex flex-col justify-between">
               <div className="flex items-center space-x-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-cyan-500 flex-shrink-0" />
@@ -1266,16 +1251,6 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               </div>
               <div className="text-sm font-bold text-white mt-1.5 font-mono">
                 {formatBytes(data.storageUsage.musicSizeBytes)}
-              </div>
-            </div>
-
-            <div className="p-3 bg-[#181c24] rounded-xl border border-[#242a36]/80 flex flex-col justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-500 flex-shrink-0" />
-                <span className="text-[11px] text-[#9ca3af] uppercase font-bold">Photos</span>
-              </div>
-              <div className="text-sm font-bold text-white mt-1.5 font-mono">
-                {formatBytes(data.storageUsage.photosSizeBytes)}
               </div>
             </div>
           </div>

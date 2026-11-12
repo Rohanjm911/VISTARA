@@ -1,25 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { apiRequest } from '../api/client';
 import { usePlayer } from '../context/PlayerContext';
-import { MovieDto, TVShowDto, TrackDto, PhotoDto } from '../types';
-import { Heart, Film, Tv, Music, Image as ImageIcon, Play, Trash2, Star, Calendar } from 'lucide-react';
+import { MovieDto, TVShowDto, TrackDto } from '../types';
+import { Heart, Film, Tv, Music, Play, Trash2, Star, Calendar } from 'lucide-react';
 
 export const FavouritesPage: React.FC = () => {
   const { playTrack, openVideoPlayer } = usePlayer();
-  const [filter, setFilter] = useState<'all' | 'movies' | 'shows' | 'music' | 'photos'>('all');
+  const [filter, setFilter] = useState<'all' | 'movies' | 'shows' | 'music'>('all');
   const [movies, setMovies] = useState<MovieDto[]>([]);
   const [shows, setShows] = useState<TVShowDto[]>([]);
   const [tracks, setTracks] = useState<TrackDto[]>([]);
-  const [photos, setPhotos] = useState<PhotoDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchFavourites = async () => {
     setIsLoading(true);
-    const [moviesRes, showsRes, musicRes, photosRes] = await Promise.all([
+    const [moviesRes, showsRes, musicRes] = await Promise.all([
       apiRequest<any>('/api/v1/movies?pageSize=1000'),
       apiRequest<any>('/api/v1/tvshows?pageSize=1000'),
       apiRequest<any>('/api/v1/music/tracks?pageSize=1000'),
-      apiRequest<any>('/api/v1/gallery/photos?pageSize=1000'),
     ]);
 
     if (moviesRes.success && moviesRes.data?.items) {
@@ -30,9 +28,6 @@ export const FavouritesPage: React.FC = () => {
     }
     if (musicRes.success && musicRes.data?.items) {
       setTracks(musicRes.data.items.filter((t: TrackDto) => t.isFavourite));
-    }
-    if (photosRes.success && photosRes.data?.items) {
-      setPhotos(photosRes.data.items.filter((p: PhotoDto) => p.isFavourite));
     }
     setIsLoading(false);
   };
@@ -69,18 +64,10 @@ export const FavouritesPage: React.FC = () => {
     }
   };
 
-  const handleTogglePhotoFav = async (id: string) => {
-    const res = await apiRequest<boolean>(`/api/v1/gallery/photos/${id}/favourite`, { method: 'POST' });
-    if (res.success) {
-      setPhotos((prev) => prev.filter((p) => p.id !== id && p.photoId !== id));
-    }
-  };
-
   const totalCount =
     (filter === 'all' || filter === 'movies' ? movies.length : 0) +
     (filter === 'all' || filter === 'shows' ? shows.length : 0) +
-    (filter === 'all' || filter === 'music' ? tracks.length : 0) +
-    (filter === 'all' || filter === 'photos' ? photos.length : 0);
+    (filter === 'all' || filter === 'music' ? tracks.length : 0);
 
   return (
     <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
@@ -92,7 +79,7 @@ export const FavouritesPage: React.FC = () => {
             Favourites
           </h1>
           <p className="text-sm text-gray-400 mt-1">
-            Your personal hand-picked library of favorite movies, shows, songs, and photos
+            Your personal hand-picked library of favorite movies, shows, and songs
           </p>
         </div>
 
@@ -106,7 +93,7 @@ export const FavouritesPage: React.FC = () => {
                 : 'text-gray-400 hover:text-white'
             }`}
           >
-            All ({movies.length + shows.length + tracks.length + photos.length})
+            All ({movies.length + shows.length + tracks.length})
           </button>
           <button
             onClick={() => setFilter('movies')}
@@ -137,16 +124,6 @@ export const FavouritesPage: React.FC = () => {
             }`}
           >
             Music ({tracks.length})
-          </button>
-          <button
-            onClick={() => setFilter('photos')}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              filter === 'photos'
-                ? 'bg-[var(--color-accent)] text-white'
-                : 'text-gray-400 hover:text-white'
-            }`}
-          >
-            Photos ({photos.length})
           </button>
         </div>
       </div>
@@ -311,45 +288,13 @@ export const FavouritesPage: React.FC = () => {
               </div>
             </div>
           )}
-
-          {/* Photos Section */}
-          {(filter === 'all' || filter === 'photos') && photos.length > 0 && (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <ImageIcon className="w-4 h-4 text-accent" />
-                <h2 className="text-sm font-semibold text-white uppercase tracking-wider">
-                  Favourite Photos ({photos.length})
-                </h2>
-              </div>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {photos.map((p) => (
-                  <div
-                    key={p.id}
-                    className="group relative bg-[#12151b] border border-[#242a36] hover:border-gray-500 rounded-lg overflow-hidden aspect-square transition-all"
-                  >
-                    <img src={p.thumbnailUrl} alt={p.title} className="w-full h-full object-cover" />
-                    <button
-                      onClick={() => handleTogglePhotoFav(p.id)}
-                      title="Remove favourite"
-                      className="absolute top-2 right-2 p-1.5 bg-black/80 hover:bg-black text-red-500 rounded-md transition-colors"
-                    >
-                      <Heart className="w-3.5 h-3.5 fill-current" />
-                    </button>
-                    <div className="absolute inset-x-0 bottom-0 p-2 bg-black/70 backdrop-blur-sm text-[11px] text-white truncate">
-                      {p.title}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
       ) : (
         <div className="bg-[#12151b] border border-[#242a36] rounded-xl p-16 text-center text-gray-400">
           <Heart className="w-14 h-14 mx-auto mb-3 opacity-40 text-gray-500" />
           <h3 className="text-base font-semibold text-white">No favourites yet</h3>
           <p className="text-xs text-gray-500 max-w-sm mx-auto mt-1">
-            Click the heart icon on any movie, show, song, or photo to save it here for quick access
+            Click the heart icon on any movie, show, or song to save it here for quick access
           </p>
         </div>
       )}

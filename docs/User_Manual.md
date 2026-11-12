@@ -21,8 +21,7 @@
    - [Cinema Universe & Poster Engine](#41-cinema-universe-movies)
    - [TV Series Universe](#42-television-shows)
    - [Music Studio, Equalizer & 60 FPS Visualizers](#43-music-studio)
-   - [Photo Gallery & EXIF Inspector](#44-photo-gallery)
-   - [Playlists & Collections](#45-playlists)
+   - [Playlists & Collections](#44-playlists)
 5. [Library Management & File Scanning](#5-library-management--file-scanning)
 6. [Keyboard Shortcuts Reference](#6-keyboard-shortcuts-reference)
 7. [Backup & Recovery](#7-backup--recovery)
@@ -75,7 +74,7 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
 
 - **Collapsible Sidebar (Left):**
   - Toggle with <kbd>Ctrl</kbd> + <kbd>B</kbd> or the bottom chevron button.
-  - Direct links to **Dashboard**, **Cinema**, **TV Shows**, **Music**, **Gallery**, **Playlists**, **Watchlist**, **Favourites**, **Libraries**, and **Settings**.
+  - Direct links to **Dashboard**, **Cinema**, **TV Shows**, **Music**, **Playlists**, **Watchlist**, **Favourites**, **Libraries**, and **Settings**.
 - **Header Bar (Top):**
   - **FTS5 Global Search:** Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search across movies, shows, music tracks, artists, and albums in milliseconds.
   - **Job Monitor:** Real-time pulse indicator showing scanning and transcoding status.
@@ -144,16 +143,11 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
 - **10-Band Graphic Equalizer:** Studio equalizer spanning 32 Hz to 16 kHz with 8 genre presets (*Flat*, *Bass Boost*, *Treble Boost*, *Rock*, *Pop*, *Jazz*, *Classical*, *Electronic*, *Vocal Focus*).
 - **LRCLIB Synced Lyrics:** Karaoke-style real-time synced lyrics with line-by-line glow highlights, auto-scrolling, and click-to-seek playback.
 
-### 4.4 Photo Gallery
-- **Chronological Timeline:** Automatically groups photos by capture month and year.
-- **EXIF Inspector Drawer:** Inspect camera make/model, lens aperture ($f$-number), shutter speed, ISO rating, and focal length.
-- **Full-Screen Lightbox:** Smooth pan, zoom, 90° rotation, and slideshow mode with configurable interval timing.
-
-### 4.5 Playlists
+### 4.4 Playlists
 - **Cross-Media Collections:** Build mixed playlists with music tracks, movies, or video clips.
 - **One-Click Play All:** Load full playlists into active queue with shuffle support.
 
-### 4.6 Media Health & Integrity Monitor
+### 4.5 Media Health & Integrity Monitor
 VISTARA protects your media library against silent bit-rot, unreadable disks, unexpected modifications, and disconnected drives:
 - **Media Health Dashboard:** Access via **Media Health** in the sidebar. Displays total monitored files, healthy percentage, modified files, missing files, corrupted files, and total verified storage size.
 - **Real-Time Integrity Scans:**

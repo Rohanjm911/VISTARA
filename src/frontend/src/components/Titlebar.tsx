@@ -127,8 +127,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
   const totalResultsCount =
     (results?.movies.length || 0) +
     (results?.tvShows.length || 0) +
-    (results?.tracks.length || 0) +
-    (results?.photos.length || 0);
+    (results?.tracks.length || 0);
 
   return (
     <header className="h-14 bg-[#111722] border-b border-white/[0.06] px-6 flex items-center justify-between select-none relative z-30">
@@ -142,7 +141,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => results && totalResultsCount > 0 && setShowDropdown(true)}
-            placeholder="Search movies, TV shows, tracks, or photos..."
+            placeholder="Search movies, TV shows, or tracks..."
             className="w-full bg-[#161E29] border border-white/[0.07] rounded-xl pl-10 pr-16 py-1.5 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-accent/60 transition-colors"
           />
           {isSearching ? (

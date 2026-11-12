@@ -19,7 +19,6 @@ import { DashboardPage } from './pages/DashboardPage';
 import { CinemaPage } from './pages/CinemaPage';
 import { TvShowsPage } from './pages/TvShowsPage';
 import { MusicPage } from './pages/MusicPage';
-import { GalleryPage } from './pages/GalleryPage';
 import { PlaylistsPage } from './pages/PlaylistsPage';
 import { WatchlistPage } from './pages/WatchlistPage';
 import { FavouritesPage } from './pages/FavouritesPage';
@@ -34,8 +33,10 @@ export const AppContent: React.FC = () => {
   const urlTab = urlParams.get('tab') as NavTab | null;
 
   const [currentTab, setCurrentTab] = useState<NavTab>(() => {
-    if (urlTab) return urlTab;
-    return (localStorage.getItem('vistara_active_tab') as NavTab) || 'dashboard';
+    if (urlTab && (urlTab as string) !== 'gallery') return urlTab;
+    const saved = localStorage.getItem('vistara_active_tab') as NavTab;
+    if (saved && (saved as string) !== 'gallery') return saved;
+    return 'dashboard';
   });
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [showSplash, setShowSplash] = useState<boolean>(() => !skipSplash);
@@ -133,8 +134,6 @@ export const AppContent: React.FC = () => {
         return <TvShowsPage />;
       case 'music':
         return <MusicPage />;
-      case 'gallery':
-        return <GalleryPage />;
       case 'playlists':
         return <PlaylistsPage />;
       case 'watchlist':

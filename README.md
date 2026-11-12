@@ -37,7 +37,6 @@
 4. [Supported Media Formats & Codecs Matrix](#4-supported-media-formats--codecs-matrix)
    - [Video Formats & Capabilities](#-video-formats--capabilities)
    - [Audio Formats & Lossless Studio Pipeline](#-audio-formats--lossless-studio-pipeline)
-   - [Photo & Graphic Formats](#-photo--graphic-formats)
 5. [Technology Stack & Architecture](#5-technology-stack--architecture)
 6. [Quick Start — Running VISTARA](#6-quick-start--running-vistara)
 7. [Directory & Project Layout](#7-directory--project-layout)
@@ -51,7 +50,6 @@
    - [DJ Crossfade, Synced Lyrics & Sleep Timer](#dj-crossfade-synced-lyrics--sleep-timer)
    - [Smart Dynamic Mixes & Curated Playlists](#smart-dynamic-mixes--curated-playlists)
    - [10-Band Graphic Equalizer with Genre Presets](#10-band-graphic-equalizer-with-genre-presets)
-   - [Photo Studio & EXIF Timeline](#photo-studio--exif-timeline)
    - [Adaptive Playback, Fullscreen & Hardware Acceleration](#adaptive-playback-fullscreen--hardware-acceleration)
    - [Open-Source Online Subtitle Engine](#open-source-online-subtitle-engine-movies--tv-series)
    - [Open-Source Synced Lyrics Engine (LRCLIB)](#open-source-synced-lyrics-engine-lrclib-integration)
@@ -65,7 +63,7 @@
 
 ## 1. Overview & Core Philosophy
 
-**VISTARA** is a production-quality, Windows-first media hub engineered to organise, browse, play, and safeguard your personal media collections across movies, television series, high-resolution music, and photo memories.
+**VISTARA** is a production-quality, Windows-first media hub engineered to organise, browse, play, and safeguard your personal media collections across movies, television series, and high-resolution music.
 
 ### Foundational Principles
 
@@ -93,7 +91,7 @@ Real, uncompressed 1080p desktop screenshots of VISTARA in production operation:
 > **Key Capabilities Displayed:**
 > - **Theatrical Featured Spotlight:** Displays high-priority watch recommendations with plot synopsis, release metadata, and direct "Resume Watching" action.
 > - **Continue Watching Tray:** Instant resume capability with accurate percentage indicators and remaining runtime.
-> - **Library Telemetry:** Real-time counts across Cinema (72 films), TV Series (6 shows / 176 episodes), Hi-Fi Audio (416 tracks / 393 albums), and Photo Vaults.
+> - **Library Telemetry:** Real-time counts across Cinema (72 films), TV Series (6 shows / 176 episodes), and Hi-Fi Audio (416 tracks / 393 albums).
 > - **Unified Dual-Tone Palette:** Crafted in solid Midnight Charcoal (`#10151B` / `#151A21`) and Electric Teal (`#35C6B0`) with zero gradients.
 
 ---
@@ -173,7 +171,6 @@ Real, uncompressed 1080p desktop screenshots of VISTARA in production operation:
 | **Smart Poster & Metadata Engine** | **Automated Online Theatrical Posters & Plot Synopses** (OMDB & Cinemeta open catalogs). Integrated 3-tab poster picker modal (online suggestions, custom file upload, direct image URL), single-click "⚡ Auto Fetch Posters" bulk tool, and background online metadata enrichment during library scanning. |
 | **TV Series Universe** | Series banners, season selector, episode lists, episode progress tracking, automated series poster & synopsis auto-fetch, auto season/episode filename identification (`S01E02`, `1x02`, `Season 1 Episode 2`), and next-episode autoplay. |
 | **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **3 View Modes (Table, Compact, Grid)**, **Interactive Audio Progress Bar** (micro-equalizer bars, energy shimmer beam, soundwave halo & pulse ripple, floating seek tooltip), **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (Beat-Synced Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
-| **Photo Gallery** | Chronological timeline, smart album grouping, full-screen lightbox viewer with zoom/rotate, EXIF metadata drawer (aperture, ISO, focal length, camera make/model), and multi-selection. |
 | **Libraries Engine** | Multi-folder support per library, incremental scanning, real-time SignalR progress updates, duplicate detection via fast SHA-256 headers, and safe preservation of missing files. |
 | **Media Integrity Monitor** | Enterprise library protection: streaming SHA-256 fingerprinting, corruption detection via FFprobe/FFmpeg, unexpected modification detection, disconnected external drive preservation (never deleted), Recovery Assistant with candidate scoring and 1-click relinking, and CSV/JSON health reporting. |
 | **Player Pipeline** | 3-tier streaming architecture (**DirectPlay** $\rightarrow$ **0% CPU DirectStream Remux** $\rightarrow$ **Adaptive HLS / Progressive Transcode**) with automatic detection of GPU acceleration (**NVIDIA NVENC, Intel QSV, AMD AMF, DXVA2, D3D11VA**) with 10-bit YUV420P conversion, borderless Fullscreen toggle (<kbd>F</kbd> / <kbd>F11</kbd>), responsive volume slider, and online open-source subtitles. |
@@ -229,16 +226,6 @@ VISTARA features an audiophile-grade audio pipeline with **dual-layer self-heali
 > * **Smart Sleep Timer:** 15m, 30m, 45m, 60m, or End of Track with gentle 20-second volume fadeout.
 > * **Synced `.lrc` Karaoke Lyrics:** Auto-scrolling, active line glow, and click-to-seek navigation.
 > * **Real-Time 60 FPS Visualizers:** 5 studio visualizers (Spectrum Bars, Liquid Wave, Radial Halo, Cosmic Embers, VU Meters) + Bottom Mini-Player Spectrum widget.
-
----
-
-### 🖼️ Photo & Graphic Formats
-
-| Category | Real-Life Logos & Supported Extensions | Features & Capabilities |
-| :--- | :--- | :--- |
-| **Standard Web & Digital** | ![JPEG](https://img.shields.io/badge/JPEG-E34F26?style=flat-square&logoColor=white) ![PNG](https://img.shields.io/badge/PNG-00599C?style=flat-square&logoColor=white) ![WebP](https://img.shields.io/badge/WebP-4285F4?style=flat-square&logo=google&logoColor=white) ![GIF](https://img.shields.io/badge/GIF-25D366?style=flat-square) ![BMP](https://img.shields.io/badge/BMP-4A5568?style=flat-square)<br>`.jpg` • `.jpeg` • `.png` • `.webp` • `.gif` • `.bmp` | Instant thumbnailing, full-resolution zoom & pan, orientation auto-correction |
-| **High Dynamic Range & Modern** | ![Apple HEIC](https://img.shields.io/badge/Apple_HEIC-000000?style=flat-square&logo=apple&logoColor=white) ![AVIF](https://img.shields.io/badge/AVIF-Alliance_for_Open_Media-4B32C3?style=flat-square) ![TIFF](https://img.shields.io/badge/TIFF-Lossless_Publishing-2B579A?style=flat-square)<br>`.heic` • `.avif` • `.tiff` • `.tif` | Non-destructive high-fidelity conversion, color space preservation |
-| **Digital Camera RAW** | ![Canon CR2](https://img.shields.io/badge/Canon_CR2-CC0000?style=flat-square&logo=canon&logoColor=white) ![Nikon NEF](https://img.shields.io/badge/Nikon_NEF-FFE600?style=flat-square&logo=nikon&logoColor=black) ![Sony ARW](https://img.shields.io/badge/Sony_ARW-000000?style=flat-square&logo=sony&logoColor=white)<br>`.raw` • `.cr2` (Canon) • `.nef` (Nikon) • `.arw` (Sony) | Embedded preview extraction and EXIF exposure analysis |
 
 ---
 
@@ -431,11 +418,6 @@ VISTARA elevates music listening into an audiophile studio experience:
   * Frequency Bands: 32 Hz, 64 Hz, 125 Hz, 250 Hz, 500 Hz, 1 kHz, 2 kHz, 4 kHz, 8 kHz, 16 kHz.
   * Presets: *Flat, Bass Boost, Treble Boost, Rock, Pop, Jazz, Classical, Electronic, Vocal Focus*.
 
-### Photo Studio & EXIF Timeline
-* Chronological photo stream grouped by capture month and year.
-* Non-destructive full-screen photo lightbox with keyboard navigation (`Left`, `Right`, `Esc`).
-* EXIF metadata extraction: Camera manufacturer, model, lens, exposure time, aperture $f$-number, and ISO speed.
-
 ### Adaptive Playback, Fullscreen & Hardware Acceleration
 1. **Direct Play:** If the client natively supports the media container and codecs (e.g. MP4 with H.264 video and AAC audio), the file is served directly using HTTP Range requests (`206 Partial Content`) with zero CPU overhead.
 2. **0% CPU DirectStream Remuxing:** For MKV and other containers carrying compatible H.264 video, FFmpeg executes instant on-the-fly stream remuxing (`-c:v copy -c:a aac -f mp4 pipe:1`). Video tracks pass through without decoding, guaranteeing 0% CPU consumption and immediate frame delivery (~10ms).
@@ -557,7 +539,7 @@ For detailed technical specifications, operational procedures, and developer gui
 
 | Document | Description |
 | :--- | :--- |
-| [User Manual](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/User_Manual.md) | End-user guide for dashboard navigation, cinema, music, and photo studios. |
+| [User Manual](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/User_Manual.md) | End-user guide for dashboard navigation, cinema, and music studios. |
 | [Technical Architecture](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/Technical_Architecture.md) | Architectural blueprints, component diagrams, and thread lifecycles. |
 | [API Reference](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/API_Reference.md) | Complete OpenAPI / REST endpoint specifications and DTO schemas. |
 | [Database Documentation](file:///d:/projects%20and%20certificates/projects/personal/VISTARA/docs/Database_Documentation.md) | SQLite schema, foreign key maps, indexing strategies, and FTS5 BM25 search. |
