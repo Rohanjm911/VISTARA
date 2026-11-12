@@ -20,6 +20,8 @@ export type UISoundType =
   | 'success'
   | 'play';
 
+import { VISTARA_FEMALE_VOICE_BASE64 } from './vistaraVoiceData';
+
 class AudioMasterEngine {
   private ctx: AudioContext | null = null;
   private isAudioUnlocked: boolean = false;
@@ -29,6 +31,8 @@ class AudioMasterEngine {
   private introSoundEnabled: boolean = true;
   private isIntroActive: boolean = false;
   private introMasterGain: GainNode | null = null;
+  private voiceBuffer: AudioBuffer | null = null;
+  private isDecodingVoice: boolean = false;
 
   // --- Ambient Soundscape State ---
   private ambientEnabled: boolean = true;
@@ -107,6 +111,7 @@ class AudioMasterEngine {
 
     if (ctx.state === 'running') {
       this.isAudioUnlocked = true;
+      this.preloadVoiceBuffer();
       // If ambient sound was enabled and queued, start it now (unless intro is active)
       if (this.ambientEnabled && !this.ambientRunning && !this.ambientDucked && !this.isIntroActive) {
         this.startAmbient();
@@ -115,6 +120,33 @@ class AudioMasterEngine {
     }
 
     return false;
+  }
+
+  /**
+   * Pre-loads and caches the decoded audio buffer for the soft female 'Vistara' voice
+   */
+  public async preloadVoiceBuffer(): Promise<AudioBuffer | null> {
+    if (this.voiceBuffer) return this.voiceBuffer;
+    if (this.isDecodingVoice) return null;
+    const ctx = this.getContext();
+    if (!ctx) return null;
+
+    this.isDecodingVoice = true;
+    try {
+      const binaryString = atob(VISTARA_FEMALE_VOICE_BASE64);
+      const len = binaryString.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      this.voiceBuffer = await ctx.decodeAudioData(bytes.buffer.slice(0));
+      return this.voiceBuffer;
+    } catch (e) {
+      console.warn('Could not decode embedded female voice buffer:', e);
+      return null;
+    } finally {
+      this.isDecodingVoice = false;
+    }
   }
 
   private attachGlobalUnlockers(): void {
@@ -306,6 +338,52 @@ class AudioMasterEngine {
           chime.start(hit2Time + 0.01);
           chime.stop(hit2Time + 2.2);
         });
+
+        // --- LAYER 6: Soft Cinematic Female Voice whisper saying "Vistara" ---
+        // Lands gracefully as the bass impact and chimes hold (t0 + 0.95s)
+        const voiceDelay = hit2Time + 0.42;
+        this.preloadVoiceBuffer().then((buffer) => {
+          if (!buffer) {
+            this.speakVistaraFallback();
+            return;
+          }
+          if (!this.isIntroActive) return;
+          try {
+            const voiceSource = ctx.createBufferSource();
+            voiceSource.buffer = buffer;
+
+            // Stereo panner for spacious ambient stereo field
+            let voiceNode: AudioNode = voiceSource;
+            if (ctx.createStereoPanner) {
+              const panner = ctx.createStereoPanner();
+              panner.pan.setValueAtTime(0, voiceDelay);
+              voiceSource.connect(panner);
+              voiceNode = panner;
+            }
+
+            // Gentle high-shelf filter for silky, breathy clarity
+            const airFilter = ctx.createBiquadFilter();
+            airFilter.type = 'highshelf';
+            airFilter.frequency.setValueAtTime(3200, voiceDelay);
+            airFilter.gain.setValueAtTime(2.5, voiceDelay);
+
+            const voiceGain = ctx.createGain();
+            voiceGain.gain.setValueAtTime(0.001, voiceDelay);
+            voiceGain.gain.linearRampToValueAtTime(0.85, voiceDelay + 0.08);
+            voiceGain.gain.setValueAtTime(0.85, voiceDelay + buffer.duration - 0.25);
+            voiceGain.gain.exponentialRampToValueAtTime(0.0001, voiceDelay + buffer.duration);
+
+            voiceNode.connect(airFilter);
+            airFilter.connect(voiceGain);
+            voiceGain.connect(master);
+
+            voiceSource.start(voiceDelay);
+          } catch {
+            this.speakVistaraFallback();
+          }
+        }).catch(() => {
+          this.speakVistaraFallback();
+        });
       } catch (err) {
         console.warn('Intro Ta-Dum playback note:', err);
       }
@@ -316,6 +394,30 @@ class AudioMasterEngine {
     } else {
       execute();
     }
+  }
+
+  /**
+   * Fallback Web Speech API engine using high-quality female natural voice
+   */
+  public speakVistaraFallback(): void {
+    if (typeof window === 'undefined' || !window.speechSynthesis) return;
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance('Vistara');
+      utterance.rate = 0.85;
+      utterance.pitch = 1.08;
+      utterance.volume = 0.75;
+      const voices = window.speechSynthesis.getVoices();
+      const femaleVoice = voices.find(
+        (v) =>
+          (v.lang.startsWith('en') || v.lang.startsWith('hi')) &&
+          /female|zira|jenny|aria|ava|samantha|victoria|karen|neerja|sonia/i.test(v.name)
+      );
+      if (femaleVoice) {
+        utterance.voice = femaleVoice;
+      }
+      window.speechSynthesis.speak(utterance);
+    } catch {}
   }
 
   /**
