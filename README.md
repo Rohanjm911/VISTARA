@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo-512.png" alt="VISTARA Logo" width="132" height="132" />
+  <img src="assets/logo.svg" alt="VISTARA Logo" width="140" height="140" />
 </p>
 
 <h1 align="center">VISTARA — Personal Media Universe</h1>

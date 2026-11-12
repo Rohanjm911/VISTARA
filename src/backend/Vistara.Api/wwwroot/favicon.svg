@@ -25,29 +25,29 @@
     </radialGradient>
   </defs>
 
-  {/* Squircle Badge */}
+  <!-- Squircle Badge -->
   <rect x="4" y="4" width="92" height="92" rx="24" fill="url(#favBg)" stroke="#222b3b" stroke-width="2" />
 
-  {/* Ambient Halo */}
+  <!-- Ambient Halo -->
   <circle cx="50" cy="50" r="32" fill="#38BDF8" opacity="0.18" />
 
-  {/* Orbit Ring */}
+  <!-- Orbit Ring -->
   <ellipse cx="50" cy="48" rx="38" ry="12" transform="rotate(-20 50 48)" stroke="#38BDF8" stroke-width="1.2" stroke-dasharray="3 6 22 8" opacity="0.45" />
 
-  {/* Left Wing */}
+  <!-- Left Wing -->
   <path d="M 16 22 L 47 85 L 47 52 L 32 22 Z" fill="url(#favLeftWing)" />
 
-  {/* Right Wing */}
+  <!-- Right Wing -->
   <path d="M 84 22 L 53 85 L 53 52 L 68 22 Z" fill="url(#favRightWing)" />
 
-  {/* Inner Keystone */}
+  <!-- Inner Keystone -->
   <path d="M 47 52 L 50 85 L 53 52 L 50 48 Z" fill="url(#favInnerFacet)" />
 
-  {/* Aperture Star Beacon */}
+  <!-- Aperture Star Beacon -->
   <polygon points="50,15 57,28 50,41 43,28" fill="url(#favCoreGlow)" />
   <polygon points="50,22 53,28 50,34 47,28" fill="#FFFFFF" />
 
-  {/* Precision Highlights */}
+  <!-- Precision Highlights -->
   <path d="M 16 22 L 32 22 L 47 52" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" opacity="0.5" />
   <path d="M 84 22 L 68 22 L 53 52" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" opacity="0.9" />
   <line x1="50" y1="56" x2="50" y2="85" stroke="#38BDF8" stroke-width="1.2" opacity="0.8" />

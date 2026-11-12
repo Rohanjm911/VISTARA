@@ -37,6 +37,7 @@ import { LyricsBeatVisualizer } from './LyricsBeatVisualizer';
 import { AudioProgressBar } from './AudioProgressBar';
 import { useLyricsBeat } from '../hooks/useLyricsBeat';
 import { devanagariToHinglish, hasDevanagari } from '../utils/hinglish';
+import { VistaraLogo } from './VistaraLogo';
 
 export interface LyricStanza {
   id: string;
@@ -617,8 +618,9 @@ export const NowPlayingModal: React.FC = () => {
 
         {/* 2. Apple Music Top Frosted Header Bar */}
         <div className="relative z-20 flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/[0.08] bg-[#0c1017]/65 backdrop-blur-2xl">
-          {/* Left: Animated NOW PLAYING Status Pill */}
+          {/* Left: Animated NOW PLAYING Status Pill with Vistara Emblem */}
           <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-white/[0.08] border border-white/[0.1] backdrop-blur-md shadow-inner">
+            <VistaraLogo size={15} withGlow={true} animated={true} />
             <div className="flex items-end space-x-0.5 h-3">
               <span
                 className={`w-0.5 bg-accent rounded-full transition-all duration-300 ${
