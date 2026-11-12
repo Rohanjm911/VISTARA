@@ -316,7 +316,8 @@ class AudioMasterEngine {
   }
 
   /**
-   * Helper to play the soft female whisper "Vistara" seamlessly over any intro profile.
+   * Helper to play the seductive, breathy female whisper "Vistara" seamlessly over any intro profile.
+   * Mastered with warm proximity EQ, silky air band, and intimate Haas stereo imaging.
    */
   private playVoiceWhisper(ctx: AudioContext, master: GainNode, triggerTime: number): void {
     this.preloadVoiceBuffer()
@@ -331,29 +332,40 @@ class AudioMasterEngine {
           const voiceSource = ctx.createBufferSource();
           voiceSource.buffer = buffer;
 
-          let voiceNode: AudioNode = voiceSource;
-          if (ctx.createStereoPanner) {
-            const panner = ctx.createStereoPanner();
-            panner.pan.setValueAtTime(0, triggerTime);
-            voiceSource.connect(panner);
-            voiceNode = panner;
-          }
+          // 1. Proximity Warmth Filter (gives that close-to-the-ear intimate sensation)
+          const warmFilter = ctx.createBiquadFilter();
+          warmFilter.type = 'lowshelf';
+          warmFilter.frequency.setValueAtTime(240, triggerTime);
+          warmFilter.gain.setValueAtTime(2.5, triggerTime);
 
-          // Gentle high-shelf filter for silky, breathy clarity
+          // 2. Silky Air Band Filter (ultra-breathy ASMR high frequencies)
           const airFilter = ctx.createBiquadFilter();
           airFilter.type = 'highshelf';
-          airFilter.frequency.setValueAtTime(3200, triggerTime);
-          airFilter.gain.setValueAtTime(2.8, triggerTime);
+          airFilter.frequency.setValueAtTime(7500, triggerTime);
+          airFilter.gain.setValueAtTime(4.2, triggerTime);
 
+          // 3. Stereo Spatial Widener / Haas Micro-Space
+          const delay = ctx.createDelay();
+          delay.delayTime.setValueAtTime(0.018, triggerTime);
+          const delayGain = ctx.createGain();
+          delayGain.gain.setValueAtTime(0.32, triggerTime);
+
+          // 4. Smooth Intimate Dynamics Envelope
           const voiceGain = ctx.createGain();
           voiceGain.gain.setValueAtTime(0.001, triggerTime);
-          voiceGain.gain.linearRampToValueAtTime(0.85, triggerTime + 0.08);
-          voiceGain.gain.setValueAtTime(0.85, triggerTime + buffer.duration - 0.25);
+          voiceGain.gain.linearRampToValueAtTime(0.92, triggerTime + 0.12);
+          voiceGain.gain.setValueAtTime(0.92, triggerTime + buffer.duration - 0.35);
           voiceGain.gain.exponentialRampToValueAtTime(0.0001, triggerTime + buffer.duration);
 
-          voiceNode.connect(airFilter);
+          voiceSource.connect(warmFilter);
+          warmFilter.connect(airFilter);
           airFilter.connect(voiceGain);
           voiceGain.connect(master);
+
+          // Haas spatial branch for immersive binaural wrap
+          airFilter.connect(delay);
+          delay.connect(delayGain);
+          delayGain.connect(master);
 
           voiceSource.start(triggerTime);
         } catch {
