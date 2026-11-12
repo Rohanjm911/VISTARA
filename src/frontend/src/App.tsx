@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { bootstrapSecurity, apiRequest } from './api/client';
 import { signalRService } from './api/signalr';
 import { ThemeProvider } from './context/ThemeContext';
-import { PlayerProvider } from './context/PlayerContext';
+import { PlayerProvider, usePlayer } from './context/PlayerContext';
 import { Sidebar, NavTab } from './components/Sidebar';
 import { Titlebar } from './components/Titlebar';
 import { MiniPlayer } from './components/MiniPlayer';
@@ -28,6 +28,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { LibraryDto } from './types';
 
 export const AppContent: React.FC = () => {
+  const { activeTrack } = usePlayer();
   const urlParams = new URLSearchParams(window.location.search);
   const skipSplash = urlParams.get('nosplash') === '1';
   const urlTab = urlParams.get('tab') as NavTab | null;
@@ -152,7 +153,19 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#0f141b] text-[#f4f7f8] overflow-hidden select-none">
+    <div className="flex flex-col h-screen w-screen bg-[#080a0f] text-[#f4f7f8] overflow-hidden select-none relative">
+      {/* Signature Apple Music Dynamic Living Fluid Mesh Background Layer */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+        <div className="absolute -top-32 -left-32 w-[520px] h-[520px] rounded-full bg-[#FA2D48]/10 blur-[130px] apple-mesh-orb-1" />
+        <div className="absolute top-1/2 -right-32 w-[560px] h-[560px] rounded-full bg-[#38BDF8]/10 blur-[130px] apple-mesh-orb-2" />
+        <div className="absolute -bottom-32 left-1/3 w-[480px] h-[480px] rounded-full bg-[#818CF8]/08 blur-[130px] apple-mesh-orb-3" />
+        {activeTrack?.artworkUrl && (
+          <div className="absolute inset-0 opacity-20 filter blur-[120px] scale-150 transform transition-all duration-1000">
+            <img src={activeTrack.artworkUrl} alt="" className="w-full h-full object-cover" />
+          </div>
+        )}
+      </div>
+
       {/* Title Bar with Search, Status, and Controls */}
       <div
         className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -172,7 +185,7 @@ export const AppContent: React.FC = () => {
       >
         <Sidebar currentTab={currentTab} onSelectTab={setCurrentTab} />
 
-        <main className="flex-1 flex flex-col overflow-hidden bg-[#0f141b] relative">
+        <main className="flex-1 flex flex-col overflow-hidden bg-transparent relative">
           {renderActivePage()}
         </main>
       </div>

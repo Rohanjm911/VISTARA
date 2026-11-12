@@ -570,10 +570,10 @@ export const NowPlayingModal: React.FC = () => {
       onClick={(e) => {
         if (e.target === e.currentTarget) setIsNowPlayingOpen(false);
       }}
-      className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 select-none transition-colors duration-200 overflow-hidden ${
+      className={`fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 select-none transition-colors duration-300 overflow-hidden ${
         isMaximized
           ? 'bg-[#06080d] p-0'
-          : 'bg-black/75 backdrop-blur-md animate-in fade-in duration-200'
+          : 'bg-black/75 backdrop-blur-xl animate-in fade-in duration-300'
       }`}
     >
       <div
@@ -581,19 +581,27 @@ export const NowPlayingModal: React.FC = () => {
           isMaximized
             ? 'w-full h-full bg-[#06080d] rounded-none'
             : activeTab === 'lyrics' || activeTab === 'queue'
-            ? 'w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] animate-in zoom-in-95 duration-200'
+            ? 'w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017]/80 backdrop-blur-3xl border border-white/[0.12] rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.15)] animate-in zoom-in-95 duration-200'
             : sideLyricsRevealed && !userDismissedSideLyrics
-            ? 'w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
-            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
+            ? 'w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017]/80 backdrop-blur-3xl border border-white/[0.12] rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
+            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017]/80 backdrop-blur-3xl border border-white/[0.12] rounded-3xl shadow-[0_30px_90px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.15)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
         }`}
       >
-        {/* 1. Subtle Ambient Album Aura in Background */}
-        {artworkUrl && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-25 filter blur-[60px] scale-125 transform">
-            <img src={artworkUrl} alt="" className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-[#0c1017]/85" />
-          </div>
-        )}
+        {/* 1. Signature Apple Music Dynamic Living Fluid Mesh & Artwork Glow */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+          {/* Animated Liquid Color Blobs */}
+          <div className="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-[#FA2D48]/35 blur-[100px] apple-mesh-orb-1" />
+          <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full bg-[#38BDF8]/35 blur-[100px] apple-mesh-orb-2" />
+          <div className="absolute top-1/3 right-1/4 w-80 h-80 rounded-full bg-[#818CF8]/30 blur-[100px] apple-mesh-orb-3" />
+
+          {/* Living Artwork Blur Backdrop */}
+          {artworkUrl && (
+            <div className="absolute inset-0 opacity-40 filter blur-[90px] scale-125 transform transition-all duration-700">
+              <img src={artworkUrl} alt="" className="w-full h-full object-cover" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-[#0c1017]/60 backdrop-blur-xl" />
+        </div>
 
         {/* 1.5. Cosmic Embers Background Visualizer */}
         {visualizerMode === 'embers' && (
@@ -607,10 +615,10 @@ export const NowPlayingModal: React.FC = () => {
           </div>
         )}
 
-        {/* 2. Top Header Navigation Bar */}
-        <div className="relative z-20 flex-shrink-0 flex items-center justify-between px-4 sm:px-5 py-2.5 sm:py-3.5 border-b border-[#1b212d]/70 bg-[#0c0f16]/90 backdrop-blur-md">
+        {/* 2. Apple Music Top Frosted Header Bar */}
+        <div className="relative z-20 flex-shrink-0 flex items-center justify-between px-4 sm:px-6 py-3 border-b border-white/[0.08] bg-[#0c1017]/65 backdrop-blur-2xl">
           {/* Left: Animated NOW PLAYING Status Pill */}
-          <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-[#121620]/80 border border-accent/30 shadow-inner">
+          <div className="flex items-center space-x-2 px-3 py-1 rounded-full bg-white/[0.08] border border-white/[0.1] backdrop-blur-md shadow-inner">
             <div className="flex items-end space-x-0.5 h-3">
               <span
                 className={`w-0.5 bg-accent rounded-full transition-all duration-300 ${
@@ -633,20 +641,20 @@ export const NowPlayingModal: React.FC = () => {
             </span>
           </div>
 
-          {/* Center: Tabs Switcher */}
-          <div className="flex items-center space-x-1 p-0.5 bg-[#10141d]/90 border border-[#1e2536] rounded-xl text-xs">
+          {/* Center: Apple Segmented Pill Switcher */}
+          <div className="flex items-center space-x-1 p-0.5 bg-white/[0.06] border border-white/[0.08] rounded-full text-xs backdrop-blur-md shadow-inner">
             <button
               onClick={() => setActiveTab('player')}
-              className={`px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
-                activeTab === 'player' ? 'bg-accent text-white shadow-sm' : 'text-[#9ca3af] hover:text-white'
+              className={`px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer font-medium ${
+                activeTab === 'player' ? 'bg-white/[0.18] text-white shadow-sm font-semibold' : 'text-white/60 hover:text-white'
               }`}
             >
               Track
             </button>
             <button
               onClick={() => setActiveTab('queue')}
-              className={`flex items-center space-x-1 px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
-                activeTab === 'queue' ? 'bg-accent text-white shadow-sm' : 'text-[#9ca3af] hover:text-white'
+              className={`flex items-center space-x-1.5 px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer font-medium ${
+                activeTab === 'queue' ? 'bg-white/[0.18] text-white shadow-sm font-semibold' : 'text-white/60 hover:text-white'
               }`}
             >
               <ListMusic className="w-3.5 h-3.5" />
@@ -659,8 +667,8 @@ export const NowPlayingModal: React.FC = () => {
             </button>
             <button
               onClick={() => setActiveTab('lyrics')}
-              className={`flex items-center space-x-1 px-3 py-1 rounded-lg transition-colors cursor-pointer font-medium ${
-                activeTab === 'lyrics' ? 'bg-accent text-white shadow-sm' : 'text-[#9ca3af] hover:text-white'
+              className={`flex items-center space-x-1.5 px-3.5 py-1 rounded-full transition-all duration-200 cursor-pointer font-medium ${
+                activeTab === 'lyrics' ? 'bg-white/[0.18] text-white shadow-sm font-semibold' : 'text-white/60 hover:text-white'
               }`}
             >
               <AlignLeft className="w-3.5 h-3.5" />
@@ -678,16 +686,16 @@ export const NowPlayingModal: React.FC = () => {
                   ? `Sleep Timer Active: ${sleepTimerRemainingSeconds === -1 ? 'End of Track' : `${Math.ceil(sleepTimerRemainingSeconds / 60)}m remaining`}`
                   : 'Smart Sleep Timer'
               }
-              className={`p-1.5 rounded-lg border transition-all cursor-pointer flex items-center space-x-1 ${
+              className={`w-8 h-8 rounded-full border transition-all cursor-pointer flex items-center justify-center ${
                 sleepTimerRemainingSeconds !== null
                   ? 'bg-accent/20 text-accent border-accent/50 shadow-sm'
-                  : 'bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border-[#242c3d]'
+                  : 'bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border-white/[0.08]'
               }`}
             >
               <Moon className="w-3.5 h-3.5" />
               {sleepTimerRemainingSeconds !== null && (
-                <span className="text-[10px] font-mono hidden sm:inline font-semibold">
-                  {sleepTimerRemainingSeconds === -1 ? 'Track End' : `${Math.ceil(sleepTimerRemainingSeconds / 60)}m`}
+                <span className="text-[9px] font-mono font-semibold ml-0.5">
+                  {sleepTimerRemainingSeconds === -1 ? 'End' : `${Math.ceil(sleepTimerRemainingSeconds / 60)}m`}
                 </span>
               )}
             </button>
@@ -695,7 +703,7 @@ export const NowPlayingModal: React.FC = () => {
             <button
               onClick={() => setIsEqualizerOpen(true)}
               title="Audio Equalizer & Studio Processing"
-              className="p-1.5 rounded-lg bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border border-[#242c3d] transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border border-white/[0.08] flex items-center justify-center transition-all cursor-pointer"
             >
               <Sliders className="w-3.5 h-3.5" />
             </button>
@@ -703,7 +711,7 @@ export const NowPlayingModal: React.FC = () => {
             <button
               onClick={() => setIsMaximized((prev) => !prev)}
               title={isMaximized ? 'Windowed View' : 'Maximize to Full Screen'}
-              className="p-1.5 rounded-lg bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border border-[#242c3d] transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border border-white/[0.08] flex items-center justify-center transition-all cursor-pointer"
             >
               {isMaximized ? <Minimize2 className="w-3.5 h-3.5" /> : <Maximize2 className="w-3.5 h-3.5" />}
             </button>
@@ -711,7 +719,7 @@ export const NowPlayingModal: React.FC = () => {
             <button
               onClick={() => setIsNowPlayingOpen(false)}
               title="Close (Esc)"
-              className="p-1.5 rounded-lg bg-[#141822] hover:bg-rose-500/20 text-[#9ca3af] hover:text-rose-300 border border-[#242c3d] hover:border-rose-500/40 transition-colors cursor-pointer"
+              className="w-8 h-8 rounded-full bg-white/[0.08] hover:bg-rose-500/25 text-white/70 hover:text-rose-300 border border-white/[0.08] hover:border-rose-500/40 flex items-center justify-center transition-all cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -995,19 +1003,22 @@ export const NowPlayingModal: React.FC = () => {
                 </div>
               </div>
 
-              {/* Right Column: Dynamic Synced Lyrics Beside Cassette Tape */}
+              {/* Right Column: Signature Apple Music Dynamic Synced Lyrics Beside Cassette Tape */}
               {sideLyricsRevealed && !userDismissedSideLyrics && (
-                <div className="w-full lg:w-[380px] xl:w-[440px] h-[360px] sm:h-[420px] lg:h-[480px] flex flex-col bg-[#0b0e15]/95 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-right-8 duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] flex-shrink-0">
+                <div className="w-full lg:w-[410px] xl:w-[470px] h-[380px] sm:h-[440px] lg:h-[500px] flex flex-col bg-black/40 backdrop-blur-2xl border border-white/[0.1] rounded-3xl p-4 sm:p-5 shadow-2xl relative overflow-hidden flex-shrink-0 animate-in fade-in slide-in-from-right-8 duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]">
+                  {/* Subtle internal living glow */}
+                  <div className="absolute -top-12 -right-12 w-48 h-48 rounded-full bg-accent/20 blur-3xl pointer-events-none -z-10" />
+
                   {/* Side Lyrics Header */}
-                  <div className="relative z-10 flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] flex-shrink-0">
+                  <div className="relative z-10 flex items-center justify-between pb-3 mb-2 border-b border-white/[0.08] flex-shrink-0">
                     <div className="flex items-center space-x-2">
-                      <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
-                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#F8FAFC]">
+                      <span className="w-2 h-2 rounded-full bg-[#FA2D48] animate-pulse" />
+                      <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-white/90">
                         SYNCED LYRICS
                       </span>
                       {lyricsSource && (
-                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-accent/15 text-accent border border-accent/30 uppercase font-semibold">
-                          {lyricsSource === 'local_lrc' ? 'LOCAL LRC' : lyricsSource === 'lrclib' ? 'LRCLIB' : 'MULTI-SOURCE'}
+                        <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/[0.08] text-white/70 border border-white/[0.1] uppercase font-semibold">
+                          {lyricsSource === 'local_lrc' ? 'LRC' : lyricsSource === 'lrclib' ? 'LRCLIB' : 'HI-RES'}
                         </span>
                       )}
                     </div>
@@ -1024,10 +1035,10 @@ export const NowPlayingModal: React.FC = () => {
                           }
                         }}
                         disabled={translationLoading}
-                        className={`px-2 py-0.5 rounded-md border text-[10px] font-mono font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
+                        className={`px-2.5 py-1 rounded-full border text-[10px] font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
                           isTranslationActive
-                            ? 'bg-accent text-white border-accent shadow-[0_0_8px_rgba(56,189,248,0.4)]'
-                            : 'bg-white/[0.04] hover:bg-white/[0.08] text-[#94A3B8] hover:text-white border-white/[0.08]'
+                            ? 'bg-accent text-white border-accent shadow-[0_0_12px_rgba(56,189,248,0.4)]'
+                            : 'bg-white/[0.06] hover:bg-white/[0.12] text-white/70 hover:text-white border-white/[0.08]'
                         }`}
                         title="Toggle real-time bilingual Hinglish lyrics translation"
                       >
@@ -1039,23 +1050,23 @@ export const NowPlayingModal: React.FC = () => {
                         <button
                           onClick={handleAutoFetchSyncedLyrics}
                           disabled={lyricsLoading || isAutoFetching}
-                          className="px-2 py-0.5 rounded-md bg-accent/20 hover:bg-accent text-accent hover:text-white border border-accent/40 text-[10px] font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
+                          className="px-2.5 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.16] text-white/80 hover:text-white border border-white/[0.1] text-[10px] font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
                           title="Auto fetch synced lyrics"
                         >
-                          <Sparkles className="w-2.5 h-2.5" />
+                          <Sparkles className="w-2.5 h-2.5 text-accent" />
                           <span>Sync</span>
                         </button>
                       )}
                       <button
                         onClick={() => setActiveTab('lyrics')}
-                        className="p-1 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors text-[10px] font-mono font-medium"
+                        className="px-2 py-1 rounded-full text-white/60 hover:text-white hover:bg-white/[0.08] transition-colors text-[10px] font-semibold cursor-pointer"
                         title="Open Full Lyrics Screen"
                       >
                         Expand ↗
                       </button>
                       <button
                         onClick={() => setUserDismissedSideLyrics(true)}
-                        className="p-1 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
+                        className="p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
                         title="Hide side lyrics"
                       >
                         <X className="w-3.5 h-3.5" />
@@ -1065,8 +1076,8 @@ export const NowPlayingModal: React.FC = () => {
 
                   {/* Real-time beat responsive frequency line */}
                   {isPlaying && (
-                    <div className="w-full h-0.5 mb-2 bg-white/[0.04] rounded-full overflow-hidden flex items-center gap-0.5">
-                      {[...Array(20)].map((_, i) => (
+                    <div className="w-full h-0.5 mb-2.5 bg-white/[0.06] rounded-full overflow-hidden flex items-center gap-0.5 pointer-events-none">
+                      {[...Array(24)].map((_, i) => (
                         <div
                           key={i}
                           className="flex-1 bg-accent/80 transition-all duration-75 rounded-full"
@@ -1079,16 +1090,16 @@ export const NowPlayingModal: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Side Lyrics Scrollable Stream */}
+                  {/* Apple Music Style Side Lyrics Stream */}
                   <div
                     ref={sideLyricsContainerRef}
-                    className="relative flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-2 py-2 px-1 scroll-smooth"
+                    className="relative flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-3 py-3 px-1 scroll-smooth"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                   >
                     {lyricsLoading && !activeTrack.lyrics ? (
                       <div className="h-full flex flex-col items-center justify-center text-center space-y-2 py-8">
                         <Sparkles className="w-5 h-5 text-accent animate-spin" />
-                        <span className="text-xs text-[#94A3B8] font-medium">Auto-fetching lyrics...</span>
+                        <span className="text-xs text-white/70 font-medium">Auto-fetching lyrics...</span>
                       </div>
                     ) : parsedLyrics && parsedLyrics.length > 0 ? (
                       parsedLyrics.map((item, idx) => {
@@ -1102,58 +1113,51 @@ export const NowPlayingModal: React.FC = () => {
                             key={idx}
                             ref={isCurrent ? sideActiveLyricRef : null}
                             onClick={() => seek(item.time)}
-                            className={`group relative py-2.5 px-3.5 rounded-2xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none flex items-center justify-between gap-3 ${
+                            className={`group relative py-2 px-2.5 rounded-2xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none flex items-start justify-between gap-3 ${
                               isCurrent
-                                ? 'text-white font-extrabold bg-gradient-to-r from-accent/25 via-accent/15 to-[#0b1019] border border-accent/70 shadow-[0_0_24px_rgba(56,189,248,0.35),inset_0_1px_1px_rgba(255,255,255,0.2)] scale-[1.025] translate-x-1'
+                                ? 'text-white font-extrabold scale-[1.02] origin-left'
                                 : isPast
-                                ? 'text-[#64748B] hover:text-white/85 hover:bg-white/[0.03] opacity-55 hover:opacity-100'
-                                : 'text-[#94A3B8] hover:text-white hover:bg-white/[0.04] opacity-85 hover:opacity-100'
+                                ? 'opacity-35 blur-[0.35px] text-white/90 font-bold hover:opacity-85 hover:blur-none hover:translate-x-1'
+                                : 'opacity-45 blur-[0.35px] text-white font-bold hover:opacity-90 hover:blur-none hover:translate-x-1'
                             }`}
                           >
-                            {/* Dynamic Glowing Left Accent Indicator on Active Line */}
-                            {isCurrent && (
-                              <div className="absolute left-0 top-2.5 bottom-2.5 w-1 bg-accent rounded-r-full shadow-[0_0_10px_rgba(56,189,248,1)]" />
-                            )}
-
                             <div className="flex flex-col min-w-0 flex-1">
-                              {/* Main Lyric Line */}
+                              {/* Main Lyric Line (Apple Music Typography) */}
                               <div className="flex items-center space-x-2">
                                 {isCurrent && (
-                                  <span className="flex items-end space-x-0.5 h-3.5 flex-shrink-0 mr-1">
+                                  <span className="flex items-end space-x-0.5 h-3.5 flex-shrink-0 mr-1.5">
                                     <span
-                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_6px_rgba(56,189,248,0.8)]"
+                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(56,189,248,0.9)]"
                                       style={{ height: `${Math.max(4, Math.min(14, beatData.bassLevel * 22)) || 10}px` }}
                                     />
                                     <span
-                                      className="w-0.5 bg-white rounded-full transition-all duration-75 shadow-[0_0_6px_#ffffff]"
+                                      className="w-0.5 bg-white rounded-full transition-all duration-75 shadow-[0_0_8px_#ffffff]"
                                       style={{ height: `${Math.max(4, Math.min(14, beatData.midLevel * 18)) || 6}px` }}
                                     />
                                     <span
-                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_6px_rgba(56,189,248,0.8)]"
+                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(56,189,248,0.9)]"
                                       style={{ height: `${Math.max(4, Math.min(14, beatData.trebleLevel * 20)) || 12}px` }}
                                     />
                                   </span>
                                 )}
                                 <span
-                                  className={`leading-snug transition-all duration-200 ${
+                                  className={`leading-snug transition-all duration-300 ${
                                     isCurrent
-                                      ? 'text-white font-extrabold text-sm sm:text-base tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
-                                      : 'text-xs font-medium'
+                                      ? 'text-white font-black text-base sm:text-lg md:text-xl tracking-tight drop-shadow-[0_2px_16px_rgba(255,255,255,0.45)]'
+                                      : 'text-sm sm:text-base font-bold'
                                   }`}
                                 >
                                   {item.text || '♪'}
                                 </span>
                               </div>
 
-                              {/* Translation / Hinglish Line Directly Below Main Text */}
+                              {/* Translation / Hinglish Subtitle Directly Below Main Text */}
                               {isTranslationActive && subtitleText && (
                                 <span
-                                  className={`block font-normal leading-normal italic transition-all duration-300 ${
+                                  className={`block font-medium leading-normal italic transition-all duration-300 ${
                                     isCurrent
-                                      ? 'text-xs sm:text-[13px] text-[#7DD3FC] font-semibold mt-1 pl-4 drop-shadow-[0_0_10px_rgba(56,189,248,0.5)] animate-in fade-in-0 slide-in-from-top-1'
-                                      : isPast
-                                      ? 'text-[10.5px] text-[#475569] mt-0.5'
-                                      : 'text-[10.5px] text-[#64748B] mt-0.5'
+                                      ? 'text-xs sm:text-[13.5px] text-[#7DD3FC] font-semibold mt-1 pl-4 drop-shadow-[0_0_12px_rgba(56,189,248,0.45)] animate-in fade-in-0 slide-in-from-top-1.5'
+                                      : 'text-[11px] text-white/40 mt-0.5 pl-4'
                                   }`}
                                 >
                                   {subtitleText}
@@ -1162,8 +1166,8 @@ export const NowPlayingModal: React.FC = () => {
                             </div>
 
                             <span
-                              className={`text-[9px] font-mono flex-shrink-0 transition-colors ${
-                                isCurrent ? 'text-accent font-bold' : 'text-[#475569]'
+                              className={`text-[9px] font-mono flex-shrink-0 pt-0.5 transition-colors ${
+                                isCurrent ? 'text-accent font-bold drop-shadow-[0_0_6px_rgba(56,189,248,0.6)]' : 'text-white/30'
                               }`}
                             >
                               {formatTime(item.time)}
@@ -1273,41 +1277,42 @@ export const NowPlayingModal: React.FC = () => {
             </div>
           ) : (
             /* ============================================================= */
-            /* MODE C: SYNCHRONIZED KARAOKE / TEXT LYRICS DISPLAY            */
+            /* MODE C: APPLE MUSIC FULLSCREEN KARAOKE & LYRICS DISPLAY       */
             /* ============================================================= */
-            <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-[#0d1017] border border-[#202736] rounded-xl p-2.5 sm:p-4 shadow-2xl overflow-hidden relative animate-in fade-in duration-200">
+            <div className="w-full h-full flex-1 min-h-0 flex flex-col bg-black/40 backdrop-blur-3xl border border-white/[0.1] rounded-2xl p-3 sm:p-5 shadow-2xl overflow-hidden relative animate-in fade-in duration-200">
               {/* Real-Time Beat Reactive Visualizer Canvas behind lyrics */}
               <LyricsBeatVisualizer analyserRef={analyserRef} isPlaying={isPlaying} />
 
               {/* Header Bar */}
-              <div className="relative z-10 flex flex-wrap items-center justify-between border-b border-[#202736] pb-2 mb-1.5 gap-2 flex-shrink-0">
+              <div className="relative z-10 flex flex-wrap items-center justify-between border-b border-white/[0.08] pb-2.5 mb-2 gap-2 flex-shrink-0">
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#9ca3af] truncate max-w-[180px] sm:max-w-xs">
+                  <span className="w-2 h-2 rounded-full bg-[#FA2D48] animate-pulse" />
+                  <h2 className="text-[12px] font-bold uppercase tracking-[0.16em] text-white/90 truncate max-w-[180px] sm:max-w-xs">
                     LYRICS · {activeTrack.title}
                   </h2>
                   {parsedLyrics ? (
-                    <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-accent/20 text-accent border border-accent/40 flex items-center gap-1 shadow-sm">
+                    <span className="text-[9px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-accent/20 text-accent border border-accent/40 flex items-center gap-1 shadow-sm">
                       <Sparkles className="w-2.5 h-2.5 text-accent animate-pulse" /> Synced Karaoke
                     </span>
                   ) : activeTrack.lyrics ? (
-                    <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#1B222B] text-[#F4F7F8] border border-[#2A3442] flex items-center gap-1 shadow-sm">
+                    <span className="text-[9px] font-mono font-semibold px-2.5 py-0.5 rounded-full bg-white/[0.08] text-white/80 border border-white/[0.1] flex items-center gap-1 shadow-sm">
                       <AlignLeft className="w-2.5 h-2.5 text-accent" /> Formatted Stanzas
                     </span>
                   ) : null}
                   <span
-                    className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#1B222B] text-accent border border-accent/35 flex items-center gap-1 uppercase"
+                    className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-white/[0.06] text-white/60 border border-white/[0.08] flex items-center gap-1 uppercase"
                     title="Multi-Source Lyrics Pipeline (Local LRC • LRCLIB • iTunes • Lyrics.ovh)"
                   >
                     <Globe className="w-2.5 h-2.5" />{' '}
                     {lyricsSource === 'local_lrc'
-                      ? 'LOCAL LRC'
+                      ? 'LRC'
                       : lyricsSource === 'lyrics.ovh'
                       ? 'LYRICS.OVH'
                       : lyricsSource === 'embedded'
                       ? 'EMBEDDED'
                       : lyricsSource === 'lrclib'
                       ? 'LRCLIB'
-                      : 'MULTI-SOURCE'}
+                      : 'HI-RES'}
                   </span>
                 </div>
 
@@ -1316,11 +1321,11 @@ export const NowPlayingModal: React.FC = () => {
                   <button
                     onClick={handleAutoFetchSyncedLyrics}
                     disabled={lyricsLoading || isAutoFetching}
-                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-semibold flex items-center space-x-1.5 transition-all cursor-pointer shadow-sm ${
+                    className={`px-3 py-1 rounded-full border text-[11px] font-semibold flex items-center space-x-1.5 transition-all cursor-pointer shadow-sm ${
                       isAutoFetching
                         ? 'bg-accent/30 text-accent border-accent animate-pulse'
                         : parsedLyrics
-                        ? 'bg-[#141822] hover:bg-accent/15 text-accent hover:text-white border-[#242c3d]'
+                        ? 'bg-white/[0.08] hover:bg-white/[0.15] text-white/80 hover:text-white border-white/[0.08]'
                         : 'bg-accent/20 text-accent hover:text-white border-accent/40 shadow-sm'
                     }`}
                     title="Automatically find and sync lyrics for this track from open-source archive"
@@ -1341,10 +1346,10 @@ export const NowPlayingModal: React.FC = () => {
                         }
                       }}
                       disabled={translationLoading}
-                      className={`px-2 py-1 rounded-l-lg border text-[11px] font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
+                      className={`px-2.5 py-1 rounded-l-full border text-[11px] font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
                         isTranslationActive
                           ? 'bg-accent text-white border-accent shadow-[0_0_12px_rgba(56, 189, 248,0.4)]'
-                          : 'bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border-[#242c3d]'
+                          : 'bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border-white/[0.08]'
                       }`}
                       title="Toggle bilingual real-time lyrics translation"
                     >
@@ -1369,7 +1374,7 @@ export const NowPlayingModal: React.FC = () => {
                           handleTranslateLyrics(newLang);
                         }
                       }}
-                      className="py-1 px-1 rounded-r-lg border border-l-0 text-[10px] font-mono font-bold bg-[#10141d] text-accent border-[#242c3d] hover:border-accent cursor-pointer focus:outline-none"
+                      className="py-1 px-1 rounded-r-full border border-l-0 text-[10px] font-mono font-bold bg-white/[0.08] text-accent border-white/[0.08] hover:border-accent cursor-pointer focus:outline-none"
                       title="Choose target translation language"
                     >
                       <option value="hi">HINGLISH</option>
@@ -1383,7 +1388,7 @@ export const NowPlayingModal: React.FC = () => {
                   {/* Lyrics Formatting Toolbar: Alignment & Font Size */}
                   <button
                     onClick={toggleLyricsAlign}
-                    className="p-1.5 rounded-lg bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border border-[#242c3d] transition-colors cursor-pointer"
+                    className="p-1.5 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border border-white/[0.08] transition-colors cursor-pointer"
                     title={`Alignment: ${lyricsAlign === 'center' ? 'Center (Click for Left)' : 'Left (Click for Center)'}`}
                   >
                     {lyricsAlign === 'center' ? <AlignCenter className="w-3.5 h-3.5" /> : <AlignLeft className="w-3.5 h-3.5" />}
@@ -1391,10 +1396,10 @@ export const NowPlayingModal: React.FC = () => {
 
                   <button
                     onClick={toggleLyricsSize}
-                    className={`px-2 py-1 rounded-lg border text-[11px] font-bold font-mono transition-colors cursor-pointer ${
+                    className={`px-2.5 py-1 rounded-full border text-[11px] font-bold font-mono transition-colors cursor-pointer ${
                       lyricsSize === 'large'
                         ? 'bg-accent/20 text-accent border-accent/40'
-                        : 'bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border-[#242c3d]'
+                        : 'bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border-white/[0.08]'
                     }`}
                     title={`Text Size: ${lyricsSize === 'large' ? 'Large (Click for Normal)' : 'Normal (Click for Large)'}`}
                   >
@@ -1408,10 +1413,10 @@ export const NowPlayingModal: React.FC = () => {
                         handleSearchOnlineLyrics();
                       }
                     }}
-                    className={`px-2.5 py-1 rounded-lg border text-[11px] font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
+                    className={`px-3 py-1 rounded-full border text-[11px] font-medium flex items-center space-x-1.5 transition-colors cursor-pointer ${
                       isSearchOpen
                         ? 'bg-accent/20 text-accent border-accent/40'
-                        : 'bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border-[#242c3d]'
+                        : 'bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border-white/[0.08]'
                     }`}
                     title="Search different lyrics on LRCLIB"
                   >
@@ -1422,7 +1427,7 @@ export const NowPlayingModal: React.FC = () => {
                   <button
                     onClick={() => handleAutoFetchSyncedLyrics()}
                     disabled={lyricsLoading || isAutoFetching}
-                    className="px-2.5 py-1 rounded-lg bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border border-[#242c3d] text-[11px] font-medium flex items-center space-x-1.5 transition-colors cursor-pointer disabled:opacity-50"
+                    className="px-3 py-1 rounded-full bg-white/[0.08] hover:bg-white/[0.15] text-white/70 hover:text-white border border-white/[0.08] text-[11px] font-medium flex items-center space-x-1.5 transition-colors cursor-pointer disabled:opacity-50"
                     title="Refetch / upgrade lyrics from LRCLIB open-source archive"
                   >
                     <RefreshCw className={`w-3 h-3 ${lyricsLoading ? 'animate-spin text-accent' : ''}`} />
@@ -1572,70 +1577,53 @@ export const NowPlayingModal: React.FC = () => {
                         key={idx}
                         ref={isCurrent ? activeLyricRef : null}
                         onClick={() => seek(item.time)}
-                        className={`relative z-10 py-2.5 px-4 rounded-xl cursor-pointer transition-all duration-150 select-none flex items-center gap-3 ${
-                          lyricsAlign === 'left' ? 'text-left justify-start pl-4' : 'text-center justify-center'
+                        className={`relative z-10 py-3 sm:py-4 px-4 rounded-2xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none flex items-start gap-4 ${
+                          lyricsAlign === 'left' ? 'text-left justify-start' : 'text-center justify-center'
                         } ${
                           isCurrent
-                            ? `text-white font-extrabold ${
-                                lyricsSize === 'large' ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl'
-                              } bg-accent/20 border border-accent/60`
+                            ? `text-white font-black scale-[1.03] origin-left drop-shadow-[0_2px_24px_rgba(255,255,255,0.5)]`
                             : isPast
-                            ? `text-[#6b7280] ${
-                                lyricsSize === 'large' ? 'text-base sm:text-lg' : 'text-sm sm:text-base'
-                              } hover:text-gray-300 hover:scale-[1.01]`
-                            : `text-[#9ca3af] ${
-                                lyricsSize === 'large' ? 'text-base sm:text-lg' : 'text-sm sm:text-base'
-                              } hover:text-white hover:scale-[1.01]`
+                            ? `opacity-30 blur-[0.45px] text-white/90 font-bold hover:opacity-85 hover:blur-none hover:scale-[1.01]`
+                            : `opacity-40 blur-[0.45px] text-white font-bold hover:opacity-90 hover:blur-none hover:scale-[1.01]`
                         }`}
-                        style={
-                          isCurrent && isPlaying
-                            ? {
-                                transform: `scale(${1.02 + beatData.beatPulse * 0.025})`,
-                                boxShadow: `0 0 ${12 + beatData.bassLevel * 24}px rgba(56, 189, 248, ${0.3 + beatData.bassLevel * 0.45})`,
-                                borderColor: `rgba(56, 189, 248, ${0.45 + beatData.bassLevel * 0.5})`,
-                              }
-                            : isCurrent
-                            ? {
-                                transform: 'scale(1.02)',
-                                boxShadow: '0 0 16px rgba(56, 189, 248, 0.35)',
-                                borderColor: 'rgba(56, 189, 248, 0.5)',
-                              }
-                            : undefined
-                        }
                       >
                         {isCurrent && (
-                          <span className="flex items-end space-x-0.5 h-4 flex-shrink-0">
+                          <span className="flex items-end space-x-0.5 h-5 flex-shrink-0 mt-1">
                             <span
-                              className="w-1 bg-accent rounded-full transition-all duration-75"
-                              style={{ height: `${Math.max(4, beatData.eqBars[0] * 0.16)}px` }}
+                              className="w-1 bg-accent rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                              style={{ height: `${Math.max(4, beatData.eqBars[0] * 0.18)}px` }}
                             />
                             <span
-                              className="w-1 bg-white/90 rounded-full transition-all duration-75"
-                              style={{ height: `${Math.max(4, beatData.eqBars[1] * 0.16)}px` }}
+                              className="w-1 bg-white rounded-full transition-all duration-75 shadow-[0_0_8px_#ffffff]"
+                              style={{ height: `${Math.max(4, beatData.eqBars[1] * 0.18)}px` }}
                             />
                             <span
-                              className="w-1 bg-accent rounded-full transition-all duration-75"
-                              style={{ height: `${Math.max(4, beatData.eqBars[2] * 0.16)}px` }}
+                              className="w-1 bg-accent rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                              style={{ height: `${Math.max(4, beatData.eqBars[2] * 0.18)}px` }}
                             />
                             <span
-                              className="w-1 bg-white/80 rounded-full transition-all duration-75"
-                              style={{ height: `${Math.max(4, beatData.eqBars[3] * 0.16)}px` }}
+                              className="w-1 bg-white rounded-full transition-all duration-75 shadow-[0_0_8px_#ffffff]"
+                              style={{ height: `${Math.max(4, beatData.eqBars[3] * 0.18)}px` }}
                             />
                             <span
-                              className="w-1 bg-accent/80 rounded-full transition-all duration-75"
-                              style={{ height: `${Math.max(4, beatData.eqBars[4] * 0.16)}px` }}
+                              className="w-1 bg-accent rounded-full transition-all duration-75 shadow-[0_0_8px_rgba(56,189,248,0.8)]"
+                              style={{ height: `${Math.max(4, beatData.eqBars[4] * 0.18)}px` }}
                             />
                           </span>
                         )}
                         <div className="flex flex-col text-inherit">
-                          <span className="leading-snug">{item.text || '♪'}</span>
+                          <span className={`leading-snug tracking-tight ${
+                            lyricsSize === 'large'
+                              ? isCurrent ? 'text-2xl sm:text-3xl lg:text-4xl' : 'text-xl sm:text-2xl'
+                              : isCurrent ? 'text-xl sm:text-2xl lg:text-3xl' : 'text-lg sm:text-xl'
+                          }`}>
+                            {item.text || '♪'}
+                          </span>
                           {isTranslationActive && (translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`] || (hasDevanagari(item.text) ? devanagariToHinglish(item.text) : '')) && (
-                            <span className={`font-normal transition-all leading-normal ${
+                            <span className={`font-semibold transition-all leading-normal italic ${
                               isCurrent
-                                ? 'text-[#7DD3FC] text-xs sm:text-sm mt-1 font-semibold italic drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]'
-                                : isPast
-                                ? 'text-[#64748b] text-[11px] sm:text-xs mt-0.5 italic'
-                                : 'text-accent/80 text-[11px] sm:text-xs mt-0.5 italic'
+                                ? 'text-[#7DD3FC] text-sm sm:text-base lg:text-lg mt-1.5 drop-shadow-[0_0_12px_rgba(56,189,248,0.45)] animate-in fade-in-0 slide-in-from-top-1.5'
+                                : 'text-white/40 text-xs sm:text-sm mt-0.5'
                             }`}>
                               {translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`] || devanagariToHinglish(item.text)}
                             </span>
@@ -1763,23 +1751,23 @@ export const NowPlayingModal: React.FC = () => {
           )}
         </div>
 
-        {/* 4. Bottom Controls Deck */}
-        <div className="relative z-20 flex-shrink-0 w-full px-4 sm:px-5 py-2 sm:py-3 flex flex-col space-y-2 border-t border-[#1b212d]/70 bg-[#0c0f16]/95 backdrop-blur-md">
+        {/* 4. Apple Music Bottom Frosted Controls Deck */}
+        <div className="relative z-20 flex-shrink-0 w-full px-4 sm:px-6 py-3 flex flex-col space-y-2.5 border-t border-white/[0.08] bg-[#0c1017]/75 backdrop-blur-2xl">
           {/* Visualizer Mode Selector Pill Bar (Only in Player/Track tab) */}
           {activeTab === 'player' && (
             <div className="flex items-center justify-between pb-0.5">
-              <div className="flex items-center space-x-1 p-0.5 bg-[#10141d]/90 border border-[#1e2536] rounded-xl text-[11px] shadow-sm">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-[#6b7280] px-1.5 hidden sm:inline">
+              <div className="flex items-center space-x-1 p-0.5 bg-white/[0.06] border border-white/[0.08] rounded-full text-[11px] shadow-inner backdrop-blur-md">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 px-2 hidden sm:inline">
                   VISUALIZER:
                 </span>
                 {(['bars', 'wave', 'halo', 'embers', 'vu', 'off'] as VisualizerMode[]).map((vMode) => (
                   <button
                     key={vMode}
                     onClick={() => handleVisualizerChange(vMode)}
-                    className={`px-2 py-0.5 rounded-lg transition-colors cursor-pointer text-[11px] font-semibold ${
+                    className={`px-2.5 py-0.5 rounded-full transition-all duration-150 cursor-pointer text-[11px] font-semibold ${
                       visualizerMode === vMode
-                        ? 'bg-accent text-white shadow-md'
-                        : 'text-[#9ca3af] hover:text-white hover:bg-[#1a202c]'
+                        ? 'bg-white/[0.2] text-white shadow-sm'
+                        : 'text-white/60 hover:text-white hover:bg-white/[0.06]'
                     }`}
                   >
                     {vMode === 'bars' && '⫾ Bars'}
@@ -1791,8 +1779,8 @@ export const NowPlayingModal: React.FC = () => {
                   </button>
                 ))}
               </div>
-              <span className="text-[10px] font-mono text-[#6b7280] hidden md:inline">
-                Press <kbd className="px-1 py-0.5 rounded bg-[#161a24] border border-[#2b3345] text-white">V</kbd> to cycle
+              <span className="text-[10px] font-mono text-white/40 hidden md:inline">
+                Press <kbd className="px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.08] text-white/80">V</kbd> to cycle
               </span>
             </div>
           )}
@@ -1814,46 +1802,41 @@ export const NowPlayingModal: React.FC = () => {
               onClick={toggleShuffle}
               title={shuffle ? 'Shuffle: Enabled' : 'Shuffle: Disabled'}
               className={`p-2 rounded-full transition-colors cursor-pointer ${
-                shuffle ? 'text-accent bg-accent/15' : 'text-[#6b7280] hover:text-white'
+                shuffle ? 'text-accent bg-accent/20' : 'text-white/50 hover:text-white'
               }`}
             >
               <Shuffle className="w-4 h-4" />
             </button>
 
             {/* Center Transport Controls with Micro-Interactions */}
-            <div className="flex items-center space-x-5">
+            <div className="flex items-center space-x-6">
               <button
                 onClick={previousTrack}
                 title="Previous Track (Left Arrow)"
-                className="p-2 rounded-full text-[#9ca3af] hover:text-white hover:bg-[#1a202c] transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer"
+                className="p-2 rounded-full text-white/70 hover:text-white transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer"
               >
-                <SkipBack className="w-5 h-5" />
+                <SkipBack className="w-5 h-5 fill-current" />
               </button>
 
-              {/* Giant Central Play/Pause Button with Pulsing Glow */}
-              <div className="relative flex items-center justify-center">
-                {isPlaying && (
-                  <span className="absolute inset-0 rounded-full bg-accent/40 animate-ping opacity-60 pointer-events-none" />
+              {/* Giant Apple Music Central Play/Pause Button */}
+              <button
+                onClick={togglePlayPause}
+                title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
+                className="w-13 h-13 rounded-full bg-white hover:bg-white/90 text-black flex items-center justify-center transition-all duration-200 hover:scale-105 active:scale-95 shadow-xl shadow-white/20 cursor-pointer"
+              >
+                {isPlaying ? (
+                  <Pause className="w-5 h-5 fill-black" />
+                ) : (
+                  <Play className="w-5 h-5 fill-black ml-0.5" />
                 )}
-                <button
-                  onClick={togglePlayPause}
-                  title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
-                  className="relative z-10 w-12 h-12 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-xl shadow-accent/40 cursor-pointer"
-                >
-                  {isPlaying ? (
-                    <Pause className="w-5 h-5 fill-white" />
-                  ) : (
-                    <Play className="w-5 h-5 fill-white ml-0.5" />
-                  )}
-                </button>
-              </div>
+              </button>
 
               <button
                 onClick={nextTrack}
                 title="Next Track (Right Arrow)"
-                className="p-2 rounded-full text-[#9ca3af] hover:text-white hover:bg-[#1a202c] transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer"
+                className="p-2 rounded-full text-white/70 hover:text-white transition-all duration-150 hover:scale-110 active:scale-90 cursor-pointer"
               >
-                <SkipForward className="w-5 h-5" />
+                <SkipForward className="w-5 h-5 fill-current" />
               </button>
             </div>
 
@@ -1862,7 +1845,7 @@ export const NowPlayingModal: React.FC = () => {
               onClick={cycleRepeat}
               title={`Repeat: ${repeatMode.toUpperCase()}`}
               className={`p-2 rounded-full transition-colors cursor-pointer ${
-                repeatMode !== 'off' ? 'text-accent bg-accent/15' : 'text-[#6b7280] hover:text-white'
+                repeatMode !== 'off' ? 'text-accent bg-accent/20' : 'text-white/50 hover:text-white'
               }`}
             >
               {repeatMode === 'one' ? <Repeat1 className="w-4 h-4" /> : <Repeat className="w-4 h-4" />}
@@ -1870,13 +1853,13 @@ export const NowPlayingModal: React.FC = () => {
           </div>
 
           {/* Bottom Sub-Bar: Volume & Equalizer Shortcut */}
-          <div className="flex items-center justify-between pt-1 border-t border-[#181e2b]/60 text-xs text-[#9ca3af]">
+          <div className="flex items-center justify-between pt-1 border-t border-white/[0.06] text-xs text-white/60">
             {/* Volume Control */}
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2.5">
               <button
                 onClick={toggleMute}
                 title={isMuted ? 'Unmute (M)' : 'Mute (M)'}
-                className="text-[#9ca3af] hover:text-white transition-colors cursor-pointer"
+                className="text-white/60 hover:text-white transition-colors cursor-pointer"
               >
                 {isMuted || volume === 0 ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
               </button>
@@ -1888,16 +1871,16 @@ export const NowPlayingModal: React.FC = () => {
                 value={isMuted ? 0 : volume}
                 onChange={(e) => setVolume(parseFloat(e.target.value))}
                 onInput={(e) => setVolume(parseFloat((e.target as HTMLInputElement).value))}
-                className="w-20 sm:w-28 h-1 bg-[#1e2533] rounded-lg appearance-none cursor-pointer accent-accent"
+                className="w-20 sm:w-28 h-1 bg-white/[0.12] rounded-lg appearance-none cursor-pointer accent-accent"
               />
-              <span className="font-mono text-[10px] w-6 text-right tabular-nums">
+              <span className="font-mono text-[10px] w-6 text-right tabular-nums text-white/70">
                 {Math.round((isMuted ? 0 : volume) * 100)}%
               </span>
             </div>
 
             {/* Hint */}
-            <span className="hidden sm:inline text-[9px] font-mono text-[#6b7280]">
-              <kbd className="px-1 py-0.5 rounded bg-[#161a24] border border-[#2b3345] text-white">Esc</kbd> close · <kbd className="px-1 py-0.5 rounded bg-[#161a24] border border-[#2b3345] text-white">Space</kbd> play/pause
+            <span className="hidden sm:inline text-[9px] font-mono text-white/40">
+              <kbd className="px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.08] text-white/70">Esc</kbd> close · <kbd className="px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.08] text-white/70">Space</kbd> play/pause
             </span>
           </div>
         </div>

@@ -22,7 +22,99 @@
   --accent-color: #38bdf8;
   --color-accent: #38bdf8;
   --accent-hover: #0ea5e9;
+  --apple-red: #FA2D48;
   color-scheme: dark;
+}
+
+/* ========================================================================== */
+/* APPLE MUSIC SIGNATURE GLASSMORPHISM & ANIMATION SYSTEM                    */
+/* ========================================================================== */
+
+@keyframes appleMeshGlow {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1) rotate(0deg);
+    opacity: 0.35;
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.12) rotate(120deg);
+    opacity: 0.55;
+  }
+  66% {
+    transform: translate(-25px, 25px) scale(0.92) rotate(240deg);
+    opacity: 0.40;
+  }
+}
+
+@keyframes applePulseGlow {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+.apple-mesh-orb-1 {
+  animation: appleMeshGlow 22s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.apple-mesh-orb-2 {
+  animation: appleMeshGlow 28s cubic-bezier(0.4, 0, 0.2, 1) infinite reverse;
+}
+
+.apple-mesh-orb-3 {
+  animation: appleMeshGlow 34s cubic-bezier(0.4, 0, 0.2, 1) infinite 4s;
+}
+
+/* Apple Frosted Acrylic Glass */
+.apple-glass {
+  background: rgba(14, 18, 26, 0.72);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.12), 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.apple-glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.apple-pill-active {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  color: #ffffff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* Apple Music Lyrics Typography */
+.apple-lyrics-active {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 2px 20px rgba(255, 255, 255, 0.45), 0 4px 12px rgba(0, 0, 0, 0.8);
+  transform: scale(1.02);
+  transform-origin: left center;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-lyrics-inactive {
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 700;
+  filter: blur(0.4px);
+  transform-origin: left center;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.apple-lyrics-inactive:hover {
+  color: rgba(255, 255, 255, 0.85);
+  filter: blur(0px);
+  transform: translateX(4px);
 }
 
 html,

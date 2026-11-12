@@ -99,7 +99,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
 
   return (
     <aside
-      className={`h-full bg-[#111722] border-r border-white/[0.06] flex flex-col transition-all duration-200 select-none ${
+      className={`h-full bg-[#0c1017]/80 backdrop-blur-2xl border-r border-white/[0.07] flex flex-col transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none relative z-20 ${
         collapsed ? 'w-[68px]' : 'w-60'
       }`}
     >
@@ -107,16 +107,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       <div className="h-14 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
         {!collapsed ? (
           <div className="flex items-center space-x-2.5 overflow-hidden">
-            <div className="w-8 h-8 rounded-xl bg-[#141b27] border border-accent/25 flex items-center justify-center flex-shrink-0 shadow-sm p-1">
+            <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center flex-shrink-0 shadow-sm p-1 backdrop-blur-md">
               <VistaraLogo size={22} withGlow={true} animated={true} />
             </div>
             <div className="leading-tight">
-              <div className="font-extrabold text-[13px] tracking-[0.14em] text-[#F8FAFC]">VISTARA</div>
-              <div className="text-[9px] text-[#64748B] uppercase tracking-[0.18em] font-semibold">Universe</div>
+              <div className="font-extrabold text-[13px] tracking-[0.14em] text-white">VISTARA</div>
+              <div className="text-[9px] text-white/50 uppercase tracking-[0.18em] font-semibold">Universe</div>
             </div>
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-xl bg-[#141b27] border border-accent/25 flex items-center justify-center mx-auto shadow-sm p-1">
+          <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/[0.1] flex items-center justify-center mx-auto shadow-sm p-1 backdrop-blur-md">
             <VistaraLogo size={22} withGlow={true} animated={true} />
           </div>
         )}
@@ -128,7 +128,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               toggleCollapsed();
             }}
             title="Collapse sidebar (Ctrl+B)"
-            className="p-1.5 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
+            className="p-1.5 rounded-lg text-white/50 hover:text-white hover:bg-white/[0.08] transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -136,11 +136,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       </div>
 
       {/* Navigation items grouped cleanly */}
-      <nav className="flex-1 py-4 px-2.5 space-y-4 overflow-y-auto">
+      <nav className="flex-1 py-4 px-2.5 space-y-4 overflow-y-auto no-scrollbar">
         {NAV_GROUPS.map((group) => (
           <div key={group.title} className="space-y-0.5">
             {!collapsed && (
-              <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]/80">
+              <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-white/40">
                 {group.title}
               </div>
             )}
@@ -154,15 +154,15 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
                     onSelectTab(item.id);
                   }}
                   title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center rounded-lg py-2 text-[13px] transition-all duration-150 ${
+                  className={`w-full flex items-center rounded-xl py-2 text-[13px] transition-all duration-200 cursor-pointer ${
                     collapsed ? 'justify-center px-0' : 'px-3'
                   } ${
                     isActive
-                      ? 'bg-accent/12 text-accent font-semibold shadow-sm'
-                      : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04]'
+                      ? 'bg-white/[0.12] text-white font-semibold backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_8px_rgba(0,0,0,0.25)]'
+                      : 'text-white/65 hover:text-white hover:bg-white/[0.06]'
                   }`}
                 >
-                  <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-accent' : 'text-[#64748B]'}`}>
+                  <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-accent' : 'text-white/50'}`}>
                     {item.icon}
                   </span>
                   {!collapsed && <span className="ml-3 truncate font-medium">{item.label}</span>}
@@ -176,9 +176,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       {/* Shortcut hint footer / Expand button when collapsed */}
       <div className="px-3 py-3 border-t border-white/[0.06] flex-shrink-0">
         {!collapsed ? (
-          <div className="px-1 text-[11px] text-[#64748B] flex justify-between items-center">
+          <div className="px-1 text-[11px] text-white/45 flex justify-between items-center">
             <span>Toggle Sidebar</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] font-mono text-[#94A3B8]">
+            <kbd className="px-1.5 py-0.5 rounded-md bg-white/[0.06] border border-white/[0.08] text-[10px] font-mono text-white/70">
               Ctrl+B
             </kbd>
           </div>
@@ -189,7 +189,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               toggleCollapsed();
             }}
             title="Expand sidebar (Ctrl+B)"
-            className="w-full py-1.5 rounded-lg flex items-center justify-center text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
+            className="w-full py-1.5 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/[0.08] transition-colors cursor-pointer"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
