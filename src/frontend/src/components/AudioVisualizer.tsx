@@ -240,8 +240,10 @@ function drawSpectrumBars(
     const x = i * (barWidth + spacing) + (width - (barCount * (barWidth + spacing) - spacing)) / 2;
     const y = height - barHeight;
 
-    // Clean solid accent bar
-    ctx.fillStyle = accentColor;
+    // Beat-synced 310-degree rainbow spectrum bar color
+    const barHue = (t * 310 + huePhase) % 360;
+    const lightness = Math.min(72, 54 + val * 14 + beatSpike * 12);
+    ctx.fillStyle = `hsl(${barHue}, 90%, ${lightness}%)`;
     drawRoundedRect(ctx, x, y, barWidth, barHeight, Math.min(barWidth / 2, 2.5));
 
     // Floating peak cap (Clean solid white)
