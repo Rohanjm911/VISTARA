@@ -116,7 +116,7 @@ export const CassetteTape: React.FC<CassetteTapeProps> = ({
       {/* Dynamic Ambient Glow behind the cassette when playing - reactive to music bass */}
       {isPlaying && (
         <div
-          className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-accent/20 blur-2xl pointer-events-none transition-all duration-100 -z-10"
+          className="absolute -inset-4 sm:-inset-6 rounded-3xl bg-accent/20 blur-2xl pointer-events-none transition-all duration-75 ease-out -z-10"
           style={{
             transform: `scale(${1 + (beatPulse || 0) * 0.08})`,
             opacity: 0.65 + (bassLevel || 0) * 0.35,
@@ -126,7 +126,7 @@ export const CassetteTape: React.FC<CassetteTapeProps> = ({
 
       {/* 3D Flipping Container */}
       <div
-        className="relative w-[310px] sm:w-[370px] h-[195px] sm:h-[230px] transition-transform duration-700 ease-out"
+        className="relative w-[310px] sm:w-[370px] h-[195px] sm:h-[230px] transition-transform duration-600 ease-[cubic-bezier(0.16,1,0.3,1)]"
         style={{
           transformStyle: 'preserve-3d',
           transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0deg)',
@@ -270,7 +270,7 @@ export const CassetteTape: React.FC<CassetteTapeProps> = ({
             {/* LEFT SPOOL (SUPPLY REEL) */}
             <div className="relative flex items-center justify-center">
               <div
-                className="absolute rounded-full bg-[#1b100a] border border-[#3e271a] shadow-md transition-all duration-500 ease-out"
+                className="absolute rounded-full bg-[#1b100a] border border-[#3e271a] shadow-md transition-all duration-300 ease-linear"
                 style={{
                   width: `${leftSpoolRadius * 2}px`,
                   height: `${leftSpoolRadius * 2}px`,
@@ -313,7 +313,7 @@ export const CassetteTape: React.FC<CassetteTapeProps> = ({
             {/* RIGHT SPOOL (TAKE-UP REEL) */}
             <div className="relative flex items-center justify-center">
               <div
-                className="absolute rounded-full bg-[#1b100a] border border-[#3e271a] shadow-md transition-all duration-500 ease-out"
+                className="absolute rounded-full bg-[#1b100a] border border-[#3e271a] shadow-md transition-all duration-300 ease-linear"
                 style={{
                   width: `${rightSpoolRadius * 2}px`,
                   height: `${rightSpoolRadius * 2}px`,

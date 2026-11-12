@@ -40,6 +40,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
   const idlePhaseRef = useRef<number>(0);
   const huePhaseRef = useRef<number>(0);
   const bassSmoothedRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number>(0);
 
   // Initialize cosmic particles with full rainbow spectrum for 'embers' mode
   useEffect(() => {
@@ -112,8 +113,14 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
         } catch {}
       }
 
+      // Delta-time normalization for silky-smooth 60/120/144Hz animation on all displays
+      const now = performance.now();
+      const dt = lastFrameTimeRef.current ? Math.min(0.05, Math.max(0.005, (now - lastFrameTimeRef.current) / 1000)) : 0.016;
+      lastFrameTimeRef.current = now;
+      const fpsRatio = dt * 60;
+
       // Smooth interpolation filter (EMA smoothing)
-      idlePhaseRef.current += 0.04;
+      idlePhaseRef.current += 0.04 * fpsRatio;
       const smooth = smoothedFreqsRef.current;
       const peaks = peakCapsRef.current;
 
@@ -136,15 +143,16 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
           rawVal = idleWave;
         }
 
-        // Fluid lerp smoothing
-        const lerpWeight = isPlaying ? (hasSignal ? 0.26 : 0.18) : 0.09;
+        // Frame-rate independent fluid lerp smoothing
+        const baseLerp = isPlaying ? (hasSignal ? 0.26 : 0.18) : 0.09;
+        const lerpWeight = 1 - Math.pow(1 - baseLerp, fpsRatio);
         smooth[i] = smooth[i] * (1 - lerpWeight) + rawVal * lerpWeight;
 
         // Floating peak caps with gravity
         if (smooth[i] >= peaks[i]) {
           peaks[i] = smooth[i];
         } else {
-          peaks[i] = Math.max(0, peaks[i] - 0.007);
+          peaks[i] = Math.max(0, peaks[i] - 0.0075 * fpsRatio);
         }
       }
 
@@ -162,7 +170,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
 
       // Beat-synced rainbow hue phase acceleration:
       // Smooth natural drift + energetic burst synced directly to the beat kicks
-      const hueSpeed = isPlaying ? (0.8 + bassEnergy * 2.8 + beatSpike * 7.0) : 0.25;
+      const hueSpeed = (isPlaying ? (0.8 + bassEnergy * 2.8 + beatSpike * 7.0) : 0.25) * fpsRatio;
       huePhaseRef.current = (huePhaseRef.current + hueSpeed) % 360;
       const currentHuePhase = huePhaseRef.current;
 

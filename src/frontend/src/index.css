@@ -412,7 +412,33 @@ dialog::backdrop {
 .animate-eq-bar-3 { animation: eqBar3 0.9s ease-in-out infinite 0.3s; }
 .animate-eq-bar-4 { animation: eqBar4 0.65s ease-in-out infinite 0.2s; }
 
-/* Subtle rotation for music spools */
+/* Vintage cassette tape spool rotation */
+@keyframes cassetteSpoolRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Soundwave expanding ping ring */
+@keyframes soundwavePing {
+  0% {
+    transform: scale(0.98);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.14);
+    opacity: 0;
+  }
+}
+
+.animate-soundwave-ping {
+  animation: soundwavePing 2.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+/* Subtle rotation for music spools & vinyl */
 @keyframes spinSlow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

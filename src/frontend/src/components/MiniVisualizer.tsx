@@ -21,6 +21,7 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
   const phaseRef = useRef<number>(Math.random() * 10);
   const huePhaseRef = useRef<number>(0);
   const bassSmoothedRef = useRef<number>(0);
+  const lastFrameTimeRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -65,7 +66,13 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
         } catch {}
       }
 
-      phaseRef.current += 0.045;
+      // Delta-time normalization for silky-smooth 60/120/144Hz animation on all displays
+      const now = performance.now();
+      const dt = lastFrameTimeRef.current ? Math.min(0.05, Math.max(0.005, (now - lastFrameTimeRef.current) / 1000)) : 0.016;
+      lastFrameTimeRef.current = now;
+      const fpsRatio = dt * 60;
+
+      phaseRef.current += 0.045 * fpsRatio;
       const smooth = smoothedRef.current;
       const peaks = peaksRef.current;
 
@@ -85,7 +92,7 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
       bassSmoothedRef.current = prevBass * 0.8 + bassEnergy * 0.2;
       const beatSpike = Math.max(0, bassEnergy - prevBass);
 
-      const hueSpeed = isPlaying ? (0.8 + bassEnergy * 2.8 + beatSpike * 6.0) : 0.25;
+      const hueSpeed = (isPlaying ? (0.8 + bassEnergy * 2.8 + beatSpike * 6.0) : 0.25) * fpsRatio;
       huePhaseRef.current = (huePhaseRef.current + hueSpeed) % 360;
       const huePhase = huePhaseRef.current;
 
@@ -112,15 +119,16 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
           rawVal = restingWave;
         }
 
-        // Fluid lerp smoothing
-        const lerpWeight = isPlaying ? (hasSignal ? 0.28 : 0.20) : 0.09;
+        // Frame-rate independent fluid lerp smoothing
+        const baseLerp = isPlaying ? (hasSignal ? 0.28 : 0.20) : 0.09;
+        const lerpWeight = 1 - Math.pow(1 - baseLerp, fpsRatio);
         smooth[i] = smooth[i] * (1 - lerpWeight) + rawVal * lerpWeight;
 
         // Floating peak cap physics
         if (smooth[i] >= peaks[i]) {
           peaks[i] = smooth[i];
         } else {
-          peaks[i] = Math.max(0, peaks[i] - 0.009);
+          peaks[i] = Math.max(0, peaks[i] - 0.009 * fpsRatio);
         }
 
         const barHeight = Math.max(3, smooth[i] * (height - 6));

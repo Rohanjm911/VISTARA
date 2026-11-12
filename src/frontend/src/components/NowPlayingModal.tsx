@@ -576,14 +576,14 @@ export const NowPlayingModal: React.FC = () => {
       }`}
     >
       <div
-        className={`relative flex flex-col overflow-hidden shadow-2xl transition-all duration-300 ${
+        className={`relative flex flex-col overflow-hidden shadow-2xl transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] ${
           isMaximized
             ? 'w-full h-full bg-[#06080d] rounded-none'
             : activeTab === 'lyrics' || activeTab === 'queue'
             ? 'w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] animate-in zoom-in-95 duration-200'
             : sideLyricsRevealed && !userDismissedSideLyrics
-            ? 'w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-500'
-            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-500'
+            ? 'w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
+            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]'
         }`}
       >
         {/* 1. Subtle Ambient Album Aura in Background */}
@@ -735,7 +735,7 @@ export const NowPlayingModal: React.FC = () => {
                 sideLyricsRevealed && !userDismissedSideLyrics
                   ? 'flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 max-w-6xl'
                   : 'flex-col items-center max-w-lg'
-              } mx-auto transition-all duration-700 ease-out`}
+              } mx-auto transition-all duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]`}
             >
               {/* Left Column: Cassette / Vinyl Player Experience */}
               <div className="flex flex-col items-center max-w-lg w-full space-y-3.5 text-center flex-shrink-0">
@@ -996,7 +996,7 @@ export const NowPlayingModal: React.FC = () => {
 
               {/* Right Column: Dynamic Synced Lyrics Beside Cassette Tape */}
               {sideLyricsRevealed && !userDismissedSideLyrics && (
-                <div className="w-full lg:w-[380px] xl:w-[440px] h-[360px] sm:h-[420px] lg:h-[480px] flex flex-col bg-[#0b0e15]/95 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-right-8 duration-700 flex-shrink-0">
+                <div className="w-full lg:w-[380px] xl:w-[440px] h-[360px] sm:h-[420px] lg:h-[480px] flex flex-col bg-[#0b0e15]/95 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-right-8 duration-400 ease-[cubic-bezier(0.16,1,0.3,1)] flex-shrink-0">
                   {/* Side Lyrics Header */}
                   <div className="relative z-10 flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] flex-shrink-0">
                     <div className="flex items-center space-x-2">
