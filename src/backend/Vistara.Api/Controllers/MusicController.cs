@@ -14,11 +14,16 @@ public class MusicController : ControllerBase
 {
     private readonly VistaraDbContext _context;
     private readonly ILyricsService _lyricsService;
+    private readonly IMusicArtworkService _musicArtworkService;
 
-    public MusicController(VistaraDbContext context, ILyricsService lyricsService)
+    public MusicController(
+        VistaraDbContext context,
+        ILyricsService lyricsService,
+        IMusicArtworkService musicArtworkService)
     {
         _context = context;
         _lyricsService = lyricsService;
+        _musicArtworkService = musicArtworkService;
     }
 
     [HttpGet("tracks")]
@@ -41,6 +46,7 @@ public class MusicController : ControllerBase
                     .ThenInclude(f => f.Streams)
             .Include(t => t.Artist)
             .Include(t => t.Album)
+                .ThenInclude(a => a!.Artwork)
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(genre))
@@ -93,7 +99,9 @@ public class MusicController : ControllerBase
                 Lyrics = t.Lyrics,
                 ReplayGainTrackGain = t.ReplayGainTrackGain,
                 IsFavourite = t.MediaItem?.IsFavourite ?? false,
-                ArtworkUrl = t.MediaItem?.PrimaryArtwork != null ? $"/api/v1/artwork/{t.MediaItem.PrimaryArtwork.Id}" : null,
+                ArtworkUrl = (t.MediaItem?.PrimaryArtwork ?? t.Album?.Artwork) != null
+                    ? $"/api/v1/artwork/{(t.MediaItem?.PrimaryArtwork ?? t.Album?.Artwork)!.Id}"
+                    : null,
                 MediaFileId = f?.Id ?? Guid.Empty,
                 AudioFormat = format,
                 AudioCodec = s?.Codec ?? f?.AudioCodec ?? format,
@@ -311,5 +319,21 @@ public class MusicController : ControllerBase
     {
         var result = await _lyricsService.TranslateLyricsAsync(request, ct);
         return Ok(ApiResponse<TranslatedLyricsResultDto>.Ok(result));
+    }
+
+    [HttpPost("albums/auto-fetch-artwork")]
+    public async Task<IActionResult> AutoFetchAllAlbumArtwork(CancellationToken ct = default)
+    {
+        var result = await _musicArtworkService.AutoFetchAllAlbumCoversAsync(ct);
+        return Ok(ApiResponse<AutoFetchAllResultDto>.Ok(result));
+    }
+
+    [HttpPost("albums/{id}/auto-fetch-artwork")]
+    public async Task<IActionResult> AutoFetchSingleAlbumArtwork(Guid id, CancellationToken ct = default)
+    {
+        var success = await _musicArtworkService.AutoFetchSingleAlbumCoverAsync(id, ct);
+        return success
+            ? Ok(ApiResponse<bool>.Ok(true, "Hi-res album cover imported successfully"))
+            : NotFound(ApiResponse<bool>.Fail("Could not find online artwork for this album"));
     }
 }

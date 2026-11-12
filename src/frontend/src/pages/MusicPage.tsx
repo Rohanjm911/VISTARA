@@ -8,6 +8,7 @@ import {
   LayoutGrid,
   List,
   ListMusic,
+  Loader2,
   Mic2,
   Music,
   Play,
@@ -16,6 +17,7 @@ import {
   Shuffle,
   Sliders,
   User,
+  Wand2,
   X,
 } from 'lucide-react';
 import { apiRequest } from '../api/client';
@@ -51,6 +53,36 @@ export const MusicPage: React.FC = () => {
 
   // Selected album details view
   const [selectedAlbum, setSelectedAlbum] = useState<AlbumDto | null>(null);
+
+  // Auto-Fetch Hi-Res Album Cover Art state
+  const [isFetchingCovers, setIsFetchingCovers] = useState(false);
+  const [coverStatusMsg, setCoverStatusMsg] = useState<string | null>(null);
+
+  const handleAutoFetchCovers = async () => {
+    setIsFetchingCovers(true);
+    setCoverStatusMsg('Fetching highest-resolution (up to 3000x3000) album cover art...');
+    try {
+      const res = await apiRequest<{ totalProcessed: number; updatedCount: number; failedCount: number }>(
+        '/api/v1/music/albums/auto-fetch-artwork',
+        { method: 'POST' }
+      );
+      if (res.success && res.data) {
+        setCoverStatusMsg(
+          res.data.updatedCount > 0
+            ? `Imported ${res.data.updatedCount} hi-res album covers!`
+            : 'All available album covers are already up to date.'
+        );
+        await fetchMusic();
+      } else {
+        setCoverStatusMsg('Failed to fetch album covers.');
+      }
+    } catch {
+      setCoverStatusMsg('Network error while fetching album covers.');
+    } finally {
+      setIsFetchingCovers(false);
+      setTimeout(() => setCoverStatusMsg(null), 5000);
+    }
+  };
 
   const fetchMusic = async () => {
     setLoading(true);
@@ -207,6 +239,21 @@ export const MusicPage: React.FC = () => {
             )}
           </div>
 
+          {/* Auto Fetch Hi-Res Album Covers Button */}
+          <button
+            onClick={handleAutoFetchCovers}
+            disabled={isFetchingCovers}
+            title="Auto-import highest possible resolution album & track cover art"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#161D27] border border-accent/40 hover:border-accent text-xs font-semibold text-accent transition-colors cursor-pointer disabled:opacity-50"
+          >
+            {isFetchingCovers ? (
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
+            ) : (
+              <Wand2 className="w-3.5 h-3.5 text-accent" />
+            )}
+            <span>{isFetchingCovers ? 'Importing Covers...' : 'Auto Fetch Covers'}</span>
+          </button>
+
           {/* Equalizer Button */}
           <button
             onClick={() => setIsEqualizerOpen(true)}
@@ -269,6 +316,13 @@ export const MusicPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {coverStatusMsg && (
+        <div className="px-4 py-2.5 rounded-lg bg-[#161D27] border border-accent/40 text-accent text-xs font-semibold flex items-center space-x-2">
+          {isFetchingCovers && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+          <span>{coverStatusMsg}</span>
+        </div>
+      )}
 
       {/* Album Details View */}
       {selectedAlbum ? (

@@ -97,6 +97,7 @@ try
     builder.Services.AddScoped<ISettingsService, SettingsService>();
     builder.Services.AddScoped<IIntegrityService, IntegrityService>();
     builder.Services.AddHttpClient<ILyricsService, LyricsService>();
+    builder.Services.AddHttpClient<IMusicArtworkService, MusicArtworkService>();
     builder.Services.AddHttpClient<IMoviePosterService, MoviePosterService>();
 
     // Register Background Task Manager as both hosted service and singleton
