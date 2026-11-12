@@ -162,3 +162,4 @@ export const VistaraLogo: React.FC<VistaraLogoProps> = ({
 
   return logoSvg;
 };
+

@@ -36,6 +36,7 @@ import { CassetteTape } from './CassetteTape';
 import { LyricsBeatVisualizer } from './LyricsBeatVisualizer';
 import { AudioProgressBar } from './AudioProgressBar';
 import { useLyricsBeat } from '../hooks/useLyricsBeat';
+import { devanagariToHinglish, hasDevanagari } from '../utils/hinglish';
 
 export interface LyricStanza {
   id: string;
@@ -195,9 +196,9 @@ export const NowPlayingModal: React.FC = () => {
   const [searchResults, setSearchResults] = useState<LrcLibSearchResultDto[]>([]);
   const [isSearchingOnline, setIsSearchingOnline] = useState(false);
 
-  // Bilingual Lyrics Translation State
+  // Bilingual Lyrics Translation State (Default to TRUE for instant Hinglish subtitles)
   const [isTranslationActive, setIsTranslationActive] = useState<boolean>(() => {
-    return localStorage.getItem('vistara_lyrics_translate_active') === 'true';
+    return localStorage.getItem('vistara_lyrics_translate_active') !== 'false';
   });
   const [targetLanguage, setTargetLanguage] = useState<string>(() => {
     return localStorage.getItem('vistara_lyrics_target_lang') || 'hi';
@@ -1093,40 +1094,78 @@ export const NowPlayingModal: React.FC = () => {
                       parsedLyrics.map((item, idx) => {
                         const isCurrent = idx === currentLyricIndex;
                         const isPast = idx < currentLyricIndex;
+                        const rawTranslation = translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`];
+                        const subtitleText = rawTranslation || (hasDevanagari(item.text) ? devanagariToHinglish(item.text) : '');
 
                         return (
                           <div
                             key={idx}
                             ref={isCurrent ? sideActiveLyricRef : null}
                             onClick={() => seek(item.time)}
-                            className={`py-2 px-3 rounded-xl cursor-pointer transition-all duration-150 select-none flex items-center justify-between gap-2 ${
+                            className={`group relative py-2.5 px-3.5 rounded-2xl cursor-pointer transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] select-none flex items-center justify-between gap-3 ${
                               isCurrent
-                                ? 'text-white font-extrabold text-sm sm:text-base bg-accent/20 border border-accent/60 shadow-[0_0_16px_rgba(56,189,248,0.35)] scale-[1.02]'
+                                ? 'text-white font-extrabold bg-gradient-to-r from-accent/25 via-accent/15 to-[#0b1019] border border-accent/70 shadow-[0_0_24px_rgba(56,189,248,0.35),inset_0_1px_1px_rgba(255,255,255,0.2)] scale-[1.025] translate-x-1'
                                 : isPast
-                                ? 'text-[#64748B] text-xs hover:text-white/80'
-                                : 'text-[#94A3B8] text-xs hover:text-white'
+                                ? 'text-[#64748B] hover:text-white/85 hover:bg-white/[0.03] opacity-55 hover:opacity-100'
+                                : 'text-[#94A3B8] hover:text-white hover:bg-white/[0.04] opacity-85 hover:opacity-100'
                             }`}
                           >
-                            <div className="flex flex-col truncate">
-                              <div className="flex items-center space-x-2 truncate">
+                            {/* Dynamic Glowing Left Accent Indicator on Active Line */}
+                            {isCurrent && (
+                              <div className="absolute left-0 top-2.5 bottom-2.5 w-1 bg-accent rounded-r-full shadow-[0_0_10px_rgba(56,189,248,1)]" />
+                            )}
+
+                            <div className="flex flex-col min-w-0 flex-1">
+                              {/* Main Lyric Line */}
+                              <div className="flex items-center space-x-2">
                                 {isCurrent && (
-                                  <span className="flex items-end space-x-0.5 h-3 flex-shrink-0">
-                                    <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
-                                    <span className="w-0.5 bg-white rounded-full animate-bounce h-2" />
-                                    <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                                  <span className="flex items-end space-x-0.5 h-3.5 flex-shrink-0 mr-1">
+                                    <span
+                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_6px_rgba(56,189,248,0.8)]"
+                                      style={{ height: `${Math.max(4, Math.min(14, beatData.bassLevel * 22)) || 10}px` }}
+                                    />
+                                    <span
+                                      className="w-0.5 bg-white rounded-full transition-all duration-75 shadow-[0_0_6px_#ffffff]"
+                                      style={{ height: `${Math.max(4, Math.min(14, beatData.midLevel * 18)) || 6}px` }}
+                                    />
+                                    <span
+                                      className="w-0.5 bg-accent rounded-full transition-all duration-75 shadow-[0_0_6px_rgba(56,189,248,0.8)]"
+                                      style={{ height: `${Math.max(4, Math.min(14, beatData.trebleLevel * 20)) || 12}px` }}
+                                    />
                                   </span>
                                 )}
-                                <span className="truncate leading-relaxed">{item.text || '♪'}</span>
+                                <span
+                                  className={`leading-snug transition-all duration-200 ${
+                                    isCurrent
+                                      ? 'text-white font-extrabold text-sm sm:text-base tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]'
+                                      : 'text-xs font-medium'
+                                  }`}
+                                >
+                                  {item.text || '♪'}
+                                </span>
                               </div>
-                              {isTranslationActive && (translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]) && (
-                                <span className={`text-[11px] font-normal leading-normal italic truncate mt-0.5 ${
-                                  isCurrent ? 'text-accent font-medium' : isPast ? 'text-[#64748B]' : 'text-accent/80'
-                                }`}>
-                                  {translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]}
+
+                              {/* Translation / Hinglish Line Directly Below Main Text */}
+                              {isTranslationActive && subtitleText && (
+                                <span
+                                  className={`block font-normal leading-normal italic transition-all duration-300 ${
+                                    isCurrent
+                                      ? 'text-xs sm:text-[13px] text-[#7DD3FC] font-semibold mt-1 pl-4 drop-shadow-[0_0_10px_rgba(56,189,248,0.5)] animate-in fade-in-0 slide-in-from-top-1'
+                                      : isPast
+                                      ? 'text-[10.5px] text-[#475569] mt-0.5'
+                                      : 'text-[10.5px] text-[#64748B] mt-0.5'
+                                  }`}
+                                >
+                                  {subtitleText}
                                 </span>
                               )}
                             </div>
-                            <span className="text-[9px] font-mono text-[#64748B] flex-shrink-0">
+
+                            <span
+                              className={`text-[9px] font-mono flex-shrink-0 transition-colors ${
+                                isCurrent ? 'text-accent font-bold' : 'text-[#475569]'
+                              }`}
+                            >
                               {formatTime(item.time)}
                             </span>
                           </div>
@@ -1590,15 +1629,15 @@ export const NowPlayingModal: React.FC = () => {
                         )}
                         <div className="flex flex-col text-inherit">
                           <span className="leading-snug">{item.text || '♪'}</span>
-                          {isTranslationActive && (translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]) && (
+                          {isTranslationActive && (translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`] || (hasDevanagari(item.text) ? devanagariToHinglish(item.text) : '')) && (
                             <span className={`font-normal transition-all leading-normal ${
                               isCurrent
-                                ? 'text-accent text-xs sm:text-sm mt-1 font-medium'
+                                ? 'text-[#7DD3FC] text-xs sm:text-sm mt-1 font-semibold italic drop-shadow-[0_0_8px_rgba(56,189,248,0.4)]'
                                 : isPast
-                                ? 'text-[#64748b] text-[11px] sm:text-xs mt-0.5'
-                                : 'text-accent/70 text-[11px] sm:text-xs mt-0.5'
+                                ? 'text-[#64748b] text-[11px] sm:text-xs mt-0.5 italic'
+                                : 'text-accent/80 text-[11px] sm:text-xs mt-0.5 italic'
                             }`}>
-                              {translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]}
+                              {translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`] || devanagariToHinglish(item.text)}
                             </span>
                           )}
                         </div>
