@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { uiSound } from '../utils/uiSound';
+import { VistaraLogo } from './VistaraLogo';
 import {
   Bookmark,
   ChevronLeft,
@@ -106,10 +107,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       <div className="h-14 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
         {!collapsed ? (
           <div className="flex items-center space-x-2.5 overflow-hidden">
-            <div className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/25 flex items-center justify-center flex-shrink-0">
-              <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M2 3 L12 21 L22 3 L17 3 L12 14 L7 3 Z" />
-              </svg>
+            <div className="w-8 h-8 rounded-xl bg-[#141b27] border border-accent/25 flex items-center justify-center flex-shrink-0 shadow-sm p-1">
+              <VistaraLogo size={22} withGlow={true} animated={true} />
             </div>
             <div className="leading-tight">
               <div className="font-extrabold text-[13px] tracking-[0.14em] text-[#F8FAFC]">VISTARA</div>
@@ -117,10 +116,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
             </div>
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/25 flex items-center justify-center mx-auto">
-            <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M2 3 L12 21 L22 3 L17 3 L12 14 L7 3 Z" />
-            </svg>
+          <div className="w-8 h-8 rounded-xl bg-[#141b27] border border-accent/25 flex items-center justify-center mx-auto shadow-sm p-1">
+            <VistaraLogo size={22} withGlow={true} animated={true} />
           </div>
         )}
 

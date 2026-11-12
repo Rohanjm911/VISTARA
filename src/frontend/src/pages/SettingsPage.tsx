@@ -35,6 +35,7 @@ import {
 import { cinematicSound } from '../utils/cinematicSound';
 import { ambientSound, AmbientPreset } from '../utils/ambientSound';
 import { uiSound } from '../utils/uiSound';
+import { VistaraLogo } from '../components/VistaraLogo';
 
 type SettingsTab =
   | 'appearance'
@@ -1197,8 +1198,8 @@ export const SettingsPage: React.FC = () => {
 
             <div className="bg-[#12151b] border border-[#242a36] rounded-xl p-6 space-y-4">
               <div className="flex items-center gap-4">
-                <div className="w-14 h-14 bg-[#181c24] border border-[#242a36] rounded-xl flex items-center justify-center font-black text-2xl text-[var(--color-accent)]">
-                  V
+                <div className="w-14 h-14 bg-[#141b27] border border-accent/25 rounded-2xl flex items-center justify-center p-2 shadow-lg">
+                  <VistaraLogo size={36} withGlow={true} />
                 </div>
                 <div>
                   <h3 className="text-lg font-bold text-white">VISTARA — Personal Media Universe</h3>
