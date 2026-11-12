@@ -119,6 +119,22 @@ Extracted at 10% of total duration or 15 seconds in:
 ffmpeg -ss 15 -i "{video_path}" -vframes 1 -vf "scale=480:-1" -q:v 2 "{thumb_path}"
 ```
 
+### Audio Album Cover Extraction & Codec Normalization
+Embedded cover art in audio files (MP3 ID3v2 APIC frames, FLAC METADATA_BLOCK_PICTURE, M4A covr atoms) frequently contains non-JPEG formats such as PNG or WEBP. Earlier naive extraction using `-vcodec copy` failed whenever an embedded PNG was directed to a `.jpg` target.
+
+VISTARA resolves this with guaranteed full-frame re-encoding:
+```powershell
+ffmpeg -hide_banner -loglevel error -i "{audio_path}" -an -vcodec mjpeg -vframes 1 -q:v 2 -y "{output_path}"
+```
+- **Codec Independence:** Automatically converts any embedded image stream (PNG, WEBP, BMP, progressive JPEG) into a high-quality standard baseline JPEG.
+- **Folder-Level Fallback:** If no embedded stream exists, `ThumbnailService` searches the track's folder for candidate art files (`cover.jpg`, `folder.jpg`, `album.jpg`, `front.jpg`, etc.).
+- **Multi-Tier Online Auto-Import:** If local extraction yields no artwork, `LibraryScannerService` automatically invokes `IMusicArtworkService` using a 4-tier query hierarchy:
+  1. Full metadata: *Artist + Album*
+  2. Standalone album: *Clean Album Title* (critical for multi-artist Bollywood soundtracks / OSTs)
+  3. Track metadata: *Artist + Track Title*
+  4. Standalone track: *Clean Track Title*
+- Discovered artwork is saved to cache and linked to `Track.ArtworkId`, `Album.ArtworkId`, and `Artist.ArtworkId`, ensuring 100% artwork resolution library-wide.
+
 ### Embedded Subtitle to WebVTT
 VISTARA extracts embedded SRT or text subtitles and converts them on-the-fly to standard HTML5 WebVTT:
 ```powershell

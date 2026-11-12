@@ -302,14 +302,36 @@ flowchart TD
 
 ---
 
-## 9. Unified Dual-Tone Design Architecture (v2.1)
+## 9. Apple Music-Inspired Glassmorphism & UI Architecture (v1.4.0)
 
-VISTARA strictly adheres to a unified dual-tone design language:
-- **Surfaces:** Deep Midnight Charcoal (`#10151B` base, `#151A21` surface, `#1B222B` raised panels, `#222B35` cards).
-- **Borders & Dividers:** Subtle high-contrast borders (`#242A36` primary, `#303A45` secondary).
-- **Signature Accent:** Solid Electric Teal (`#35C6B0`, hover `#2BA895`).
-- **Typography:** Inter / system-ui sans-serif with JetBrains Mono for durations, hashes, and bitrates.
-- **Strict Visual Discipline:** Zero gradients, zero neon glassmorphism, zero competing accent palettes.
+VISTARA incorporates a modern, fluid Apple Music-inspired desktop design system:
+- **Living Fluid Mesh Aura:** Ambient chromatic mesh blooms (`#FA2D48` Apple Crimson, `#38BDF8` Sky Neon, `#818CF8` Cosmic Indigo) dynamically drifting with `blur-[120px]` and gentle oscillation behind acrylic glass panels.
+- **Frosted Acrylic Glass Materials (`.apple-glass`, `.apple-glass-panel`):** Multi-layered glass surfaces engineered using `backdrop-filter: blur(28px) saturate(190%)`, hairline border illumination (`rgba(255, 255, 255, 0.12)`), and specular inset highlights.
+- **macOS Apple Music Floating Sidebar:** Frosted translucent side panel with rounded pill navigation, active selection glow, and instant collapse/expand (<kbd>Ctrl</kbd> + <kbd>B</kbd>).
+- **Apple Search Capsule:** Centered floating pill search bar with hairline frosted glass, real-time query clearance, and keyboard shortcut badge (<kbd>Ctrl</kbd> + <kbd>K</kbd>) triggering SQLite FTS5 BM25 queries.
+- **Bottom Player Island Deck:** Floating translucent dock featuring artwork thumbnail, title, artist subtitle, centered transport controls with a solid radiant white circular play button, volume slider, visualizer mode switcher, and instant click-to-expand.
+- **Borderless Dynamic Synced Lyrics Canvas:** Apple Music lyric typography featuring radiant white active text (`drop-shadow-[0_2px_16px_rgba(255,255,255,0.45)]`), past and upcoming lyric lines dynamically blurred (`blur-[0.35px]`) at 35-45% opacity, and smooth spring auto-centering scroll.
+
+---
+
+## 10. Bilingual Hinglish Lyrics & Subtitle Architecture
+
+- **Subtitles Positioned Below Main Text:** Romanized Hinglish translations render inline beneath each synced lyric line (`main text ke neche`) with staggered slide-in animations.
+- **Zero-Latency Client Transliterator (`devanagariToHinglish`):** Client-side instant engine with schwa deletion logic, nukta consonant mapping (`क़`, `ख़`, `ग़`, `ज़`, `फ़`, `ड़`, `ढ़`), and 50+ Bollywood vocabulary overrides (e.g., *parda*, *laazmi*, *tadpa*, *shaadi*, *mushkil*, *zindagi*), running with 0ms network latency.
+- **Side-by-Side Lyrics Auto-Reveal:** Dynamically slides into view 2-3 seconds after audio playback begins beside the 3D Cassette Tape or Vinyl turntable, with 1-click manual toggle and persistence.
+
+---
+
+## 11. Multi-Tier Album Artwork Pipeline Architecture (100% Coverage)
+
+- **Frame Decoding Re-encoder:** Replaced direct copy with `-vcodec mjpeg -vframes 1 -q:v 2 -y` in `ThumbnailService`, converting embedded PNG, WEBP, or BMP picture streams into compliant baseline JPEGs.
+- **Folder-Level Discovery:** Inspects parent directory for artwork candidates (`cover.jpg`, `folder.jpg`, `album.jpg`, `front.jpg`).
+- **Multi-Tier Online Search Hierarchy:**
+  1. Full metadata query: *Artist + Album*
+  2. Standalone album query: *Clean Album Title* (vital for Bollywood Soundtracks / OSTs with multiple playback singers)
+  3. Track metadata query: *Artist + Track Title*
+  4. Standalone track query: *Clean Track Title*
+- **Scanner-Level Auto-Import:** Injected into `LibraryScannerService` to automatically fetch and link artwork IDs across `Track.ArtworkId`, `Album.ArtworkId`, and `Artist.ArtworkId`, verifying 100% library artwork resolution.
 
 ---
 

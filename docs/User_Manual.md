@@ -72,16 +72,18 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
   <img src="../assets/soundwave-divider.svg" alt="Divider" width="100%" />
 </p>
 
-- **Collapsible Sidebar (Left):**
-  - Toggle with <kbd>Ctrl</kbd> + <kbd>B</kbd> or the bottom chevron button.
-  - Direct links to **Dashboard**, **Cinema**, **TV Shows**, **Music**, **Playlists**, **Watchlist**, **Favourites**, **Libraries**, and **Settings**.
-- **Header Bar (Top):**
-  - **FTS5 Global Search:** Press <kbd>Ctrl</kbd> + <kbd>K</kbd> to search across movies, shows, music tracks, artists, and albums in milliseconds.
-  - **Job Monitor:** Real-time pulse indicator showing scanning and transcoding status.
-  - **Security Indicator:** Verified green dot for local loopback (`127.0.0.1`).
-  - **Theme Toggle:** Instant switch between Dark and Light mode.
-- **Persistent Mini-Player (Bottom):**
-  - Docked player deck with real-time waveform visualizer, seek bar, time display, volume attenuation slider, and queue toggles.
+- **Apple Music Frosted Acrylic Sidebar (Left):**
+  - Translucent glassmorphism panel (`.apple-glass-panel`) with hairline border and subtle backdrop blur.
+  - Rounded pill navigation buttons with active glowing indicators. Toggle with <kbd>Ctrl</kbd> + <kbd>B</kbd> or the bottom chevron button.
+  - Direct links to **Dashboard**, **Cinema**, **TV Shows**, **Music**, **Playlists**, **Watchlist**, **Favourites**, **Media Health**, **Libraries**, and **Settings**.
+- **Apple Search Capsule & Header (Top):**
+  - **Floating Frosted Capsule Search:** Centered pill bar with acrylic blur, live clear button, and shortcut badge (<kbd>Ctrl</kbd> + <kbd>K</kbd>) to search across movies, shows, music tracks, artists, and albums in milliseconds using SQLite FTS5 BM25 scoring.
+  - **Job Monitor:** Real-time pulse indicator showing scanning, thumbnailing, and transcoding status.
+  - **Security Indicator:** Verified green shield badge confirming local loopback isolation (`127.0.0.1`).
+- **Floating Bottom Player Island Deck:**
+  - Docked Apple Music-style floating island deck featuring album artwork thumbnail, track title, artist subtitle, centered transport controls with a solid radiant white circular play button, volume slider, visualizer shortcut, and instant click-to-expand into Now Playing.
+- **Living Fluid Mesh Aura:**
+  - Organic multi-point ambient chromatic blooms (`#FA2D48` Apple Crimson, `#38BDF8` Sky Neon, `#818CF8` Cosmic Indigo) drifting softly behind glass layers across the application.
 
 ---
 
@@ -131,7 +133,7 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
   * **Compact View (`Compact`):** High-density streamlined rows for rapid browsing through large music libraries.
   * **Card Grid View (`Grid`):** Cover artwork cards featuring hover play buttons and album titles.
   * *Your preferred view mode is saved automatically in your browser profile.*
-- **High-Resolution Album Cover Art Auto-Import:** 1-click & automated artwork fetcher sourcing up to 3000x3000px artwork from Cover Art Archive, MusicBrainz, and Deezer CDN.
+- **100% High-Resolution Album Cover Art Engine:** Multi-tier extraction and auto-import pipeline with FFmpeg frame re-encoding (`-vframes 1 -q:v 2`), folder-level image discovery (`cover.jpg`, `folder.jpg`), and multi-tier online fallback (Artist + Album → Clean Album alone → Artist + Track → Track alone) delivering complete 100% artwork coverage across all tracks. Automatic scanner fallback runs silently in the background so you never see missing artwork placeholders.
 - **Interactive Audio Progress Bar:**
   * **Micro-Equalizer Bars:** 3 animated jumping bars next to the active timestamp display while playing.
   * **Soundwave Halo:** Dynamic breathing glow and double-ping ripple radiating from the scrubber knob during playback.

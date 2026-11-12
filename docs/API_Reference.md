@@ -124,6 +124,7 @@ All REST API endpoints return responses encapsulated in the standard `ApiRespons
 | `POST` | `/api/v1/music/tracks/{id}/lyrics/autofetch` | Automatic one-click lookup and assignment from LRCLIB. |
 | `POST` | `/api/v1/music/lyrics/translate` | Translate lyrics into target language (converts to natural Romanized Hinglish when Hindi is selected). |
 | `POST` | `/api/v1/music/albums/{id}/artwork/auto` | Auto-import highest-resolution cover art (up to 3000x3000px) from Cover Art Archive, MusicBrainz, and Deezer CDN. |
+| `POST` | `/api/v1/music/albums/auto-fetch-artwork` | Bulk auto-fetch artwork across all albums missing cover art using multi-tier fallback (Artist+Album → Album alone → Track alone). |
 
 ---
 

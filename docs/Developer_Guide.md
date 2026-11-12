@@ -61,10 +61,14 @@ VISTARA/
 3. **Safe Media Processing:**
    - User media files are treated as strictly immutable unless the user triggers an explicit management action.
    - File metadata scanning uses FFprobe without altering file modification timestamps.
-4. **Visual Rules (No Gradients):**
-   - Strictly avoid CSS linear or radial gradients.
-   - Use high-contrast solid surfaces: Background `#0b0d11`, Cards/Panels `#12151b`, Borders `#242a36`, Hover `#181c24`.
-   - Accents are solid high-contrast colors defined by CSS variables: `--color-accent` and `--color-accent-hover`.
+4. **Apple Music-Inspired Living Glassmorphism (`.apple-glass`):**
+   - Use standardized glassmorphism classes (`.apple-glass`, `.apple-glass-panel`) for translucent acrylic elevation.
+   - Acrylic parameters: `backdrop-filter: blur(28px) saturate(190%)` paired with hairline borders (`rgba(255, 255, 255, 0.12)`).
+   - Dynamic living background aura: `#FA2D48` (Apple Crimson), `#38BDF8` (Sky Neon), `#818CF8` (Cosmic Indigo) blooms with `blur-[120px]`.
+   - Typography: Radiant solid white typography for active lines (`drop-shadow-[0_2px_16px_rgba(255,255,255,0.45)]`) and subtle atmospheric blur (`blur-[0.35px]`) for background lines.
+5. **Hinglish Lyrics & Subtitle Conventions:**
+   - Always place Romanized Hinglish subtitles directly below the primary text (`main text ke neche`) with staggered slide-in animations.
+   - Utilize client-side transliteration utility `devanagariToHinglish()` from `src/frontend/src/utils/hinglish.ts` for 0ms instant display.
 
 > [!IMPORTANT]
 > Never introduce external cloud dependencies, registration barriers, or public socket bindings into VISTARA. The platform is strictly local-first.

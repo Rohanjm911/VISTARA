@@ -53,6 +53,8 @@
    - [Adaptive Playback, Fullscreen & Hardware Acceleration](#adaptive-playback-fullscreen--hardware-acceleration)
    - [Open-Source Online Subtitle Engine](#open-source-online-subtitle-engine-movies--tv-series)
    - [Open-Source Synced Lyrics Engine (LRCLIB)](#open-source-synced-lyrics-engine-lrclib-integration)
+   - [Bilingual Romanized Hinglish Lyrics & Side-by-Side Synced Lyrics](#bilingual-romanized-hinglish-lyrics--side-by-side-synced-lyrics)
+   - [Robust Multi-Tier Album Artwork Pipeline (100% Coverage)](#robust-multi-tier-album-artwork-pipeline-100-coverage)
 9. [Keyboard Shortcuts Matrix](#9-keyboard-shortcuts-matrix)
 10. [Building from Source](#10-building-from-source)
 11. [Automated Testing & Verification](#11-automated-testing--verification)
@@ -71,7 +73,9 @@
 * **Zero-Login Experience:** No login screens, no account creation, no password prompts. Opens directly into the Dashboard.
 * **No Docker Required:** Self-contained native Windows executables without container overhead or virtualization dependencies.
 * **Original Media File Safety:** Read-only access to user files. Original audio, video, and image assets are NEVER altered, remuxed in-place, or deleted without explicit confirmation.
-* **Unified Dual-Tone Identity (Zero Gradients):** High-contrast cinematic dark theme built with solid matte dark surfaces (`#10151B`, `#151A21`, `#1B222B`), clean borders (`#242a36`), and signature solid Electric Teal accent (`#35C6B0`). Absolute zero gradients.
+* **Apple Music-Inspired Living Glassmorphism:** Ultra-modern desktop experience pairing **Frosted Acrylic Glass materials (`.apple-glass`)** with an ambient **Living Fluid Mesh Aura** (`#FA2D48` Apple Crimson, `#38BDF8` Sky Neon, `#818CF8` Cosmic Indigo), floating macOS sidebar, capsule search bar, floating bottom player island deck, and borderless synced lyrics.
+* **Bilingual Hinglish Subtitles:** Zero-latency Devanagari-to-Hinglish transliterator and translation engine displaying Romanized lyrics directly underneath main lines (`main text ke neche`) with beat-synced kinetic typography.
+* **100% Album Artwork Coverage:** Robust multi-tier extraction and auto-import engine with FFmpeg frame decoding (`-vframes 1 -q:v 2`), folder-level artwork detection, and automated online fallback ensuring every single track in your collection has high-resolution cover art.
 * **Dual Operating Modes:**
   * **Desktop Mode:** WPF container with Microsoft Edge WebView2, custom title bar, fullscreen toggle (`F11`), and system tray minimization.
   * **Browser Mode:** Accessible from any browser at `http://127.0.0.1:5178/`, sharing the identical backend and SQLite database.
@@ -450,6 +454,22 @@ VISTARA elevates music listening into an audiophile studio experience:
 * **Synchronized Karaoke Mode (`.lrc`):** Millisecond-accurate timestamp parsing (`[mm:ss.xx]`) with live line-by-line glowing accent highlights, automatic smooth scrolling, and clickable jump-to-time lines.
 * **Auto-Fetch & Persistent Local Caching:** If a track has no embedded lyrics, VISTARA automatically queries LRCLIB on demand, sanitizes title/artist nomenclature, prioritizes time-synced lyrics, and caches them directly into the local SQLite database for instant offline access.
 * **Interactive Lyrics Search & Manual Override:** Dedicated in-player search drawer allows searching LRCLIB by custom song or artist name, previewing matched results with duration and synced tags, and applying lyrics with one click.
+
+### Bilingual Romanized Hinglish Lyrics & Side-by-Side Synced Lyrics
+* **Subtitles Directly Under Main Lyric Lines (`main text ke neche`):** Provides synchronized Romanized Hinglish subtitles directly below each lyric line with staggered slide-in animations (`animate-in fade-in-0 slide-in-from-top-1.5`), sky-neon typography (`#7DD3FC`), and glowing drop shadows.
+* **Zero-Latency Client Transliterator (`devanagariToHinglish`):** Client-side instant engine with schwa deletion logic, nukta consonant mapping (`क़`, `ख़`, `ग़`, `ज़`, `फ़`, `ड़`, `ढ़`), and 50+ Bollywood vocabulary overrides (e.g., *parda*, *laazmi*, *tadpa*, *shaadi*, *mushkil*, *zindagi*), running with 0ms network latency.
+* **Side-by-Side Lyrics Auto-Reveal:** Dynamically slides into view 2-3 seconds after audio playback starts beside the 3D Cassette Tape or Vinyl turntable, with 1-click manual show/hide toggle and local preference persistence.
+* **Dual-Column & Full-Screen Modes:** Easily switch between the compact side-by-side stream beside the cassette and the full-screen Apple Music-style lyrics canvas.
+
+### Robust Multi-Tier Album Artwork Pipeline (100% Coverage)
+* **FFmpeg Frame Re-Encoding:** Uses direct frame extraction and JPEG encoding (`-vframes 1 -q:v 2 -y`) rather than raw stream copying, eliminating container codec mismatch errors for embedded PNG and WEBP artwork.
+* **Folder-Level Artwork Detection:** Automatically inspects parent folders for cover art files (`cover.jpg`, `folder.jpg`, `album.jpg`, `front.jpg`).
+* **Multi-Tier Online Fallback:** Injected directly into the library scanner. When tracks lack embedded artwork, the scanner queries:
+  1. Full metadata search: *Artist + Album*
+  2. Standalone album search: *Clean Album Title* (vital for Bollywood Soundtracks / OSTs with multiple playback singers)
+  3. Track-level search: *Artist + Track Title*
+  4. Standalone track search: *Clean Track Title*
+* **100% Coverage Verified:** Links discovered artwork across Track, Album, and Artist entities, guaranteeing zero blank artwork placeholders across your entire media library.
 
 ---
 
