@@ -295,13 +295,16 @@ export const TvShowsPage: React.FC = () => {
           </button>
 
           {/* Show Banner / Hero */}
-          <div className="relative rounded-2xl border border-[#242a36] bg-[#12151b] overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 shadow-2xl">
+          <div className="relative rounded-2xl border border-[#242A36] bg-[#151A21] overflow-hidden p-6 sm:p-8 flex flex-col sm:flex-row gap-6 sm:gap-8 shadow-xl">
             {selectedShow.backdropUrl && (
-              <img
-                src={selectedShow.backdropUrl}
-                alt={selectedShow.title}
-                className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
-              />
+              <>
+                <img
+                  src={selectedShow.backdropUrl}
+                  alt={selectedShow.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-15 pointer-events-none"
+                />
+                <div className="absolute inset-0 bg-[#151A21]/80 pointer-events-none" />
+              </>
             )}
 
             {/* Poster Column with Actions */}
@@ -507,10 +510,15 @@ export const TvShowsPage: React.FC = () => {
       ) : (
         /* Series Grid Overview */
         <div className="space-y-6">
-          <div className="border-b border-[#242a36] pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="border-b border-[#242A36] pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <h1 className="text-xl font-bold tracking-wide text-white uppercase">Television & Web Series Universe</h1>
-              <p className="text-xs text-[#9ca3af]">{shows.length} series in library</p>
+              <h1 className="text-xl font-extrabold tracking-wide text-[#F4F7F8] uppercase flex items-center gap-2.5">
+                <span>Television & Web Series</span>
+                <span className="text-xs font-bold font-mono px-2.5 py-0.5 rounded-md bg-[#151A21] border border-[#242A36] text-accent">
+                  {shows.length} Series
+                </span>
+              </h1>
+              <p className="text-xs text-[#8D9AA8] mt-0.5">Organized seasons, episodes & progress tracking</p>
             </div>
 
             {/* Bulk Action Buttons */}
@@ -518,17 +526,17 @@ export const TvShowsPage: React.FC = () => {
               <button
                 onClick={handleAutoFetchAllTv}
                 disabled={isAutoFetchingAll || shows.length === 0}
-                className="flex items-center space-x-2 px-3.5 py-2 rounded-xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 text-xs font-bold transition-all shadow-sm active:scale-98 disabled:opacity-50"
+                className="flex items-center space-x-2 px-3.5 py-2 rounded-lg bg-[#1B222B] hover:bg-[#222B35] border border-accent/40 text-accent text-xs font-bold transition-all active:scale-95 disabled:opacity-50"
               >
                 {isAutoFetchingAll ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+                    <Loader2 className="w-4 h-4 animate-spin text-accent" />
                     <span>Auto-Fetching Series...</span>
                   </>
                 ) : (
                   <>
-                    <Zap className="w-4 h-4 text-emerald-400" />
-                    <span>⚡ Auto Fetch TV Posters</span>
+                    <Zap className="w-4 h-4 text-accent" />
+                    <span>Auto Fetch TV Posters</span>
                   </>
                 )}
               </button>
@@ -536,9 +544,9 @@ export const TvShowsPage: React.FC = () => {
           </div>
 
           {shows.length === 0 && !loading ? (
-            <div className="py-16 text-center text-[#9ca3af] space-y-3">
-              <Tv className="w-12 h-12 mx-auto text-[#6b7280]" />
-              <div className="text-sm font-bold text-white">No Television Shows in Library</div>
+            <div className="py-16 text-center text-[#8D9AA8] space-y-3">
+              <Tv className="w-12 h-12 mx-auto text-[#303A45]" />
+              <div className="text-sm font-bold text-[#F4F7F8]">No Television Shows in Library</div>
               <p className="text-xs max-w-sm mx-auto">
                 Add a TV series folder in Libraries to automatically identify seasons and episodes.
               </p>
@@ -549,32 +557,33 @@ export const TvShowsPage: React.FC = () => {
                 <div
                   key={show.id}
                   onClick={() => openShowDetails(show.showId)}
-                  className="group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+                  className="group relative bg-[#151A21] border border-[#242A36] hover:border-accent/70 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
                 >
-                  <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">
+                  <div className="aspect-[2/3] bg-[#10151B] relative overflow-hidden">
                     {show.posterUrl ? (
                       <img
                         key={show.posterUrl}
                         src={show.posterUrl}
                         alt={show.title}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-[#9ca3af]">
+                      <div className="w-full h-full flex items-center justify-center text-[#6B7885]">
                         <Tv className="w-8 h-8" />
                       </div>
                     )}
 
-                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-white border border-[#242a36]">
-                      {show.seasonCount} Seasons
+                    <div className="absolute top-2.5 left-2.5 px-1.5 py-0.5 rounded bg-[#10151B]/90 text-[10px] font-mono font-bold text-[#F4F7F8] border border-[#303A45] z-10">
+                      {show.seasonCount} {show.seasonCount === 1 ? 'Season' : 'Seasons'}
                     </div>
 
                     {/* Hover Quick Action Buttons */}
-                    <div className="absolute top-2 left-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                    <div className="absolute top-2.5 right-2.5 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                       <button
                         title="Import / Change Poster"
                         onClick={(e) => openPosterPicker(e, show)}
-                        className="w-7 h-7 rounded-lg bg-black/80 hover:bg-accent text-white flex items-center justify-center border border-white/20 transition-all shadow-md backdrop-blur-sm"
+                        className="p-1.5 rounded-lg bg-[#10151B]/90 hover:text-accent text-[#F4F7F8] flex items-center justify-center border border-[#303A45] transition-colors"
                       >
                         <ImageIcon className="w-3.5 h-3.5" />
                       </button>
@@ -583,31 +592,31 @@ export const TvShowsPage: React.FC = () => {
                         title="1-Click Auto Fetch from Online"
                         disabled={autoFetchingShowId === show.showId}
                         onClick={(e) => handleAutoFetchSingle(e, show)}
-                        className="w-7 h-7 rounded-lg bg-black/80 hover:bg-emerald-500 text-white flex items-center justify-center border border-white/20 transition-all shadow-md backdrop-blur-sm"
+                        className="p-1.5 rounded-lg bg-[#10151B]/90 hover:text-accent text-accent flex items-center justify-center border border-[#303A45] transition-colors"
                       >
                         {autoFetchingShowId === show.showId ? (
-                          <Loader2 className="w-3.5 h-3.5 animate-spin text-emerald-400" />
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
                         ) : (
-                          <Wand2 className="w-3.5 h-3.5 text-emerald-400 hover:text-white" />
+                          <Wand2 className="w-3.5 h-3.5" />
                         )}
                       </button>
                     </div>
 
                     {/* Play Hover Overlay */}
-                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity pointer-events-none">
-                      <div className="w-10 h-10 rounded-full bg-accent text-white flex items-center justify-center shadow-lg">
-                        <Play className="w-4 h-4 fill-white ml-0.5" />
+                    <div className="absolute inset-0 bg-[#10151B]/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity pointer-events-none">
+                      <div className="w-11 h-11 rounded-full bg-accent text-[#10151B] flex items-center justify-center shadow-xl">
+                        <Play className="w-5 h-5 fill-[#10151B] ml-0.5" />
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-3">
-                    <div className="font-bold text-xs text-white truncate" title={show.title}>
+                  <div className="p-3 bg-[#151A21]">
+                    <div className="font-semibold text-xs text-[#F4F7F8] truncate" title={show.title}>
                       {show.title}
                     </div>
-                    <div className="text-[11px] text-[#9ca3af] mt-0.5 flex justify-between items-center">
+                    <div className="text-[11px] text-[#8D9AA8] mt-1 flex justify-between items-center">
                       <span>{show.year || 'TV Series'}</span>
-                      <span>{show.episodeCount} eps</span>
+                      <span className="font-mono text-[10px]">{show.episodeCount} eps</span>
                     </div>
                   </div>
                 </div>

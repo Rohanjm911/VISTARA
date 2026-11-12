@@ -357,54 +357,50 @@ export const CinemaPage: React.FC = () => {
 
   return (
     <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-7 select-none">
-      {/* 1. Featured Movie Banner */}
+      {/* 1. Split Editorial Featured Movie Banner */}
       {featuredMovie && !selectedGenre && !selectedYear && (
-        <div className="relative rounded-2xl border border-[#242a36] bg-[#12151b] overflow-hidden p-6 sm:p-8 flex flex-col justify-end min-h-[300px] shadow-xl group">
-          {featuredMovie.backdropUrl ? (
-            <img
-              src={featuredMovie.backdropUrl}
-              alt={featuredMovie.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-25 group-hover:opacity-30 transition-opacity pointer-events-none"
-            />
-          ) : featuredMovie.posterUrl ? (
-            <img
-              src={featuredMovie.posterUrl}
-              alt={featuredMovie.title}
-              className="absolute inset-0 w-full h-full object-cover opacity-15 filter blur-sm pointer-events-none"
-            />
-          ) : null}
-
-          <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-
-          <div className="relative z-10 max-w-2xl space-y-3">
-            <span className="px-2.5 py-1 rounded-full bg-accent/25 border border-accent/40 text-accent-light font-bold text-[10px] tracking-wider uppercase inline-flex items-center space-x-1.5 shadow-sm">
-              <Sparkles className="w-3 h-3 text-accent" />
-              <span>Cinema Spotlight</span>
-            </span>
-
-            <h1 className="text-2xl sm:text-4xl font-black text-white tracking-wide">
-              {featuredMovie.title}
-            </h1>
-
-            <div className="flex flex-wrap items-center gap-3 text-xs text-[#9ca3af]">
-              {featuredMovie.year && <span>{featuredMovie.year}</span>}
-              {featuredMovie.runtimeMinutes && <span>{featuredMovie.runtimeMinutes} min</span>}
+        <div className="relative rounded-2xl border border-[#242A36] bg-[#151A21] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[280px] lg:h-[310px] shadow-xl group">
+          {/* Left Editorial Info */}
+          <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between bg-[#151A21] z-10">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent font-bold text-[10px] tracking-wider uppercase inline-flex items-center space-x-1.5">
+                <Sparkles className="w-3 h-3 text-accent" />
+                <span>Cinema Spotlight</span>
+              </span>
+              {featuredMovie.editions[0]?.resolutionLabel && (
+                <span className="px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[10px] font-mono font-bold text-[#F4F7F8]">
+                  {featuredMovie.editions[0].resolutionLabel}
+                </span>
+              )}
               {featuredMovie.communityRating && (
-                <span className="flex items-center text-amber-400 font-bold">
-                  <Star className="w-3.5 h-3.5 fill-amber-400 mr-1" />
+                <span className="inline-flex items-center px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] text-[11px] font-bold">
+                  <Star className="w-3 h-3 fill-accent text-accent mr-1" />
                   {featuredMovie.communityRating.toFixed(1)}
                 </span>
               )}
-              {featuredMovie.genres.length > 0 && <span>• {featuredMovie.genres.join(', ')}</span>}
             </div>
 
-            {featuredMovie.overview && (
-              <p className="text-xs text-[#d1d5db] line-clamp-2 leading-relaxed">
-                {featuredMovie.overview}
-              </p>
-            )}
+            <div className="space-y-2 my-3">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight line-clamp-1">
+                {featuredMovie.title}
+              </h1>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-[#8D9AA8]">
+                {featuredMovie.year && <span className="font-semibold text-[#F4F7F8]">{featuredMovie.year}</span>}
+                {featuredMovie.runtimeMinutes && <span>· {featuredMovie.runtimeMinutes} min</span>}
+                {featuredMovie.genres.length > 0 && (
+                  <span className="text-[#8D9AA8]">· {featuredMovie.genres.slice(0, 3).join(', ')}</span>
+                )}
+              </div>
+
+              {featuredMovie.overview && (
+                <p className="text-xs sm:text-[13px] text-[#A4AFB9] line-clamp-2 leading-relaxed max-w-xl">
+                  {featuredMovie.overview}
+                </p>
+              )}
+            </div>
+
+            <div className="pt-2 border-t border-[#202733] flex flex-wrap items-center gap-2.5">
               <button
                 onClick={() => {
                   if (featuredMovie.editions[0]?.mediaFileId) {
@@ -413,27 +409,42 @@ export const CinemaPage: React.FC = () => {
                     openMovieDetails(featuredMovie);
                   }
                 }}
-                className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-xs font-bold transition-all shadow-md active:scale-95"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#10151B] text-xs font-extrabold transition-all active:scale-95"
               >
-                <Play className="w-4 h-4 fill-white" />
+                <Play className="w-3.5 h-3.5 fill-[#10151B]" />
                 <span>Play Movie</span>
               </button>
 
               <button
                 onClick={() => openMovieDetails(featuredMovie)}
-                className="px-4 py-2.5 rounded-xl bg-[#181c24] border border-[#242a36] hover:border-accent text-white text-xs font-bold transition-colors"
+                className="px-4 py-2 rounded-lg bg-[#1B222B] border border-[#2A3442] hover:border-accent/60 text-[#F4F7F8] text-xs font-semibold transition-colors"
               >
                 Details & Versions
               </button>
 
               <button
                 onClick={(e) => openPosterPicker(e, featuredMovie)}
-                className="flex items-center space-x-1.5 px-3 py-2.5 rounded-xl bg-[#181c24]/80 hover:bg-[#242a36] border border-[#242a36] hover:border-accent text-[#9ca3af] hover:text-white text-xs font-semibold transition-colors"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-[#1B222B] border border-transparent hover:border-[#242A36] text-[#94A3B8] hover:text-[#F4F7F8] text-xs font-semibold transition-colors"
               >
                 <ImageIcon className="w-3.5 h-3.5 text-accent" />
                 <span>Change Poster</span>
               </button>
             </div>
+          </div>
+
+          {/* Right Framed Artwork */}
+          <div className="hidden lg:block lg:col-span-5 relative bg-[#10151B] border-l border-[#242A36] overflow-hidden">
+            {featuredMovie.backdropUrl || featuredMovie.posterUrl ? (
+              <img
+                src={featuredMovie.backdropUrl || featuredMovie.posterUrl}
+                alt={featuredMovie.title}
+                className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-[#10151B] text-[#303A45]">
+                <Film className="w-12 h-12" />
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -575,74 +586,57 @@ export const CinemaPage: React.FC = () => {
       ) : (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-5">
           {filteredMovies.map((movie) => {
-            const isAutoFetchingThis = autoFetchingMovieId === movie.id;
+            const topBadge =
+              movie.editions.length > 1
+                ? `${movie.editions.length} Versions`
+                : movie.editions[0]?.resolutionLabel || null;
 
             return (
               <div
                 key={movie.id}
                 onClick={() => openMovieDetails(movie)}
-                className="group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-xl hover:-translate-y-1"
+                className="group relative bg-[#151A21] border border-[#242A36] hover:border-accent/70 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
               >
-                <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">
+                <div className="aspect-[2/3] bg-[#10151B] relative overflow-hidden">
                   {movie.posterUrl ? (
                     <img
                       src={movie.posterUrl}
                       alt={movie.title}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
                     />
                   ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-[#9ca3af] p-3 text-center space-y-2">
-                      <Film className="w-8 h-8 text-[#6b7280]" />
-                      <span className="text-[10px] text-[#6b7280] font-semibold">No Poster</span>
+                    <div className="w-full h-full flex flex-col items-center justify-center text-[#6B7885] p-3 text-center space-y-2">
+                      <Film className="w-8 h-8 text-[#303A45]" />
+                      <span className="text-[10px] font-semibold">No Poster</span>
                     </div>
                   )}
 
-                  {/* Badges on top left */}
-                  <div className="absolute top-2 left-2 flex flex-col space-y-1 z-10">
-                    {movie.editions.length > 1 && (
-                      <span className="px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-accent border border-accent/40 backdrop-blur-sm">
-                        {movie.editions.length} Versions
+                  {/* Single restrained badge on top left */}
+                  {topBadge && (
+                    <div className="absolute top-2.5 left-2.5 z-10">
+                      <span
+                        className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-bold tracking-wide bg-[#10151B]/90 border ${
+                          movie.editions.length > 1
+                            ? 'text-accent border-accent/40'
+                            : 'text-[#F4F7F8] border-[#303A45]'
+                        }`}
+                      >
+                        {topBadge}
                       </span>
-                    )}
-                    {movie.editions[0]?.resolutionLabel && (
-                      <span className="px-1.5 py-0.5 rounded bg-black/80 text-[10px] font-bold text-white border border-white/10 backdrop-blur-sm">
-                        {movie.editions[0].resolutionLabel}
-                      </span>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  {/* Action Buttons on top right (Hover overlay) */}
-                  <div className="absolute top-2 right-2 flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
-                    {/* Auto Fetch / Import Poster Quick Button */}
-                    <button
-                      title="Import / Change Poster"
-                      onClick={(e) => openPosterPicker(e, movie)}
-                      className="p-1.5 rounded-full bg-black/85 text-white hover:text-accent hover:scale-110 transition-all border border-white/10 shadow-md"
-                    >
-                      <ImageIcon className="w-3.5 h-3.5" />
-                    </button>
-
-                    <button
-                      title="⚡ Auto-Fetch Official Poster Online"
-                      onClick={(e) => handleAutoFetchSingle(e, movie)}
-                      disabled={isAutoFetchingThis}
-                      className="p-1.5 rounded-full bg-black/85 text-emerald-400 hover:text-white hover:bg-emerald-600 hover:scale-110 transition-all border border-white/10 shadow-md"
-                    >
-                      {isAutoFetchingThis ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
-                      ) : (
-                        <Wand2 className="w-3.5 h-3.5" />
-                      )}
-                    </button>
-
+                  {/* Streamlined quick actions on top right (Hover only) */}
+                  <div className="absolute top-2.5 right-2.5 flex items-center space-x-1.5 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                     <button
                       title={movie.isFavourite ? 'Remove from Favourites' : 'Add to Favourites'}
                       onClick={(e) => toggleFavourite(e, movie)}
-                      className="p-1.5 rounded-full bg-black/85 text-white hover:text-rose-500 hover:scale-110 transition-all border border-white/10 shadow-md"
+                      className="p-1.5 rounded-lg bg-[#10151B]/90 text-[#F4F7F8] hover:text-accent transition-colors border border-[#303A45]"
                     >
                       <Heart
                         className={`w-3.5 h-3.5 ${
-                          movie.isFavourite ? 'fill-rose-500 text-rose-500' : ''
+                          movie.isFavourite ? 'fill-accent text-accent' : ''
                         }`}
                       />
                     </button>
@@ -650,7 +644,7 @@ export const CinemaPage: React.FC = () => {
                     <button
                       title={movie.isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
                       onClick={(e) => toggleWatchlist(e, movie)}
-                      className="p-1.5 rounded-full bg-black/85 text-white hover:text-accent hover:scale-110 transition-all border border-white/10 shadow-md"
+                      className="p-1.5 rounded-lg bg-[#10151B]/90 text-[#F4F7F8] hover:text-accent transition-colors border border-[#303A45]"
                     >
                       <Bookmark
                         className={`w-3.5 h-3.5 ${
@@ -660,7 +654,7 @@ export const CinemaPage: React.FC = () => {
                     </button>
                   </div>
 
-                  {/* Hover Play Icon */}
+                  {/* Hover Play Overlay */}
                   <div
                     onClick={(e) => {
                       e.stopPropagation();
@@ -671,33 +665,33 @@ export const CinemaPage: React.FC = () => {
                         openMovieDetails(movie);
                       }
                     }}
-                    className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity backdrop-blur-[1px]"
+                    className="absolute inset-0 bg-[#10151B]/65 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
                     title="Play Movie"
                   >
-                    <div className="w-11 h-11 rounded-full bg-accent text-white flex items-center justify-center shadow-xl transform scale-90 group-hover:scale-110 transition-transform">
-                      <Play className="w-5 h-5 fill-white ml-0.5" />
+                    <div className="w-11 h-11 rounded-full bg-accent text-[#10151B] flex items-center justify-center shadow-xl transform scale-90 group-hover:scale-100 transition-transform">
+                      <Play className="w-5 h-5 fill-[#10151B] ml-0.5" />
                     </div>
                   </div>
 
                   {/* Progress bar */}
                   {movie.progress && (
-                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#242a36]">
+                    <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#222B35]">
                       <div
                         style={{ width: `${movie.progress.percentageWatched}%` }}
-                        className="h-full bg-accent shadow-[0_0_8px_var(--color-accent)]"
+                        className="h-full bg-accent"
                       />
                     </div>
                   )}
                 </div>
 
-                <div className="p-3">
-                  <div className="font-bold text-xs text-white truncate" title={movie.title}>
+                <div className="p-3 bg-[#151A21]">
+                  <div className="font-semibold text-xs text-[#F4F7F8] truncate" title={movie.title}>
                     {movie.title}
                   </div>
-                  <div className="text-[11px] text-[#9ca3af] mt-0.5 flex justify-between items-center">
+                  <div className="text-[11px] text-[#8D9AA8] mt-1 flex justify-between items-center">
                     <span>{movie.year || 'Movie'}</span>
                     {movie.communityRating && (
-                      <span className="flex items-center text-amber-400 font-bold text-[10px]">
+                      <span className="flex items-center text-accent font-bold text-[10px]">
                         ★ {movie.communityRating.toFixed(1)}
                       </span>
                     )}
@@ -778,7 +772,7 @@ export const CinemaPage: React.FC = () => {
                     onClick={(e) => handleAutoFetchSingle(e, selectedMovie)}
                     disabled={autoFetchingMovieId === selectedMovie.id}
                     title="1-Click Auto Fetch from Cinemeta"
-                    className="flex-1 flex items-center justify-center space-x-1 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-[11px] font-semibold text-emerald-400 transition-colors"
+                    className="flex-1 flex items-center justify-center space-x-1 px-2.5 py-1.5 rounded-lg bg-accent/15 hover:bg-accent/25 border border-accent/35 text-[11px] font-semibold text-accent transition-colors"
                   >
                     {autoFetchingMovieId === selectedMovie.id ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -795,35 +789,70 @@ export const CinemaPage: React.FC = () => {
               {/* Info Details */}
               <div className="flex-1 space-y-3">
                 <div>
-                  <h2 className="text-2xl font-black text-white">{selectedMovie.title}</h2>
+                  <h2 className="text-2xl font-extrabold text-[#F4F7F8] tracking-tight">{selectedMovie.title}</h2>
                   {selectedMovie.tagline && (
-                    <p className="text-xs italic text-[#9ca3af] mt-0.5">"{selectedMovie.tagline}"</p>
+                    <p className="text-xs italic text-[#8D9AA8] mt-0.5">"{selectedMovie.tagline}"</p>
                   )}
                 </div>
 
-                <div className="flex flex-wrap items-center gap-3 text-xs text-[#9ca3af]">
+                <div className="flex flex-wrap items-center gap-3 text-xs text-[#94A3B8]">
                   {selectedMovie.year && (
                     <span className="flex items-center">
-                      <Calendar className="w-3.5 h-3.5 mr-1" /> {selectedMovie.year}
+                      <Calendar className="w-3.5 h-3.5 mr-1 text-accent" /> {selectedMovie.year}
                     </span>
                   )}
                   {selectedMovie.runtimeMinutes && (
                     <span className="flex items-center">
-                      <Clock className="w-3.5 h-3.5 mr-1" /> {selectedMovie.runtimeMinutes} min
+                      <Clock className="w-3.5 h-3.5 mr-1 text-accent" /> {selectedMovie.runtimeMinutes} min
                     </span>
                   )}
                   {selectedMovie.communityRating && (
-                    <span className="flex items-center text-amber-400 font-bold">
-                      <Star className="w-3.5 h-3.5 fill-amber-400 mr-1" />{' '}
+                    <span className="flex items-center text-accent font-bold">
+                      <Star className="w-3.5 h-3.5 fill-accent mr-1" />{' '}
                       {selectedMovie.communityRating.toFixed(1)} / 10
                     </span>
                   )}
                   {selectedMovie.contentRating && (
-                    <span className="px-1.5 py-0.5 rounded border border-[#242a36] font-mono">
+                    <span className="px-1.5 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] font-mono text-[11px]">
                       {selectedMovie.contentRating}
                     </span>
                   )}
                 </div>
+
+                {/* Technical Media Specs Strip for active edition */}
+                {(() => {
+                  const activeEd =
+                    selectedMovie.editions.find((e) => e.mediaFileId === selectedEditionId) ||
+                    selectedMovie.editions[0];
+                  if (!activeEd) return null;
+                  return (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {activeEd.resolutionLabel && (
+                        <span className="px-2 py-0.5 rounded bg-[#1B222B] border border-accent/40 text-accent font-mono text-[10px] font-bold">
+                          {activeEd.resolutionLabel}
+                        </span>
+                      )}
+                      {activeEd.videoCodec && (
+                        <span className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] font-mono text-[10px]">
+                          VIDEO: {activeEd.videoCodec.toUpperCase()}
+                        </span>
+                      )}
+                      {activeEd.audioCodec && (
+                        <span className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] font-mono text-[10px]">
+                          AUDIO: {activeEd.audioCodec.toUpperCase()}
+                        </span>
+                      )}
+                      {activeEd.containerFormat && (
+                        <span className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[#94A3B8] font-mono text-[10px]">
+                          {activeEd.containerFormat.toUpperCase()}
+                        </span>
+                      )}
+                      <span className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[#94A3B8] font-mono text-[10px]">
+                        {(activeEd.fileSizeBytes / (1024 * 1024 * 1024)).toFixed(2)} GB
+                      </span>
+                    </div>
+                  );
+                })()}
 
                 {selectedMovie.genres.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">

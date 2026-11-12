@@ -1,11 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Film,
-  Moon,
   Music,
   RefreshCw,
   Search,
-  Sun,
   Tv,
   Wand2,
   Waves,
@@ -14,7 +12,6 @@ import {
 import { apiRequest } from '../api/client';
 import { signalRService } from '../api/signalr';
 import { usePlayer } from '../context/PlayerContext';
-import { useTheme } from '../context/ThemeContext';
 import { BackgroundJobDto, SearchResultDto, MovieDto, TVShowDto, TrackDto } from '../types';
 import { ambientSound, AmbientPreset } from '../utils/ambientSound';
 import { uiSound } from '../utils/uiSound';
@@ -25,7 +22,6 @@ interface TitlebarProps {
 }
 
 export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) => {
-  const { isDark, toggleTheme } = useTheme();
   const { openVideoPlayer, playTrack } = usePlayer();
 
   const [query, setQuery] = useState('');
@@ -33,6 +29,7 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
   const [isSearching, setIsSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeJobs, setActiveJobs] = useState<BackgroundJobDto[]>([]);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Ambient soundscape states
   const [ambientActive, setAmbientActive] = useState<boolean>(() => ambientSound.isEnabled());
@@ -100,6 +97,22 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
     return () => clearTimeout(timer);
   }, [query]);
 
+  // Ctrl+K shortcut to focus global universe search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      } else if (e.key === 'Escape' && document.activeElement === inputRef.current) {
+        setShowDropdown(false);
+        inputRef.current?.blur();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   // Click outside search dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -118,21 +131,26 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
     (results?.photos.length || 0);
 
   return (
-    <header className="h-14 bg-[#12151b] border-b border-[#242a36] px-6 flex items-center justify-between select-none relative z-30">
-      {/* Search Input with FTS5 suggestions */}
-      <div className="relative w-96" ref={searchRef}>
+    <header className="h-14 bg-[#12161D] border-b border-[#202733] px-6 flex items-center justify-between select-none relative z-30">
+      {/* Search Input with FTS5 suggestions & Ctrl+K */}
+      <div className="relative w-[420px] max-w-full" ref={searchRef}>
         <div className="relative">
-          <Search className="w-4 h-4 text-[#9ca3af] absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#6B7885] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
+            ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => results && totalResultsCount > 0 && setShowDropdown(true)}
-            placeholder="Search universe (movies, shows, music, photos)..."
-            className="w-full bg-[#181c24] border border-[#242a36] rounded-md pl-9 pr-4 py-1.5 text-xs text-white placeholder-[#6b7280] focus:outline-none focus:border-accent transition-colors"
+            placeholder="Search movies, TV shows, tracks, or photos..."
+            className="w-full bg-[#161B23] border border-[#242D3A] rounded-lg pl-10 pr-16 py-1.5 text-xs text-[#F4F7F8] placeholder-[#6B7885] focus:outline-none focus:border-accent transition-colors"
           />
-          {isSearching && (
+          {isSearching ? (
             <RefreshCw className="w-3.5 h-3.5 text-accent animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
+          ) : (
+            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[10px] font-mono text-[#8D9AA8] pointer-events-none">
+              Ctrl+K
+            </kbd>
           )}
         </div>
 

@@ -74,7 +74,7 @@ export const MiniPlayer: React.FC = () => {
   const safeCurrentTime = Number.isFinite(currentTime) && currentTime >= 0 ? currentTime : 0;
 
   return (
-    <div className="h-18 bg-[#12151b] border-t border-[#242a36] px-6 flex items-center justify-between select-none relative z-20">
+    <div className="h-[74px] bg-[#12161D] border-t border-[#202733] px-6 flex items-center justify-between select-none relative z-20">
       {/* Left Media Details */}
       <div className="flex items-center space-x-3 min-w-[270px] max-w-md sm:max-w-lg">
         <div
@@ -168,11 +168,11 @@ export const MiniPlayer: React.FC = () => {
 
           <button
             onClick={togglePlayPause}
-            className={`w-8 h-8 rounded-full bg-accent hover:bg-accent-hover text-white flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-md ${
+            className={`w-8 h-8 rounded-full bg-accent hover:bg-accent-hover text-[#10151B] flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-md ${
               isPlaying ? 'shadow-[0_0_16px_rgba(53,198,176,0.5)] ring-2 ring-accent/40' : ''
             }`}
           >
-            {isPlaying ? <Pause className="w-4 h-4 fill-white" /> : <Play className="w-4 h-4 fill-white ml-0.5" />}
+            {isPlaying ? <Pause className="w-4 h-4 fill-[#10151B]" /> : <Play className="w-4 h-4 fill-[#10151B] ml-0.5" />}
           </button>
 
           <button

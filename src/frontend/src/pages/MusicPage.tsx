@@ -234,8 +234,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'tracks'
-                  ? 'bg-accent text-white font-bold shadow-sm'
-                  : 'text-[#9ca3af] hover:text-white'
+                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
               }`}
             >
               Tracks ({tracks.length})
@@ -247,8 +247,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'albums'
-                  ? 'bg-accent text-white font-bold shadow-sm'
-                  : 'text-[#9ca3af] hover:text-white'
+                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
               }`}
             >
               Albums {albums.length > 0 && `(${albums.length})`}
@@ -260,8 +260,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'artists'
-                  ? 'bg-accent text-white font-bold shadow-sm'
-                  : 'text-[#9ca3af] hover:text-white'
+                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
               }`}
             >
               Artists {artists.length > 0 && `(${artists.length})`}
@@ -367,15 +367,15 @@ export const MusicPage: React.FC = () => {
               <button
                 onClick={handlePlayAll}
                 disabled={processedTracks.length === 0}
-                className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-accent hover:bg-accent-hover text-white text-xs font-bold shadow-sm cursor-pointer transition-transform hover:scale-105 active:scale-95 disabled:opacity-50"
+                className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-accent hover:bg-accent-hover text-[#10151B] text-xs font-extrabold shadow-sm cursor-pointer transition-all active:scale-95 disabled:opacity-50"
               >
-                <Play className="w-3.5 h-3.5 fill-white" />
+                <Play className="w-3.5 h-3.5 fill-[#10151B]" />
                 <span>Play All ({processedTracks.length})</span>
               </button>
               <button
                 onClick={handleShuffleAll}
                 disabled={processedTracks.length === 0}
-                className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-[#181c24] hover:bg-[#202634] text-[#d1d5db] text-xs font-semibold border border-[#242a36] shadow-sm cursor-pointer transition-colors disabled:opacity-50"
+                className="flex items-center space-x-2 px-3.5 py-1.5 rounded-lg bg-[#151A21] hover:bg-[#1B222B] text-[#F4F7F8] text-xs font-semibold border border-[#242A36] shadow-sm cursor-pointer transition-colors disabled:opacity-50"
               >
                 <Shuffle className="w-3.5 h-3.5 text-accent" />
                 <span>Shuffle</span>
@@ -384,14 +384,14 @@ export const MusicPage: React.FC = () => {
 
             <div className="flex items-center justify-between sm:justify-end gap-3.5">
               {/* Listing View Mode Switcher */}
-              <div className="flex items-center p-0.5 rounded-lg bg-[#12151b] border border-[#242a36] shadow-sm">
+              <div className="flex items-center p-0.5 rounded-lg bg-[#151A21] border border-[#242A36] shadow-sm">
                 <button
                   onClick={() => handleViewModeChange('table')}
                   title="Detailed Table View"
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                     viewMode === 'table'
-                      ? 'bg-accent text-white shadow-sm'
-                      : 'text-[#9ca3af] hover:text-white hover:bg-[#181c24]'
+                      ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                      : 'text-[#8D9AA8] hover:text-[#F4F7F8] hover:bg-[#1B222B]'
                   }`}
                 >
                   <List className="w-3.5 h-3.5" />
@@ -400,10 +400,10 @@ export const MusicPage: React.FC = () => {
                 <button
                   onClick={() => handleViewModeChange('compact')}
                   title="Compact List View"
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                     viewMode === 'compact'
-                      ? 'bg-accent text-white shadow-sm'
-                      : 'text-[#9ca3af] hover:text-white hover:bg-[#181c24]'
+                      ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                      : 'text-[#8D9AA8] hover:text-[#F4F7F8] hover:bg-[#1B222B]'
                   }`}
                 >
                   <AlignJustify className="w-3.5 h-3.5" />
@@ -412,10 +412,10 @@ export const MusicPage: React.FC = () => {
                 <button
                   onClick={() => handleViewModeChange('grid')}
                   title="Card Grid View"
-                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all cursor-pointer ${
+                  className={`flex items-center space-x-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer ${
                     viewMode === 'grid'
-                      ? 'bg-accent text-white shadow-sm'
-                      : 'text-[#9ca3af] hover:text-white hover:bg-[#181c24]'
+                      ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
+                      : 'text-[#8D9AA8] hover:text-[#F4F7F8] hover:bg-[#1B222B]'
                   }`}
                 >
                   <LayoutGrid className="w-3.5 h-3.5" />

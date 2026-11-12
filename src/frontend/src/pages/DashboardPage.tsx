@@ -531,93 +531,72 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 2. Cinematic Hero Billboard / Spotlight Carousel */}
+      {/* 2. Split Editorial Hero Showcase Carousel */}
       {prefs.widgets.hero && prefs.heroMode !== 'hidden' && activeHero && (
         <div
           onMouseEnter={() => setIsHeroPaused(true)}
           onMouseLeave={() => setIsHeroPaused(false)}
-          className={`relative w-full rounded-2xl overflow-hidden border border-[#242a36]/80 shadow-2xl transition-all group ${
-            prefs.heroMode === 'compact' ? 'h-[220px]' : 'h-[320px] sm:h-[380px]'
+          className={`relative w-full rounded-2xl overflow-hidden bg-[#151A21] border border-[#242A36] shadow-xl transition-all group grid grid-cols-1 lg:grid-cols-12 ${
+            prefs.heroMode === 'compact' ? 'min-h-[210px]' : 'min-h-[300px] lg:h-[340px]'
           }`}
         >
-          {/* Backdrop Visual Artwork */}
-          <div className="absolute inset-0 bg-[#0d1017]">
-            {activeHero.backdropUrl || activeHero.posterUrl ? (
-              <img
-                src={activeHero.backdropUrl || activeHero.posterUrl}
-                alt={activeHero.title}
-                className="w-full h-full object-cover object-center filter brightness-[0.65] contrast-[1.1] transform group-hover:scale-[1.01] transition-transform duration-700 ease-out"
-              />
-            ) : (
-              <div className="w-full h-full bg-[#12151b]" />
-            )}
-            {/* Clean Solid Darkening Overlay */}
-            <div className="absolute inset-0 bg-black/60 pointer-events-none" />
-          </div>
-
-          {/* Hero Content Overlay */}
-          <div className="relative z-10 h-full flex flex-col justify-between p-6 sm:p-8 max-w-3xl">
-            {/* Top Badge: Resume or Spotlight */}
-            <div className="flex items-center space-x-2">
+          {/* Left Editorial Content Column */}
+          <div className="lg:col-span-7 flex flex-col justify-between p-6 sm:p-8 bg-[#151A21] z-10">
+            {/* Top Status & Rating Row */}
+            <div className="flex flex-wrap items-center gap-2">
               {activeHero.isResume ? (
-                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold tracking-wide uppercase shadow-sm backdrop-blur-md">
-                  <Play className="w-3 h-3 fill-emerald-400" />
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-[11px] font-bold tracking-wide uppercase">
+                  <Play className="w-3 h-3 fill-accent" />
                   <span>Resume Playing {activeHero.progressPercent ? `· ${activeHero.progressPercent}%` : ''}</span>
                 </div>
               ) : (
-                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-accent/25 border border-accent/40 text-accent-light text-[11px] font-bold tracking-wide uppercase shadow-sm backdrop-blur-md">
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-[11px] font-bold tracking-wide uppercase">
                   <Sparkles className="w-3 h-3 text-accent" />
-                  <span>Featured Universe Spotlight</span>
+                  <span>Featured Spotlight</span>
                 </div>
               )}
 
               {activeHero.rating && (
-                <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-full bg-black/40 border border-white/10 text-amber-400 text-[11px] font-bold backdrop-blur-md">
-                  <Star className="w-3 h-3 fill-amber-400" />
+                <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] text-[11px] font-bold">
+                  <Star className="w-3 h-3 fill-accent text-accent" />
                   <span>{activeHero.rating.toFixed(1)}</span>
                 </div>
               )}
 
-              <div className="hidden sm:inline-flex px-2 py-1 rounded-full bg-white/5 border border-white/10 text-[#9ca3af] text-[11px] font-semibold">
-                4K ULTRA HD
-              </div>
+              <span className="text-[11px] font-semibold text-[#8D9AA8] px-2 py-1 rounded-md bg-[#1B222B] border border-[#242A36]">
+                {activeHero.subtitle}
+              </span>
             </div>
 
-            {/* Title & Metadata */}
-            <div className="space-y-2">
-              <h2 className="text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md line-clamp-1">
+            {/* Title, Tagline & Synopsis */}
+            <div className="space-y-2.5 my-4">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight line-clamp-1">
                 {activeHero.title}
               </h2>
 
-              {activeHero.tagline && (
-                <p className="text-xs sm:text-sm text-accent-light font-medium italic line-clamp-1">
-                  "{activeHero.tagline}"
-                </p>
+              {activeHero.genres && activeHero.genres.length > 0 && (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  {activeHero.genres.slice(0, 3).map((g) => (
+                    <span
+                      key={g}
+                      className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#242A36] text-[#94A3B8] text-[10px] font-semibold tracking-wide uppercase"
+                    >
+                      {g}
+                    </span>
+                  ))}
+                </div>
               )}
 
-              {/* Subtitle & Genre Chips */}
-              <div className="flex flex-wrap items-center gap-2 text-xs text-[#d1d5db]">
-                <span className="font-semibold text-white">{activeHero.subtitle}</span>
-                {activeHero.genres && activeHero.genres.slice(0, 3).map((g) => (
-                  <span
-                    key={g}
-                    className="px-2 py-0.5 rounded bg-white/10 text-[#9ca3af] text-[10px] font-medium tracking-wide uppercase"
-                  >
-                    {g}
-                  </span>
-                ))}
-              </div>
-
               {activeHero.overview && prefs.heroMode !== 'compact' && (
-                <p className="text-xs sm:text-sm text-[#9ca3af] line-clamp-2 max-w-xl pt-1">
+                <p className="text-xs sm:text-[13px] leading-relaxed text-[#A4AFB9] line-clamp-3 max-w-xl">
                   {activeHero.overview}
                 </p>
               )}
             </div>
 
             {/* Action Buttons & Slide Dots */}
-            <div className="flex items-center justify-between pt-2">
-              <div className="flex items-center space-x-3">
+            <div className="flex items-center justify-between pt-2 border-t border-[#202733]">
+              <div className="flex items-center space-x-2.5">
                 <button
                   onClick={() => {
                     try { uiSound.play('click'); } catch {}
@@ -629,15 +608,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                       onNavigate('cinema');
                     }
                   }}
-                  className="flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-accent hover:bg-accent-hover text-white text-xs font-bold transition-all shadow-lg hover:shadow-accent/40 active:scale-95"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#10151B] text-xs font-extrabold transition-all active:scale-95"
                 >
-                  <Play className="w-4 h-4 fill-white" />
+                  <Play className="w-3.5 h-3.5 fill-[#10151B]" />
                   <span>{activeHero.isResume ? 'Resume Watching' : 'Watch Now'}</span>
                 </button>
 
                 <button
                   onClick={handleTriggerRoulette}
-                  className="flex items-center space-x-1.5 px-3.5 py-2.5 rounded-xl bg-[#181c24]/80 hover:bg-[#242a36] border border-[#242a36] text-white text-xs font-semibold transition-all backdrop-blur-md active:scale-95"
+                  className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-[#1B222B] hover:bg-[#222B35] border border-[#2A3442] text-[#F4F7F8] text-xs font-semibold transition-all active:scale-95"
                 >
                   <Shuffle className="w-3.5 h-3.5 text-accent" />
                   <span className="hidden sm:inline">Surprise Me</span>
@@ -648,10 +627,10 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     onNavigate(activeHero.type === 'show' ? 'tv' : 'cinema');
                   }}
-                  className="flex items-center space-x-1.5 px-3 py-2.5 rounded-xl hover:bg-white/10 text-[#9ca3af] hover:text-white text-xs font-semibold transition-all"
+                  className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-[#1B222B] text-[#94A3B8] hover:text-[#F4F7F8] text-xs font-semibold transition-all"
                 >
                   <Info className="w-3.5 h-3.5" />
-                  <span className="hidden sm:inline">Details</span>
+                  <span className="hidden sm:inline">Browse</span>
                 </button>
               </div>
 
@@ -666,7 +645,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                         setHeroIndex(idx);
                       }}
                       className={`h-1.5 rounded-full transition-all ${
-                        idx === heroIndex ? 'w-6 bg-accent' : 'w-1.5 bg-white/30 hover:bg-white/60'
+                        idx === heroIndex ? 'w-5 bg-accent' : 'w-1.5 bg-[#303A45] hover:bg-[#6B7885]'
                       }`}
                     />
                   ))}
@@ -675,132 +654,113 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Left/Right Carousel Controls (visible on hover) */}
-          {heroItems.length > 1 && (
-            <>
-              <button
-                onClick={() => {
-                  try { uiSound.play('click'); } catch {}
-                  setHeroIndex((prev) => (prev - 1 + heroItems.length) % heroItems.length);
-                }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md z-20"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => {
-                  try { uiSound.play('click'); } catch {}
-                  setHeroIndex((prev) => (prev + 1) % heroItems.length);
-                }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 hover:bg-black/80 border border-white/10 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-md z-20"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </>
-          )}
+          {/* Right Framed Artwork Column */}
+          <div className="hidden lg:block lg:col-span-5 relative bg-[#10151B] border-l border-[#242A36] overflow-hidden">
+            {activeHero.backdropUrl || activeHero.posterUrl ? (
+              <img
+                src={activeHero.backdropUrl || activeHero.posterUrl}
+                alt={activeHero.title}
+                className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-[#10151B] text-[#303A45]">
+                <Film className="w-12 h-12" />
+              </div>
+            )}
+
+            {/* Left/Right Carousel Controls (visible on hover) */}
+            {heroItems.length > 1 && (
+              <>
+                <button
+                  onClick={() => {
+                    try { uiSound.play('click'); } catch {}
+                    setHeroIndex((prev) => (prev - 1 + heroItems.length) % heroItems.length);
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#10151B]/80 hover:bg-[#10151B] border border-[#303A45] text-[#F4F7F8] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    try { uiSound.play('click'); } catch {}
+                    setHeroIndex((prev) => (prev + 1) % heroItems.length);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#10151B]/80 hover:bg-[#10151B] border border-[#303A45] text-[#F4F7F8] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </>
+            )}
+          </div>
         </div>
       )}
 
-      {/* 3. Modernized Neon-Glow Quick Statistics Cards */}
+      {/* 3. Unified Dual-Tone Library Telemetry Strip */}
       {prefs.widgets.stats && data?.statistics && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {/* Cinema / Movies Stat Card */}
-          <div
-            onClick={() => {
-              try { uiSound.play('click'); } catch {}
-              onNavigate('cinema');
-            }}
-            className="group relative p-4 rounded-xl bg-[#12151b] border border-[#242a36] hover:border-cyan-500/50 hover:bg-[#161a22] cursor-pointer transition-all duration-150 hover:-translate-y-0.5"
-          >
-            <div className="flex items-center justify-between text-[#9ca3af] mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 flex items-center space-x-1.5">
-                <Film className="w-3.5 h-3.5" />
-                <span>Cinema</span>
-              </span>
-              <span className="text-[10px] text-[#6b7280] group-hover:text-cyan-400 transition-colors">Browse ↗</span>
-            </div>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-black text-white tracking-tight">{data.statistics.totalMovies}</span>
-              <span className="text-xs text-[#9ca3af] font-medium">Films</span>
-            </div>
-            <div className="mt-2 text-[11px] text-[#9ca3af] truncate">
-              {data.statistics.totalWatchTimeHours > 0
-                ? `${data.statistics.totalWatchTimeHours} hrs watched`
-                : 'Full library ready'}
-            </div>
-          </div>
-
-          {/* TV Shows Stat Card */}
-          <div
-            onClick={() => {
-              try { uiSound.play('click'); } catch {}
-              onNavigate('tv');
-            }}
-            className="group relative p-4 rounded-xl bg-[#12151b] border border-[#242a36] hover:border-indigo-500/50 hover:bg-[#161a22] cursor-pointer transition-all duration-150 hover:-translate-y-0.5"
-          >
-            <div className="flex items-center justify-between text-[#9ca3af] mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-400 flex items-center space-x-1.5">
-                <Tv className="w-3.5 h-3.5" />
-                <span>TV Series</span>
-              </span>
-              <span className="text-[10px] text-[#6b7280] group-hover:text-indigo-400 transition-colors">Browse ↗</span>
-            </div>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-black text-white tracking-tight">{data.statistics.totalShows}</span>
-              <span className="text-xs text-[#9ca3af] font-medium">Shows</span>
-            </div>
-            <div className="mt-2 text-[11px] text-[#9ca3af] truncate">
-              {data.statistics.totalEpisodes} episodes available
-            </div>
-          </div>
-
-          {/* Music Tracks Stat Card */}
-          <div
-            onClick={() => {
-              try { uiSound.play('click'); } catch {}
-              onNavigate('music');
-            }}
-            className="group relative p-4 rounded-xl bg-[#12151b] border border-[#242a36] hover:border-emerald-500/50 hover:bg-[#161a22] cursor-pointer transition-all duration-150 hover:-translate-y-0.5"
-          >
-            <div className="flex items-center justify-between text-[#9ca3af] mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
-                <Music className="w-3.5 h-3.5" />
-                <span>Hi-Fi Audio</span>
-              </span>
-              <span className="text-[10px] text-[#6b7280] group-hover:text-emerald-400 transition-colors">Browse ↗</span>
-            </div>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-black text-white tracking-tight">{data.statistics.totalTracks}</span>
-              <span className="text-xs text-[#9ca3af] font-medium">Tracks</span>
-            </div>
-            <div className="mt-2 text-[11px] text-[#9ca3af] truncate">
-              {data.statistics.totalAlbums} albums · Lossless Studio
-            </div>
-          </div>
-
-          {/* Photo Vault Stat Card */}
-          <div
-            onClick={() => {
-              try { uiSound.play('click'); } catch {}
-              onNavigate('gallery');
-            }}
-            className="group relative p-4 rounded-xl bg-[#12151b] border border-[#242a36] hover:border-amber-500/50 hover:bg-[#161a22] cursor-pointer transition-all duration-150 hover:-translate-y-0.5"
-          >
-            <div className="flex items-center justify-between text-[#9ca3af] mb-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
-                <Image className="w-3.5 h-3.5" />
-                <span>Photo Vault</span>
-              </span>
-              <span className="text-[10px] text-[#6b7280] group-hover:text-amber-400 transition-colors">Browse ↗</span>
-            </div>
-            <div className="flex items-baseline space-x-2">
-              <span className="text-3xl font-black text-white tracking-tight">{data.statistics.totalPhotos}</span>
-              <span className="text-xs text-[#9ca3af] font-medium">Photos</span>
-            </div>
-            <div className="mt-2 text-[11px] text-[#9ca3af] truncate">
-              {formatBytes(data.storageUsage?.photosSizeBytes || 0)} media archives
-            </div>
-          </div>
+          {[
+            {
+              tab: 'cinema' as const,
+              icon: Film,
+              label: 'Cinema',
+              value: data.statistics.totalMovies,
+              unit: 'Films',
+              sub: data.statistics.totalWatchTimeHours > 0 ? `${data.statistics.totalWatchTimeHours} hrs watched` : 'Full library ready',
+            },
+            {
+              tab: 'tv' as const,
+              icon: Tv,
+              label: 'TV Series',
+              value: data.statistics.totalShows,
+              unit: 'Shows',
+              sub: `${data.statistics.totalEpisodes} episodes available`,
+            },
+            {
+              tab: 'music' as const,
+              icon: Music,
+              label: 'Hi-Fi Audio',
+              value: data.statistics.totalTracks,
+              unit: 'Tracks',
+              sub: `${data.statistics.totalAlbums} albums · Lossless Studio`,
+            },
+            {
+              tab: 'gallery' as const,
+              icon: Image,
+              label: 'Photo Vault',
+              value: data.statistics.totalPhotos,
+              unit: 'Photos',
+              sub: `${formatBytes(data.storageUsage?.photosSizeBytes || 0)} media archives`,
+            },
+          ].map((stat) => {
+            const IconComp = stat.icon;
+            return (
+              <div
+                key={stat.tab}
+                onClick={() => {
+                  try { uiSound.play('click'); } catch {}
+                  onNavigate(stat.tab);
+                }}
+                className="group relative p-4 rounded-xl bg-[#151A21] border border-[#242A36] hover:border-accent/60 hover:bg-[#1B222B] cursor-pointer transition-all duration-150"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-accent flex items-center space-x-1.5">
+                    <IconComp className="w-3.5 h-3.5" />
+                    <span>{stat.label}</span>
+                  </span>
+                  <span className="text-[10px] text-[#6B7885] group-hover:text-accent transition-colors font-semibold">
+                    Browse ↗
+                  </span>
+                </div>
+                <div className="flex items-baseline space-x-2">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight tabular-nums">
+                    {stat.value}
+                  </span>
+                  <span className="text-xs text-[#8D9AA8] font-medium">{stat.unit}</span>
+                </div>
+                <div className="mt-1.5 text-[11px] text-[#6B7885] truncate">{stat.sub}</div>
+              </div>
+            );
+          })}
         </div>
       )}
 
