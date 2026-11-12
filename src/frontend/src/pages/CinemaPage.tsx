@@ -357,50 +357,50 @@ export const CinemaPage: React.FC = () => {
 
   return (
     <div className="flex-1 overflow-y-auto p-6 sm:p-8 space-y-7 select-none">
-      {/* 1. Split Editorial Featured Movie Banner */}
+      {/* 1. Polished Editorial Featured Movie Banner */}
       {featuredMovie && !selectedGenre && !selectedYear && (
-        <div className="relative rounded-2xl border border-[#242A36] bg-[#151A21] overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[280px] lg:h-[310px] shadow-xl group">
+        <div className="relative rounded-2xl border border-white/[0.07] bg-[#141C27] overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center gap-6 p-5 sm:p-7 shadow-2xl group">
           {/* Left Editorial Info */}
-          <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between bg-[#151A21] z-10">
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-4 z-10">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent font-bold text-[10px] tracking-wider uppercase inline-flex items-center space-x-1.5">
+              <span className="px-2.5 py-1 rounded-md bg-accent/12 text-accent font-bold text-[10px] tracking-wider uppercase inline-flex items-center space-x-1.5">
                 <Sparkles className="w-3 h-3 text-accent" />
                 <span>Cinema Spotlight</span>
               </span>
               {featuredMovie.editions[0]?.resolutionLabel && (
-                <span className="px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[10px] font-mono font-bold text-[#F4F7F8]">
+                <span className="px-2 py-1 rounded-md bg-white/[0.04] text-[10px] font-mono font-bold text-[#F8FAFC]">
                   {featuredMovie.editions[0].resolutionLabel}
                 </span>
               )}
               {featuredMovie.communityRating && (
-                <span className="inline-flex items-center px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] text-[11px] font-bold">
+                <span className="inline-flex items-center px-2 py-1 rounded-md bg-white/[0.04] text-[#F8FAFC] text-[11px] font-bold">
                   <Star className="w-3 h-3 fill-accent text-accent mr-1" />
                   {featuredMovie.communityRating.toFixed(1)}
                 </span>
               )}
             </div>
 
-            <div className="space-y-2 my-3">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight line-clamp-1">
+            <div className="space-y-2">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F8FAFC] tracking-tight line-clamp-1">
                 {featuredMovie.title}
               </h1>
 
-              <div className="flex flex-wrap items-center gap-2 text-xs text-[#8D9AA8]">
-                {featuredMovie.year && <span className="font-semibold text-[#F4F7F8]">{featuredMovie.year}</span>}
+              <div className="flex flex-wrap items-center gap-2 text-xs text-[#94A3B8]">
+                {featuredMovie.year && <span className="font-semibold text-[#F8FAFC]">{featuredMovie.year}</span>}
                 {featuredMovie.runtimeMinutes && <span>· {featuredMovie.runtimeMinutes} min</span>}
                 {featuredMovie.genres.length > 0 && (
-                  <span className="text-[#8D9AA8]">· {featuredMovie.genres.slice(0, 3).join(', ')}</span>
+                  <span>· {featuredMovie.genres.slice(0, 3).join(', ')}</span>
                 )}
               </div>
 
               {featuredMovie.overview && (
-                <p className="text-xs sm:text-[13px] text-[#A4AFB9] line-clamp-2 leading-relaxed max-w-xl">
+                <p className="text-xs sm:text-[13px] text-[#94A3B8] line-clamp-2 leading-relaxed max-w-xl">
                   {featuredMovie.overview}
                 </p>
               )}
             </div>
 
-            <div className="pt-2 border-t border-[#202733] flex flex-wrap items-center gap-2.5">
+            <div className="pt-2 border-t border-white/[0.06] flex flex-wrap items-center gap-2.5">
               <button
                 onClick={() => {
                   if (featuredMovie.editions[0]?.mediaFileId) {
@@ -409,22 +409,22 @@ export const CinemaPage: React.FC = () => {
                     openMovieDetails(featuredMovie);
                   }
                 }}
-                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#10151B] text-xs font-extrabold transition-all active:scale-95"
+                className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#0F141B] text-xs font-extrabold transition-all active:scale-95"
               >
-                <Play className="w-3.5 h-3.5 fill-[#10151B]" />
+                <Play className="w-3.5 h-3.5 fill-[#0F141B]" />
                 <span>Play Movie</span>
               </button>
 
               <button
                 onClick={() => openMovieDetails(featuredMovie)}
-                className="px-4 py-2 rounded-lg bg-[#1B222B] border border-[#2A3442] hover:border-accent/60 text-[#F4F7F8] text-xs font-semibold transition-colors"
+                className="px-4 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.09] text-[#F8FAFC] text-xs font-semibold transition-colors"
               >
                 Details & Versions
               </button>
 
               <button
                 onClick={(e) => openPosterPicker(e, featuredMovie)}
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-[#1B222B] border border-transparent hover:border-[#242A36] text-[#94A3B8] hover:text-[#F4F7F8] text-xs font-semibold transition-colors"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-white/[0.05] text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-semibold transition-colors"
               >
                 <ImageIcon className="w-3.5 h-3.5 text-accent" />
                 <span>Change Poster</span>
@@ -432,8 +432,8 @@ export const CinemaPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Framed Artwork */}
-          <div className="hidden lg:block lg:col-span-5 relative bg-[#10151B] border-l border-[#242A36] overflow-hidden">
+          {/* Right Framed Artwork Card */}
+          <div className="hidden lg:block lg:col-span-5 relative aspect-[16/10] rounded-xl bg-[#0F141B] border border-white/[0.08] overflow-hidden shadow-2xl">
             {featuredMovie.backdropUrl || featuredMovie.posterUrl ? (
               <img
                 src={featuredMovie.backdropUrl || featuredMovie.posterUrl}
@@ -441,7 +441,7 @@ export const CinemaPage: React.FC = () => {
                 className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#10151B] text-[#303A45]">
+              <div className="w-full h-full flex items-center justify-center bg-[#0F141B] text-[#334155]">
                 <Film className="w-12 h-12" />
               </div>
             )}

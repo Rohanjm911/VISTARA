@@ -101,26 +101,26 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
 
   return (
     <aside
-      className={`h-full bg-[#12161D] border-r border-[#202733] flex flex-col transition-all duration-200 select-none ${
+      className={`h-full bg-[#111722] border-r border-white/[0.06] flex flex-col transition-all duration-200 select-none ${
         collapsed ? 'w-[68px]' : 'w-60'
       }`}
     >
       {/* Brand logo & collapse toggle */}
-      <div className="h-14 flex items-center justify-between px-4 border-b border-[#202733] flex-shrink-0">
+      <div className="h-14 flex items-center justify-between px-4 border-b border-white/[0.06] flex-shrink-0">
         {!collapsed ? (
           <div className="flex items-center space-x-2.5 overflow-hidden">
-            <div className="w-7 h-7 rounded-lg bg-[#1B222B] border border-[#2A3442] flex items-center justify-center flex-shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/25 flex items-center justify-center flex-shrink-0">
               <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M2 3 L12 21 L22 3 L17 3 L12 14 L7 3 Z" />
               </svg>
             </div>
             <div className="leading-tight">
-              <div className="font-extrabold text-[13px] tracking-[0.14em] text-[#F4F7F8]">VISTARA</div>
-              <div className="text-[9px] text-[#6B7885] uppercase tracking-[0.18em] font-semibold">Media Universe</div>
+              <div className="font-extrabold text-[13px] tracking-[0.14em] text-[#F8FAFC]">VISTARA</div>
+              <div className="text-[9px] text-[#64748B] uppercase tracking-[0.18em] font-semibold">Universe</div>
             </div>
           </div>
         ) : (
-          <div className="w-8 h-8 rounded-lg bg-[#1B222B] border border-[#2A3442] flex items-center justify-center mx-auto">
+          <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/25 flex items-center justify-center mx-auto">
             <svg className="w-4 h-4 text-accent" viewBox="0 0 24 24" fill="currentColor">
               <path d="M2 3 L12 21 L22 3 L17 3 L12 14 L7 3 Z" />
             </svg>
@@ -134,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               toggleCollapsed();
             }}
             title="Collapse sidebar (Ctrl+B)"
-            className="p-1.5 rounded-lg text-[#6B7885] hover:text-[#F4F7F8] hover:bg-[#1B222B] transition-colors"
+            className="p-1.5 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
@@ -142,11 +142,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       </div>
 
       {/* Navigation items grouped cleanly */}
-      <nav className="flex-1 py-4 px-2.5 space-y-5 overflow-y-auto">
+      <nav className="flex-1 py-4 px-2.5 space-y-4 overflow-y-auto">
         {NAV_GROUPS.map((group) => (
-          <div key={group.title} className="space-y-1">
+          <div key={group.title} className="space-y-0.5">
             {!collapsed && (
-              <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#5B6775]">
+              <div className="px-3 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]/80">
                 {group.title}
               </div>
             )}
@@ -160,22 +160,18 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
                     onSelectTab(item.id);
                   }}
                   title={collapsed ? item.label : undefined}
-                  className={`relative w-full flex items-center rounded-lg py-2 text-[13px] font-medium transition-all duration-150 ${
+                  className={`w-full flex items-center rounded-lg py-2 text-[13px] transition-all duration-150 ${
                     collapsed ? 'justify-center px-0' : 'px-3'
                   } ${
                     isActive
-                      ? 'bg-[#1B222B] text-[#F4F7F8] border border-[#2B3544] shadow-sm font-semibold'
-                      : 'text-[#8D9AA8] border border-transparent hover:text-[#F4F7F8] hover:bg-[#171C24]'
+                      ? 'bg-accent/12 text-accent font-semibold shadow-sm'
+                      : 'text-[#94A3B8] hover:text-[#F8FAFC] hover:bg-white/[0.04]'
                   }`}
                 >
-                  {/* Crisp Electric Teal active indicator bar */}
-                  {isActive && !collapsed && (
-                    <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-full bg-accent" />
-                  )}
-                  <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-accent' : ''}`}>
+                  <span className={`flex-shrink-0 transition-colors ${isActive ? 'text-accent' : 'text-[#64748B]'}`}>
                     {item.icon}
                   </span>
-                  {!collapsed && <span className="ml-3 truncate">{item.label}</span>}
+                  {!collapsed && <span className="ml-3 truncate font-medium">{item.label}</span>}
                 </button>
               );
             })}
@@ -184,11 +180,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
       </nav>
 
       {/* Shortcut hint footer / Expand button when collapsed */}
-      <div className="px-3 py-3 border-t border-[#202733] flex-shrink-0">
+      <div className="px-3 py-3 border-t border-white/[0.06] flex-shrink-0">
         {!collapsed ? (
-          <div className="px-1 text-[11px] text-[#6B7885] flex justify-between items-center">
+          <div className="px-1 text-[11px] text-[#64748B] flex justify-between items-center">
             <span>Toggle Sidebar</span>
-            <kbd className="px-1.5 py-0.5 rounded bg-[#151A21] border border-[#242A36] text-[10px] font-mono text-[#94A3B8]">
+            <kbd className="px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] font-mono text-[#94A3B8]">
               Ctrl+B
             </kbd>
           </div>
@@ -199,7 +195,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
               toggleCollapsed();
             }}
             title="Expand sidebar (Ctrl+B)"
-            className="w-full py-1.5 rounded-lg flex items-center justify-center text-[#6B7885] hover:text-[#F4F7F8] hover:bg-[#1B222B] transition-colors"
+            className="w-full py-1.5 rounded-lg flex items-center justify-center text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
           >
             <ChevronRight className="w-4 h-4" />
           </button>

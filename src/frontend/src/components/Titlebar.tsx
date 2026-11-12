@@ -131,11 +131,11 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
     (results?.photos.length || 0);
 
   return (
-    <header className="h-14 bg-[#12161D] border-b border-[#202733] px-6 flex items-center justify-between select-none relative z-30">
+    <header className="h-14 bg-[#111722] border-b border-white/[0.06] px-6 flex items-center justify-between select-none relative z-30">
       {/* Search Input with FTS5 suggestions & Ctrl+K */}
       <div className="relative w-[420px] max-w-full" ref={searchRef}>
         <div className="relative">
-          <Search className="w-4 h-4 text-[#6B7885] absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#64748B] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             ref={inputRef}
             type="text"
@@ -143,12 +143,12 @@ export const Titlebar: React.FC<TitlebarProps> = ({ onOpenWizard, onNavigate }) 
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => results && totalResultsCount > 0 && setShowDropdown(true)}
             placeholder="Search movies, TV shows, tracks, or photos..."
-            className="w-full bg-[#161B23] border border-[#242D3A] rounded-lg pl-10 pr-16 py-1.5 text-xs text-[#F4F7F8] placeholder-[#6B7885] focus:outline-none focus:border-accent transition-colors"
+            className="w-full bg-[#161E29] border border-white/[0.07] rounded-xl pl-10 pr-16 py-1.5 text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-accent/60 transition-colors"
           />
           {isSearching ? (
             <RefreshCw className="w-3.5 h-3.5 text-accent animate-spin absolute right-3 top-1/2 -translate-y-1/2" />
           ) : (
-            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-[#1B222B] border border-[#2A3442] text-[10px] font-mono text-[#8D9AA8] pointer-events-none">
+            <kbd className="absolute right-2.5 top-1/2 -translate-y-1/2 px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.08] text-[10px] font-mono text-[#94A3B8] pointer-events-none">
               Ctrl+K
             </kbd>
           )}

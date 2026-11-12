@@ -227,12 +227,12 @@ export const MusicPage: React.FC = () => {
               placeholder={`Search ${activeTab}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-48 sm:w-64 pl-8 pr-7 py-1.5 rounded-lg bg-[#12151b] border border-[#242a36] text-xs text-white placeholder-[#6b7280] focus:outline-none focus:border-accent transition-colors"
+              className="w-48 sm:w-60 pl-8 pr-7 py-1.5 rounded-lg bg-[#141B25] border border-white/[0.08] text-xs text-[#F8FAFC] placeholder-[#64748B] focus:outline-none focus:border-accent transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#6b7280] hover:text-white"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#64748B] hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -244,20 +244,20 @@ export const MusicPage: React.FC = () => {
             onClick={handleAutoFetchCovers}
             disabled={isFetchingCovers}
             title="Auto-import highest possible resolution album & track cover art"
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#161D27] border border-accent/40 hover:border-accent text-xs font-semibold text-accent transition-colors cursor-pointer disabled:opacity-50"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-semibold text-accent transition-colors cursor-pointer disabled:opacity-50"
           >
             {isFetchingCovers ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin text-accent" />
             ) : (
               <Wand2 className="w-3.5 h-3.5 text-accent" />
             )}
-            <span>{isFetchingCovers ? 'Importing Covers...' : 'Auto Fetch Covers'}</span>
+            <span>{isFetchingCovers ? 'Importing Covers...' : 'Auto Covers'}</span>
           </button>
 
           {/* Equalizer Button */}
           <button
             onClick={() => setIsEqualizerOpen(true)}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-[#181c24] border border-[#242a36] hover:border-accent text-xs font-semibold text-white transition-colors cursor-pointer"
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-xs font-semibold text-[#F8FAFC] transition-colors cursor-pointer"
           >
             <Sliders className="w-3.5 h-3.5 text-accent" />
             <span>Equalizer</span>
@@ -267,13 +267,13 @@ export const MusicPage: React.FC = () => {
           <button
             onClick={fetchMusic}
             title="Refresh tracks"
-            className="p-1.5 rounded-lg bg-[#181c24] border border-[#242a36] hover:border-accent text-[#9ca3af] hover:text-white transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.08] text-[#94A3B8] hover:text-[#F8FAFC] transition-colors cursor-pointer"
           >
             <RotateCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-accent' : ''}`} />
           </button>
 
           {/* Tab buttons */}
-          <div className="flex bg-[#12151b] border border-[#242a36] rounded-lg p-0.5 text-xs">
+          <div className="flex bg-[#141B25] border border-white/[0.08] rounded-lg p-0.5 text-xs">
             <button
               onClick={() => {
                 setActiveTab('tracks');
@@ -281,8 +281,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'tracks'
-                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
-                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
+                  ? 'bg-accent text-[#0F141B] font-extrabold shadow-sm'
+                  : 'text-[#94A3B8] hover:text-[#F8FAFC]'
               }`}
             >
               Tracks ({tracks.length})
@@ -294,8 +294,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'albums'
-                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
-                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
+                  ? 'bg-accent text-[#0F141B] font-extrabold shadow-sm'
+                  : 'text-[#94A3B8] hover:text-[#F8FAFC]'
               }`}
             >
               Albums {albums.length > 0 && `(${albums.length})`}
@@ -307,8 +307,8 @@ export const MusicPage: React.FC = () => {
               }}
               className={`px-3 py-1 rounded-md transition-colors cursor-pointer ${
                 activeTab === 'artists'
-                  ? 'bg-accent text-[#10151B] font-extrabold shadow-sm'
-                  : 'text-[#8D9AA8] hover:text-[#F4F7F8]'
+                  ? 'bg-accent text-[#0F141B] font-extrabold shadow-sm'
+                  : 'text-[#94A3B8] hover:text-[#F8FAFC]'
               }`}
             >
               Artists {artists.length > 0 && `(${artists.length})`}

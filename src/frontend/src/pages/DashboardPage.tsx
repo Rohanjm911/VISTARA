@@ -531,46 +531,46 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </div>
       </div>
 
-      {/* 2. Split Editorial Hero Showcase Carousel */}
+      {/* 2. Polished Editorial Hero Showcase */}
       {prefs.widgets.hero && prefs.heroMode !== 'hidden' && activeHero && (
         <div
           onMouseEnter={() => setIsHeroPaused(true)}
           onMouseLeave={() => setIsHeroPaused(false)}
-          className={`relative w-full rounded-2xl overflow-hidden bg-[#151A21] border border-[#242A36] shadow-xl transition-all group grid grid-cols-1 lg:grid-cols-12 ${
-            prefs.heroMode === 'compact' ? 'min-h-[210px]' : 'min-h-[300px] lg:h-[340px]'
+          className={`relative w-full rounded-2xl bg-[#141C27] border border-white/[0.07] shadow-2xl transition-all group grid grid-cols-1 lg:grid-cols-12 items-center gap-6 p-5 sm:p-7 ${
+            prefs.heroMode === 'compact' ? 'min-h-[200px]' : 'min-h-[280px]'
           }`}
         >
           {/* Left Editorial Content Column */}
-          <div className="lg:col-span-7 flex flex-col justify-between p-6 sm:p-8 bg-[#151A21] z-10">
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-4 z-10">
             {/* Top Status & Rating Row */}
             <div className="flex flex-wrap items-center gap-2">
               {activeHero.isResume ? (
-                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-[11px] font-bold tracking-wide uppercase">
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/12 text-accent text-[11px] font-bold tracking-wide uppercase">
                   <Play className="w-3 h-3 fill-accent" />
                   <span>Resume Playing {activeHero.progressPercent ? `· ${activeHero.progressPercent}%` : ''}</span>
                 </div>
               ) : (
-                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-[11px] font-bold tracking-wide uppercase">
+                <div className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-accent/12 text-accent text-[11px] font-bold tracking-wide uppercase">
                   <Sparkles className="w-3 h-3 text-accent" />
                   <span>Featured Spotlight</span>
                 </div>
               )}
 
               {activeHero.rating && (
-                <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-md bg-[#1B222B] border border-[#2A3442] text-[#F4F7F8] text-[11px] font-bold">
+                <div className="inline-flex items-center space-x-1 px-2 py-1 rounded-md bg-white/[0.04] text-[#F8FAFC] text-[11px] font-bold">
                   <Star className="w-3 h-3 fill-accent text-accent" />
                   <span>{activeHero.rating.toFixed(1)}</span>
                 </div>
               )}
 
-              <span className="text-[11px] font-semibold text-[#8D9AA8] px-2 py-1 rounded-md bg-[#1B222B] border border-[#242A36]">
+              <span className="text-[11px] font-medium text-[#94A3B8] px-2 py-1 rounded-md bg-white/[0.04]">
                 {activeHero.subtitle}
               </span>
             </div>
 
-            {/* Title, Tagline & Synopsis */}
-            <div className="space-y-2.5 my-4">
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight line-clamp-1">
+            {/* Title, Genres & Synopsis */}
+            <div className="space-y-2">
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F8FAFC] tracking-tight line-clamp-1">
                 {activeHero.title}
               </h2>
 
@@ -579,7 +579,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   {activeHero.genres.slice(0, 3).map((g) => (
                     <span
                       key={g}
-                      className="px-2 py-0.5 rounded bg-[#1B222B] border border-[#242A36] text-[#94A3B8] text-[10px] font-semibold tracking-wide uppercase"
+                      className="px-2 py-0.5 rounded bg-white/[0.04] text-[#94A3B8] text-[10px] font-semibold tracking-wide uppercase"
                     >
                       {g}
                     </span>
@@ -588,14 +588,14 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
               )}
 
               {activeHero.overview && prefs.heroMode !== 'compact' && (
-                <p className="text-xs sm:text-[13px] leading-relaxed text-[#A4AFB9] line-clamp-3 max-w-xl">
+                <p className="text-xs sm:text-[13px] leading-relaxed text-[#94A3B8] line-clamp-3 max-w-xl pt-0.5">
                   {activeHero.overview}
                 </p>
               )}
             </div>
 
             {/* Action Buttons & Slide Dots */}
-            <div className="flex items-center justify-between pt-2 border-t border-[#202733]">
+            <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
               <div className="flex items-center space-x-2.5">
                 <button
                   onClick={() => {
@@ -608,15 +608,15 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                       onNavigate('cinema');
                     }
                   }}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#10151B] text-xs font-extrabold transition-all active:scale-95"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-accent hover:bg-accent-hover text-[#0F141B] text-xs font-extrabold transition-all active:scale-95"
                 >
-                  <Play className="w-3.5 h-3.5 fill-[#10151B]" />
+                  <Play className="w-3.5 h-3.5 fill-[#0F141B]" />
                   <span>{activeHero.isResume ? 'Resume Watching' : 'Watch Now'}</span>
                 </button>
 
                 <button
                   onClick={handleTriggerRoulette}
-                  className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-[#1B222B] hover:bg-[#222B35] border border-[#2A3442] text-[#F4F7F8] text-xs font-semibold transition-all active:scale-95"
+                  className="flex items-center space-x-1.5 px-3.5 py-2 rounded-lg bg-white/[0.05] hover:bg-white/[0.09] text-[#F8FAFC] text-xs font-semibold transition-all active:scale-95"
                 >
                   <Shuffle className="w-3.5 h-3.5 text-accent" />
                   <span className="hidden sm:inline">Surprise Me</span>
@@ -627,7 +627,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     onNavigate(activeHero.type === 'show' ? 'tv' : 'cinema');
                   }}
-                  className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-[#1B222B] text-[#94A3B8] hover:text-[#F4F7F8] text-xs font-semibold transition-all"
+                  className="flex items-center space-x-1.5 px-3 py-2 rounded-lg hover:bg-white/[0.05] text-[#94A3B8] hover:text-[#F8FAFC] text-xs font-semibold transition-all"
                 >
                   <Info className="w-3.5 h-3.5" />
                   <span className="hidden sm:inline">Browse</span>
@@ -645,7 +645,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                         setHeroIndex(idx);
                       }}
                       className={`h-1.5 rounded-full transition-all ${
-                        idx === heroIndex ? 'w-5 bg-accent' : 'w-1.5 bg-[#303A45] hover:bg-[#6B7885]'
+                        idx === heroIndex ? 'w-5 bg-accent' : 'w-1.5 bg-white/20 hover:bg-white/40'
                       }`}
                     />
                   ))}
@@ -654,8 +654,8 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
             </div>
           </div>
 
-          {/* Right Framed Artwork Column */}
-          <div className="hidden lg:block lg:col-span-5 relative bg-[#10151B] border-l border-[#242A36] overflow-hidden">
+          {/* Right Cleanly Framed Artwork Card */}
+          <div className="hidden lg:block lg:col-span-5 relative aspect-[16/10] rounded-xl bg-[#0F141B] border border-white/[0.08] overflow-hidden shadow-2xl">
             {activeHero.backdropUrl || activeHero.posterUrl ? (
               <img
                 src={activeHero.backdropUrl || activeHero.posterUrl}
@@ -663,7 +663,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                 className="w-full h-full object-cover object-center group-hover:scale-[1.03] transition-transform duration-700 ease-out"
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-[#10151B] text-[#303A45]">
+              <div className="w-full h-full flex items-center justify-center bg-[#0F141B] text-[#334155]">
                 <Film className="w-12 h-12" />
               </div>
             )}
@@ -676,7 +676,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     setHeroIndex((prev) => (prev - 1 + heroItems.length) % heroItems.length);
                   }}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#10151B]/80 hover:bg-[#10151B] border border-[#303A45] text-[#F4F7F8] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0F141B]/80 hover:bg-[#0F141B] border border-white/15 text-[#F8FAFC] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
@@ -685,7 +685,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     setHeroIndex((prev) => (prev + 1) % heroItems.length);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#10151B]/80 hover:bg-[#10151B] border border-[#303A45] text-[#F4F7F8] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#0F141B]/80 hover:bg-[#0F141B] border border-white/15 text-[#F8FAFC] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-20"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -695,7 +695,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
         </div>
       )}
 
-      {/* 3. Unified Dual-Tone Library Telemetry Strip */}
+      {/* 3. Unified Deep Slate Library Telemetry Strip */}
       {prefs.widgets.stats && data?.statistics && (
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {[
@@ -740,24 +740,24 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   try { uiSound.play('click'); } catch {}
                   onNavigate(stat.tab);
                 }}
-                className="group relative p-4 rounded-xl bg-[#151A21] border border-[#242A36] hover:border-accent/60 hover:bg-[#1B222B] cursor-pointer transition-all duration-150"
+                className="group relative p-4 rounded-xl bg-[#141C27] border border-white/[0.06] hover:border-accent/45 hover:bg-[#192331] cursor-pointer transition-all duration-150"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-accent flex items-center space-x-1.5">
                     <IconComp className="w-3.5 h-3.5" />
                     <span>{stat.label}</span>
                   </span>
-                  <span className="text-[10px] text-[#6B7885] group-hover:text-accent transition-colors font-semibold">
+                  <span className="text-[10px] text-[#64748B] group-hover:text-accent transition-colors font-semibold">
                     Browse ↗
                   </span>
                 </div>
                 <div className="flex items-baseline space-x-2">
-                  <span className="text-2xl sm:text-3xl font-extrabold text-[#F4F7F8] tracking-tight tabular-nums">
+                  <span className="text-2xl sm:text-3xl font-extrabold text-[#F8FAFC] tracking-tight tabular-nums">
                     {stat.value}
                   </span>
-                  <span className="text-xs text-[#8D9AA8] font-medium">{stat.unit}</span>
+                  <span className="text-xs text-[#94A3B8] font-medium">{stat.unit}</span>
                 </div>
-                <div className="mt-1.5 text-[11px] text-[#6B7885] truncate">{stat.sub}</div>
+                <div className="mt-1.5 text-[11px] text-[#64748B] truncate">{stat.sub}</div>
               </div>
             );
           })}

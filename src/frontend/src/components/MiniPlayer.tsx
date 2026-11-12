@@ -74,7 +74,7 @@ export const MiniPlayer: React.FC = () => {
   const safeCurrentTime = Number.isFinite(currentTime) && currentTime >= 0 ? currentTime : 0;
 
   return (
-    <div className="h-[74px] bg-[#12161D] border-t border-[#202733] px-6 flex items-center justify-between select-none relative z-20">
+    <div className="h-[74px] bg-[#111722] border-t border-white/[0.06] px-6 flex items-center justify-between select-none relative z-20">
       {/* Left Media Details */}
       <div className="flex items-center space-x-3 min-w-[270px] max-w-md sm:max-w-lg">
         <div
