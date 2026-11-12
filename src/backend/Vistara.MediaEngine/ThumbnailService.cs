@@ -54,10 +54,41 @@ public class ThumbnailService : IThumbnailService
         var escapedIn = audioPath.Replace("\"", "\\\"");
         var escapedOut = outputPath.Replace("\"", "\\\"");
 
-        var args = $"-i \"{escapedIn}\" -an -vcodec copy -y \"{escapedOut}\"";
+        // 1. Extract embedded picture with standard frame conversion (handles PNG/WEBP/JPEG embedded covers)
+        var args = $"-i \"{escapedIn}\" -an -vframes 1 -q:v 2 -y \"{escapedOut}\"";
         var result = await _runner.RunFFmpegAsync(args, cancellationToken);
 
-        return (result.Success && File.Exists(outputPath) && new FileInfo(outputPath).Length > 0) ? outputPath : null;
+        if (result.Success && File.Exists(outputPath) && new FileInfo(outputPath).Length > 0)
+            return outputPath;
+
+        // 2. Fallback to folder-level artwork (cover.jpg, folder.jpg, album.jpg, front.jpg, artwork.jpg, etc.)
+        try
+        {
+            var dir = Path.GetDirectoryName(audioPath);
+            if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
+            {
+                var candidateNames = new[] { "cover", "folder", "album", "front", "artwork" };
+                var exts = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                foreach (var name in candidateNames)
+                {
+                    foreach (var ext in exts)
+                    {
+                        var candidate = Path.Combine(dir, $"{name}{ext}");
+                        if (File.Exists(candidate) && new FileInfo(candidate).Length > 0)
+                        {
+                            File.Copy(candidate, outputPath, true);
+                            return outputPath;
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Ignore filesystem fallback exceptions
+        }
+
+        return null;
     }
 
     public async Task<string?> GeneratePhotoThumbnailAsync(string photoPath, int maxWidth = 480, CancellationToken cancellationToken = default)

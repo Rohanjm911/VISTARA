@@ -9,6 +9,7 @@ using Vistara.Infrastructure.Data;
 using Vistara.Infrastructure.Security;
 using Vistara.MediaEngine;
 using Vistara.Services.Metadata;
+using Vistara.Services.Music;
 
 namespace Vistara.Services.Scanning;
 
@@ -25,6 +26,7 @@ public class LibraryScannerService : ILibraryScannerService
     private readonly IThumbnailService _thumbnails;
     private readonly IPathSecurityValidator _security;
     private readonly IMoviePosterService _posterService;
+    private readonly IMusicArtworkService? _musicArtworkService;
     private readonly ILogger<LibraryScannerService> _logger;
 
     private static readonly HashSet<string> VideoExtensions = new(StringComparer.OrdinalIgnoreCase)
@@ -87,7 +89,8 @@ public class LibraryScannerService : ILibraryScannerService
         IThumbnailService thumbnails,
         IPathSecurityValidator security,
         IMoviePosterService posterService,
-        ILogger<LibraryScannerService> logger)
+        ILogger<LibraryScannerService> logger,
+        IMusicArtworkService? musicArtworkService = null)
     {
         _context = context;
         _analyzer = analyzer;
@@ -95,6 +98,7 @@ public class LibraryScannerService : ILibraryScannerService
         _security = security;
         _posterService = posterService;
         _logger = logger;
+        _musicArtworkService = musicArtworkService;
     }
 
     public async Task<ScanHistory> ScanLibraryAsync(Guid libraryId, ScanMode mode, IProgress<ScanProgressDto>? progress = null, CancellationToken cancellationToken = default)
@@ -1023,8 +1027,44 @@ public class LibraryScannerService : ILibraryScannerService
                         }
                     }
                 }
+                else if (type == LibraryType.Music)
+                {
+                    var track = await _context.Tracks
+                        .Include(t => t.Album)
+                        .Include(t => t.Artist)
+                        .FirstOrDefaultAsync(t => t.MediaItemId == mediaItemId, cancellationToken);
+                    if (track != null)
+                    {
+                        if (track.Album != null && track.Album.ArtworkId == null)
+                        {
+                            track.Album.ArtworkId = artwork.Id;
+                        }
+                        if (track.Artist != null && track.Artist.ArtworkId == null)
+                        {
+                            track.Artist.ArtworkId = artwork.Id;
+                        }
+                    }
+                }
 
                 await _context.SaveChangesAsync(cancellationToken);
+            }
+            else if (type == LibraryType.Music && _musicArtworkService != null)
+            {
+                // Auto-fetch high-resolution online artwork immediately if no local cover was found
+                try
+                {
+                    var track = await _context.Tracks
+                        .Include(t => t.Album)
+                        .FirstOrDefaultAsync(t => t.MediaItemId == mediaItemId, cancellationToken);
+                    if (track?.AlbumId != null)
+                    {
+                        await _musicArtworkService.AutoFetchSingleAlbumCoverAsync(track.AlbumId.Value, cancellationToken);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogDebug(ex, "Online artwork auto-fetch skipped for music track {MediaItemId}", mediaItemId);
+                }
             }
         }
         catch (Exception ex)

@@ -203,22 +203,32 @@ public class MusicArtworkService : IMusicArtworkService
 
         string? baseArtworkUrl = null;
 
-        // Try album search first if we have a real album title
+        // 1. Try primaryArtist + cleanAlbum as album
         if (!string.IsNullOrWhiteSpace(cleanAlbum) &&
             !cleanAlbum.Equals("Unknown Album", StringComparison.OrdinalIgnoreCase))
         {
-            var term = string.IsNullOrWhiteSpace(primaryArtist) ? cleanAlbum : $"{primaryArtist} {cleanAlbum}";
-            baseArtworkUrl = await QueryItunesArtworkUrlAsync(term, "album", ct);
+            if (!string.IsNullOrWhiteSpace(primaryArtist))
+            {
+                baseArtworkUrl = await QueryItunesArtworkUrlAsync($"{primaryArtist} {cleanAlbum}", "album", ct);
+            }
+
+            // 1b. Fallback to cleanAlbum alone (crucial for soundtracks, compilations, multi-artist OSTs)
+            if (string.IsNullOrWhiteSpace(baseArtworkUrl))
+            {
+                baseArtworkUrl = await QueryItunesArtworkUrlAsync(cleanAlbum, "album", ct);
+            }
         }
 
-        // Fallback to song search (often higher accuracy for singles / soundtracks)
+        // 2. Try primaryArtist + cleanTrack as song
         if (string.IsNullOrWhiteSpace(baseArtworkUrl) && !string.IsNullOrWhiteSpace(cleanTrack))
         {
-            var term = string.IsNullOrWhiteSpace(primaryArtist) ? cleanTrack : $"{primaryArtist} {cleanTrack}";
-            baseArtworkUrl = await QueryItunesArtworkUrlAsync(term, "song", ct);
+            if (!string.IsNullOrWhiteSpace(primaryArtist))
+            {
+                baseArtworkUrl = await QueryItunesArtworkUrlAsync($"{primaryArtist} {cleanTrack}", "song", ct);
+            }
         }
 
-        // Final fallback: title only
+        // 3. Final fallback: cleanTrack alone as song
         if (string.IsNullOrWhiteSpace(baseArtworkUrl) && !string.IsNullOrWhiteSpace(cleanTrack))
         {
             baseArtworkUrl = await QueryItunesArtworkUrlAsync(cleanTrack, "song", ct);
