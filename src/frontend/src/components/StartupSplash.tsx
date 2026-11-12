@@ -390,12 +390,61 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
         }`}
       />
 
-      {/* 5. Ta-Dum Acoustic Shockwave Rings */}
-      {stage >= 2 && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
-          <div className="w-[360px] h-[360px] rounded-full border-2 border-accent/80 shadow-[0_0_60px_rgba(56,189,248,0.7)] animate-cinematic-shockwave" />
-          <div className="w-[360px] h-[360px] rounded-full border border-accent/40 animate-cinematic-shockwave [animation-delay:150ms]" />
-          <div className="w-[360px] h-[360px] rounded-full border border-white/30 animate-cinematic-shockwave [animation-delay:300ms]" />
+      {/* 5. Cybernetic Holographic Side HUD Rings (Side Orbital Rings Flanking the Center) */}
+      {stage >= 1 && (
+        <div
+          className={`absolute inset-0 flex items-center justify-center pointer-events-none z-10 transition-all duration-1000 ${
+            stage >= 2 ? 'opacity-100' : 'opacity-60'
+          }`}
+        >
+          {/* Left Flank Ring */}
+          <div
+            className={`absolute w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] rounded-full border transition-all duration-1000 ease-out ${
+              stage >= 2
+                ? 'border-accent/70 shadow-[0_0_45px_rgba(56,189,248,0.35)]'
+                : 'border-accent/30'
+            }`}
+            style={{
+              transform: `translateX(-${isDiving ? 480 : 260}px) ${stage >= 2 ? 'scale(1)' : 'scale(0.92)'}`,
+              opacity: isDiving ? 0.2 : 0.8,
+            }}
+          >
+            {/* Holographic orbital telemetry ticks */}
+            <div className="absolute top-1/2 -right-1.5 w-2.5 h-2.5 rounded-full bg-accent animate-pulse shadow-[0_0_10px_#38BDF8]" />
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/40" />
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/40" />
+          </div>
+
+          {/* Center Orbital Ring (Concentric around core) */}
+          <div
+            className={`absolute w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] rounded-full border transition-all duration-1000 ease-out ${
+              stage >= 2
+                ? 'border-accent/80 shadow-[0_0_55px_rgba(56,189,248,0.4)]'
+                : 'border-accent/40'
+            }`}
+            style={{
+              opacity: isDiving ? 0.25 : 0.9,
+              transform: stage >= 2 ? 'scale(1)' : 'scale(0.95)',
+            }}
+          />
+
+          {/* Right Flank Ring */}
+          <div
+            className={`absolute w-[280px] sm:w-[350px] h-[280px] sm:h-[350px] rounded-full border transition-all duration-1000 ease-out ${
+              stage >= 2
+                ? 'border-accent/70 shadow-[0_0_45px_rgba(56,189,248,0.35)]'
+                : 'border-accent/30'
+            }`}
+            style={{
+              transform: `translateX(${isDiving ? 480 : 260}px) ${stage >= 2 ? 'scale(1)' : 'scale(0.92)'}`,
+              opacity: isDiving ? 0.2 : 0.8,
+            }}
+          >
+            {/* Holographic orbital telemetry ticks */}
+            <div className="absolute top-1/2 -left-1.5 w-2.5 h-2.5 rounded-full bg-accent animate-pulse shadow-[0_0_10px_#38BDF8]" />
+            <div className="absolute top-6 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/40" />
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white/40" />
+          </div>
         </div>
       )}
 
