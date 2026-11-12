@@ -170,7 +170,7 @@ Real, uncompressed 1080p desktop screenshots of VISTARA in production operation:
 | **Cinema Universe** | **Full Library View (100+ Movies Uncapped)**, live in-page instant filter search, dynamic page size dropdown (*All 100+*, *200*, *48*, *24*), "Load More" pagination footer, direct-card hover play button, and **First-Class Multi-Edition Support** (e.g., 4K UHD, 1080p, Director's Cut grouped under a single movie card without duplicate clutter). |
 | **Smart Poster & Metadata Engine** | **Automated Online Theatrical Posters & Plot Synopses** (OMDB & Cinemeta open catalogs). Integrated 3-tab poster picker modal (online suggestions, custom file upload, direct image URL), single-click "⚡ Auto Fetch Posters" bulk tool, and background online metadata enrichment during library scanning. |
 | **TV Series Universe** | Series banners, season selector, episode lists, episode progress tracking, automated series poster & synopsis auto-fetch, auto season/episode filename identification (`S01E02`, `1x02`, `Season 1 Episode 2`), and next-episode autoplay. |
-| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, cover art, persistent mini-player, queue management, lyrics support, shuffle, repeat, **3 View Modes (Table, Compact, Grid)**, **Interactive Audio Progress Bar** (micro-equalizer bars, energy shimmer beam, soundwave halo & pulse ripple, floating seek tooltip), **Immersive Now Playing Studio Screen**, **60 FPS Real-Time Audio Visualizers** (Beat-Synced Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
+| **Music Studio** | Tracks, albums, artists, embedded ID3 tags, high-resolution cover art auto-import (up to 3000x3000px from Cover Art Archive, MusicBrainz, and Deezer CDN), persistent mini-player, queue management, lyrics support, shuffle, repeat, **3 View Modes (Table, Compact, Grid)**, **3D Flipping Vintage Cassette Tape** (Side A / Side B metadata, continuous spool rotation, magnetic tape diameter dynamics), **Synced Lyrics Beside Cassette Tape** (auto-reveal at 2s with 1-click toggle), **Bilingual Romanized Hinglish Subtitles Directly Below Main Lyrics** (zero-latency client transliterator + backend translation, kinetic typography & beat animations), **Interactive Audio Progress Bar** (micro-equalizer bars, energy shimmer beam, soundwave halo & pulse ripple, floating seek tooltip), **Immersive Now Playing Studio Screen**, **60/120/144 FPS Real-Time Audio Visualizers** with delta-time physics (Beat-Synced 360° Chromatic Rainbow Spectrum Bars, Cosmic Rainbow Embers, Liquid Wave, Radial Halo, Analog VU Meters), and an integrated **10-Band Graphic Equalizer** with 8 genre presets powered by Web Audio API. |
 | **Libraries Engine** | Multi-folder support per library, incremental scanning, real-time SignalR progress updates, duplicate detection via fast SHA-256 headers, and safe preservation of missing files. |
 | **Media Integrity Monitor** | Enterprise library protection: streaming SHA-256 fingerprinting, corruption detection via FFprobe/FFmpeg, unexpected modification detection, disconnected external drive preservation (never deleted), Recovery Assistant with candidate scoring and 1-click relinking, and CSV/JSON health reporting. |
 | **Player Pipeline** | 3-tier streaming architecture (**DirectPlay** $\rightarrow$ **0% CPU DirectStream Remux** $\rightarrow$ **Adaptive HLS / Progressive Transcode**) with automatic detection of GPU acceleration (**NVIDIA NVENC, Intel QSV, AMD AMF, DXVA2, D3D11VA**) with 10-bit YUV420P conversion, borderless Fullscreen toggle (<kbd>F</kbd> / <kbd>F11</kbd>), responsive volume slider, and online open-source subtitles. |
@@ -367,10 +367,13 @@ Unlike traditional media servers, VISTARA does not require usernames, passwords,
 * Anti-CSRF protection tokens are validated for all mutation operations (`POST`, `PUT`, `DELETE`).
 * `LocalSecurityMiddleware` enforces strict loopback origin (`localhost`, `127.0.0.1`, `app://`) and host-header verification, completely preventing cross-site scripting from accessing the local API.
 
-### Cinematic Startup Screen & Synthesized Soundscape
-* **Branded Opening Experience:** On launch, VISTARA presents a matte cinematic splash screen with smooth ease-out dismissal once all services and the local database are operational.
-* **Pure Web Audio Synthesizer:** Features an ambient audio signature engineered directly using Web Audio API oscillators and gain nodes (a sub-bass pitch dive, brass swell, and glistening harmonic chime chord) with zero external media files.
-* **Persistent Preference:** Remembers user sound settings in `localStorage` (`vistara_startup_sound`), allowing one-click audio muting or playback.
+### Hyper-Dynamic Cinematic Startup Screen & Synthesized Soundscape
+* **Redesigned VISTARA Brand Logo:** The newly minted *"Prismatic Apex & Celestial Horizon"* vector emblem features dual interlocking aerodynamic blades, an orbital celestial ring, and an aperture star beacon.
+* **Interactive 3D Mouse Parallax:** Floating cosmic dust particles and deep space nebula react to cursor movement with dynamic depth parallax.
+* **Real-Time Cyber-HUD Telemetry:** Live top banner displaying kernel status (`VISTARA KERNEL // v1.0.0 · ONLINE`), lossless audio pipeline status, and real-time jumping equalizer telemetry bars.
+* **Multi-Stage Laser Assembly & "Ta-Dum" Shockwave:** Dynamic laser lines forge the Vistara emblem, followed by an acoustic shockwave blast, anamorphic lens flare flash, and a laser lead bead tracking smooth numerical loading percentage (0% to 100%).
+* **Pure Web Audio Synthesizer:** Features an ambient audio signature engineered directly using Web Audio API oscillators and gain nodes (sub-bass pitch dive, brass swell, and glistening harmonic chime chord) with zero external media files.
+* **Skip & Dive-In:** Instant skip with <kbd>Space</kbd>, <kbd>Esc</kbd>, or clicking `ENTER UNIVERSE`, smoothly triggering a hyper-dive camera warp transition into the dashboard.
 
 ### Media Library Scanner & File Protection
 The scanning engine (`LibraryScannerService`) operates concurrently in background workers:
@@ -400,16 +403,19 @@ The scanning engine (`LibraryScannerService`) operates concurrently in backgroun
 </p>
 
 VISTARA elevates music listening into an audiophile studio experience:
-* **Immersive Now Playing Modal:** Auto-opens on track playback, presenting the grand album cover in a high-contrast vinyl showcase, track metadata, format badges, and instant favourite toggling.
-* **Up Next Queue & Embedded Lyrics:** Switch between the vinyl stage, the interactive draggable queue, and embedded synchronized lyrics at any time.
-* **Master Web Audio Analyser:** Hooked directly into the master audio pipeline (`fftSize = 256`, `smoothingTimeConstant = 0.85`), delivering real-time frequency and time-domain signals to hardware-accelerated HTML5 `<canvas>` renderers.
-* **5 Real-Time 60 FPS Visualizer Modes:**
-  1. **Beat-Synced Rainbow Spectrum Bars (`bars`)**: 32-to-48 band frequency analyzer across a full 310° rainbow spectrum with individual vertical bar gradients, floating laser caps with physical gravitational drop, and sub-bass kick velocity surges.
+* **Vintage Cassette Tape & Vinyl Showcase:** Auto-opens on track playback, showcasing a high-fidelity 3D flipping Cassette Tape (Side A front face / Side B audio metadata) with continuous physical spool rotation, magnetic tape diameter dynamics, and seamless switching to audiophile Vinyl Record.
+* **Side-by-Side Synced Lyrics:** Lyrics auto-reveal beside the cassette tape 2.0s after audio starts playing (or instantly if already past 2s). Includes a 1-click toggle button (`Show Lyrics` / `Lyrics: Beside Tape`) and auto-expands the modal to a comfortable dual-column desktop layout.
+* **Bilingual Romanized Hinglish Subtitles:** Real-time Romanized Hinglish translations rendered directly below the main lyric line (`main text ke neche`). Features a zero-latency client-side Devanagari transliterator (`devanagariToHinglish`) and a backend translation pipeline, active by default.
+* **High-End Kinetic Typography & Beat Animations:** Active line glassmorphism pill, dynamic 3-bar soundwave equalizer pulsing to real-time audio bass transients, subtitle slide-in animation, and smooth spring auto-scroll centering.
+* **Master Web Audio Analyser & Delta-Time Physics:** Hooked directly into master audio (`fftSize = 256`, `smoothingTimeConstant = 0.85`), with hardware timestamp delta-time (`performance.now()`) normalization ensuring butter-smooth 60Hz/120Hz/144Hz physics on any screen.
+* **5 Real-Time 60/120/144 FPS Visualizer Modes:**
+  1. **Beat-Synced 360° Chromatic Rainbow Spectrum Bars (`bars`)**: Full 360-degree saturated chromatic rainbow spectrum analyzer (Red $\rightarrow$ Orange $\rightarrow$ Yellow $\rightarrow$ Green $\rightarrow$ Cyan $\rightarrow$ Blue $\rightarrow$ Purple $\rightarrow$ Magenta) with vertical neon intensity gradients, solid-white floating peak caps with gravitational fall, and an ambient equalizer wave when paused.
   2. **Cosmic Rainbow Embers (`embers`)**: 360-degree rainbow particle cloud with kinetic velocity surges reacting to sub-bass transients, synaptic glowing constellation webs, and expanding central sonic shockwaves.
-  3. **Liquid Wave (`wave`)**: Smooth cubic Bezier spline ribbons dancing to harmonic audio dynamics with ethereal cyan and purple glow.
+  3. **Liquid Wave (`wave`)**: Chromatic rainbow spline ribbon dancing to harmonic audio dynamics with ethereal glow.
   4. **Radial Halo (`halo`)**: 360-degree circular orbital spectrum radiating behind the album artwork, pulsing to real-time sub-bass kick energy.
   5. **Vintage Stereo VU Meter (`vu`)**: Dual analog ballistic needle meters with channel separation, needle inertia, and calibrated red danger zones (+0 dB to +3 dB).
 * **One-Click Mode Switcher:** Dedicated visualizer selector pill row in the player deck or hotkey <kbd>V</kbd> to cycle modes instantly with persistence in `localStorage`.
+* **High-Res Album Artwork Auto-Import:** 1-click & automatic cover art fetcher sourcing up to 3000x3000px artwork from Cover Art Archive, MusicBrainz, and Deezer CDN.
 
 ### 10-Band Graphic Equalizer with Genre Presets
 * Audio playback pipeline supporting MP3, FLAC, WAV, AAC, ALAC, OGG, OPUS, and AIFF.

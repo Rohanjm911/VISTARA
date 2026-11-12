@@ -122,7 +122,8 @@ All REST API endpoints return responses encapsulated in the standard `ApiRespons
 | `GET` | `/api/v1/music/lyrics/search` | Search LRCLIB by explicit query string parameters. |
 | `POST` | `/api/v1/music/tracks/{id}/lyrics/apply/{lrclibId}` | Bind specific LRCLIB synced lyrics record to track. |
 | `POST` | `/api/v1/music/tracks/{id}/lyrics/autofetch` | Automatic one-click lookup and assignment from LRCLIB. |
-| `POST` | `/api/v1/music/lyrics/translate` | Translate lyrics into target language. |
+| `POST` | `/api/v1/music/lyrics/translate` | Translate lyrics into target language (converts to natural Romanized Hinglish when Hindi is selected). |
+| `POST` | `/api/v1/music/albums/{id}/artwork/auto` | Auto-import highest-resolution cover art (up to 3000x3000px) from Cover Art Archive, MusicBrainz, and Deezer CDN. |
 
 ---
 

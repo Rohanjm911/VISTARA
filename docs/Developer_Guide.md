@@ -36,9 +36,10 @@ VISTARA/
 │       ├── vite.config.ts             # Proxy to 127.0.0.1:5178, build to Vistara.Api/wwwroot
 │       └── src/
 │           ├── api/                   # Local API client, transparent CSRF bootstrap, SignalR bus
-│           ├── components/            # Reusable UI widgets, Modals, Players, Sidebar, Titlebar
+│           ├── components/            # VistaraLogo, StartupSplash, CassetteTape, AudioVisualizer, Modals, Players
 │           ├── context/               # ThemeContext, PlayerContext (audio/video/queue)
-│           ├── pages/                 # Dashboard, Cinema, TV, Music, Gallery, Playlists, Settings
+│           ├── pages/                 # Dashboard, Cinema, TV, Music, Playlists, MediaHealth, Settings
+│           ├── utils/                 # AudioMaster, Hinglish transliterator, Ambient soundscapes, UI sound
 │           └── types/                 # TypeScript interfaces mirrored from Vistara.Core
 ├── tests/
 │   └── Vistara.UnitTests/             # xUnit unit test suite (PathSecurity, Regex, Playback)

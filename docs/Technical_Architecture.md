@@ -145,17 +145,32 @@ flowchart LR
     FrequencyData --> Visualizers["60 FPS Canvas Renderers"]
     
     subgraph Visualizers ["Visualizer Modes"]
-        Bars["Rainbow Spectrum Bars (310° Hue, Laser Caps)"]
+        Bars["Rainbow Spectrum Bars (Full 360° Chromatic Hue, Delta-Time Physics)"]
         Embers["Cosmic Rainbow Embers (Particle Dynamics, Sonic Shockwaves)"]
-        Wave["Liquid Wave (Spline Ribbons)"]
+        Wave["Liquid Wave (Chromatic Spline Ribbons)"]
         Halo["Radial Halo (360° Artwork Pulse)"]
         VU["Dual Stereo VU Meters (Ballistic Inertia)"]
     end
 ```
 
 > [!TIP]
-> **Sub-Bass Kick Tracking:**
-> The visualizer engine isolates frequency bins $0 \rightarrow 3$ ($20 \text{ Hz} \rightarrow 90 \text{ Hz}$). When energy surpasses the dynamic threshold, it triggers kinetic velocity surges in Cosmic Embers and gravitational acceleration on Rainbow Spectrum floating peak caps.
+> **Delta-Time Normalization (60Hz / 120Hz / 144Hz):**
+> Visualizer frame loops calculate hardware delta timestamps via `performance.now()` with exponential moving average (EMA) lerp smoothing: $1 - (1 - \text{baseLerp})^{\text{fpsRatio}}$, ensuring perfectly identical, micro-stutter-free physics across standard 60Hz and high-refresh 120Hz/144Hz displays.
+
+---
+
+### 3.1 Bilingual Lyrics & Hinglish Transliteration Pipeline
+
+```mermaid
+flowchart TD
+    Lyrics["Synced LRC Lyrics Stream"] --> ScriptDetect{"Devanagari Detected?"}
+    ScriptDetect -- "Yes (Hindi)" --> ClientTrans["0ms Client Transliterator (devanagariToHinglish)"]
+    ScriptDetect -- "No (Foreign/English)" --> BackendAPI["POST /api/v1/music/lyrics/translate"]
+    BackendAPI --> HinglishPipeline["Hinglish Engine (Schwa-Deletion & Overrides)"]
+    ClientTrans --> Subtitle["Luminous Glacier Blue Subtitle Line (#7DD3FC)"]
+    HinglishPipeline --> Subtitle
+    Subtitle --> ActivePill["Kinetic Active Line Elevation Pill + 3-Bar Soundwave"]
+```
 
 ---
 

@@ -32,7 +32,7 @@
 
 Welcome to **VISTARA — Personal Media Universe**, a local-first personal entertainment and media management platform engineered for Windows 10 and 11. 
 
-VISTARA brings together all your personal entertainment media—Movies, Television Shows, Music, Photos, and Home Videos—under a unified interface without requiring accounts, registration, cloud subscriptions, or mandatory internet connections.
+VISTARA brings together all your personal entertainment media—Movies, Television Shows, Music, and Video Collections—under a unified interface without requiring accounts, registration, cloud subscriptions, or mandatory internet connections.
 
 ### Core Principles
 - **100% Local-First:** Your media, watch history, metadata, and playlists reside solely on your PC.
@@ -57,7 +57,7 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
 
 > [!TIP]
 > **Complete Offline Independence:**
-> VISTARA works 100% offline. Once launched, you can browse, organize, play 4K HDR videos, listen to FLAC music, and view photos even with no internet connection. When connected to the internet, optional online poster/lyrics lookups run in the background.
+> VISTARA works 100% offline. Once launched, you can browse, organize, play 4K HDR videos, and listen to FLAC music even with no internet connection. When connected to the internet, optional online poster/lyrics lookups run in the background.
 
 ### Alternative Launch Modes
 1. **Silent Script (`VISTARA_SILENT.vbs`):** Starts the background services and GUI silently without terminal windows.
@@ -122,22 +122,26 @@ Double-click **`VISTARA.exe`** directly from the root or standalone bundle direc
 </p>
 
 - **Lossless Audiophile Pipeline:** Native playback for FLAC, WAV, MP3, AAC, ALAC, OGG, OPUS, and AIFF with embedded ID3 and Vorbis tag extraction.
-- **Immersive Now Playing Modal:** Grand vinyl record turntable presentation, high-contrast typography, interactive queue drawer, and format quality badges.
+- **Vintage Cassette Tape & Vinyl Showcase:** Auto-opens on playback, featuring a realistic 3D flipping Cassette Tape (Side A front face / Side B audio metadata) with continuous physical spool rotation, magnetic tape diameter dynamics, and 1-click toggle to spinning Vinyl Record.
+- **Side-by-Side Synced Lyrics:** Auto-reveals synced lyrics beside the cassette tape 2.0s after audio starts playing (or immediately if already past 2s). Includes a 1-click toggle button (`Show Lyrics` / `Lyrics: Beside Tape`) and expands the modal to a comfortable dual-column desktop view.
+- **Bilingual Romanized Hinglish Subtitles:** Real-time Romanized Hinglish translations rendered directly below the main lyric line (`main text ke neche`). Uses a zero-latency client-side Devanagari transliterator (`devanagariToHinglish`) and backend translation engine, active by default.
+- **High-End Kinetic Typography & Beat Animations:** Active line glassmorphism pill, dynamic 3-bar soundwave equalizer pulsing to real-time audio bass transients, subtitle slide-in animation, and smooth spring auto-scroll centering.
 - **3 Listing View Modes:**
   * **Table View (`Table`):** Comprehensive columns with Title, Artist, Album, Duration, and sorting headers.
   * **Compact View (`Compact`):** High-density streamlined rows for rapid browsing through large music libraries.
   * **Card Grid View (`Grid`):** Cover artwork cards featuring hover play buttons and album titles.
   * *Your preferred view mode is saved automatically in your browser profile.*
+- **High-Resolution Album Cover Art Auto-Import:** 1-click & automated artwork fetcher sourcing up to 3000x3000px artwork from Cover Art Archive, MusicBrainz, and Deezer CDN.
 - **Interactive Audio Progress Bar:**
   * **Micro-Equalizer Bars:** 3 animated jumping bars next to the active timestamp display while playing.
   * **Soundwave Halo:** Dynamic breathing glow and double-ping ripple radiating from the scrubber knob during playback.
   * **Energy Shimmer Beam:** Continuous micro-gleam gliding across the played track fill.
   * **Floating Seek Tooltip:** Real-time timestamp pill following your cursor on hover.
   * **Hover Expand:** Smoothly expands track height from 4px to 6px on hover with subtle Electric Teal glow.
-- **Beat-Synced 60 FPS Audio Visualizers:**
-  1. **Rainbow Spectrum Bars (`bars`)**: 32-to-48 band frequency analyzer with a vibrant 310° rainbow spectrum, per-bar color gradients, floating laser caps with gravity drop, and sub-bass kick velocity.
+- **Beat-Synced 360° Chromatic Rainbow Visualizers (60/120/144 FPS):**
+  1. **Rainbow Spectrum Bars (`bars`)**: Full 360-degree saturated chromatic rainbow spectrum analyzer (Red $\rightarrow$ Orange $\rightarrow$ Yellow $\rightarrow$ Green $\rightarrow$ Cyan $\rightarrow$ Blue $\rightarrow$ Purple $\rightarrow$ Magenta) with vertical neon intensity gradients, solid-white floating peak caps with gravitational fall, delta-time normalization, and an ambient equalizer wave when paused.
   2. **Cosmic Rainbow Embers (`embers`)**: 360-degree rainbow particle cloud with kinetic velocity surges reacting to sub-bass transients, synaptic glowing constellation webs, and expanding central sonic shockwaves.
-  3. **Liquid Wave (`wave`)**: Smooth cubic Bezier spline ribbons dancing to harmonic audio dynamics.
+  3. **Liquid Wave (`wave`)**: Chromatic rainbow spline ribbon dancing to harmonic audio dynamics.
   4. **Radial Halo (`halo`)**: 360-degree circular orbital spectrum radiating behind the album artwork, pulsing to real-time sub-bass kick energy.
   5. **Vintage Stereo VU Meter (`vu`)**: Dual analog ballistic needle meters with channel separation, needle inertia, and calibrated red danger zones (+0 dB to +3 dB).
 - **10-Band Graphic Equalizer:** Studio equalizer spanning 32 Hz to 16 kHz with 8 genre presets (*Flat*, *Bass Boost*, *Treble Boost*, *Rock*, *Pop*, *Jazz*, *Classical*, *Electronic*, *Vocal Focus*).
@@ -172,7 +176,7 @@ VISTARA protects your media library against silent bit-rot, unreadable disks, un
 </p>
 
 1. Open **Libraries** in the sidebar.
-2. Click **Add Library** and select the content type (Movies, TV Shows, Music, Photos).
+2. Click **Add Library** and select the content type (Movies, TV Shows, Music).
 3. Assign local Windows directory paths (e.g., `D:\Movies`, `E:\Music`).
 4. Click **Scan Now** to trigger real-time directory ingestion with live SignalR progress.
 5. **Auto-Metadata Enrichment:** The scanner automatically retrieves posters and synopses from OMDB & Cinemeta for newly added movies and shows.

@@ -1,5 +1,31 @@
 # VISTARA — Release Notes
 
+## Version 1.3.0 • The Sound, Motion & Branding Overhaul
+
+<p align="center">
+  <img src="../assets/banner-animated.svg" alt="VISTARA Live Engine & Audio Spectrum" width="100%" />
+</p>
+
+<p align="center">
+  <img src="../assets/soundwave-divider.svg" alt="VISTARA Audio Waveform" width="100%" />
+</p>
+
+---
+
+## 1. Release Overview
+
+**VISTARA — Personal Media Universe (v1.3.0)** introduces a landmark visual, motion, and acoustic overhaul:
+- **Redesigned VISTARA Brand Logo ("The Prismatic Apex & Celestial Horizon"):** Precision vector emblem featuring dual interlocking aerodynamic blades with specular chamfer cuts, an orbital celestial horizon ring, and an illuminated aperture star beacon across the app and browser favicon.
+- **Hyper-Dynamic Cinematic Startup Screen:** Interactive 3D mouse parallax particle field, real-time Cyber-HUD telemetry banner, laser assembly, "Ta-Dum" acoustic shockwave blast, anamorphic lens flare flash, laser lead bead progress bar (0% to 100%), and hyper-dive camera warp transition into the dashboard.
+- **Bilingual Romanized Hinglish Lyrics Subtitles:** Zero-latency client-side Devanagari transliterator and backend translation pipeline displaying natural Romanized Hinglish subtitles directly below the main lyric line (`main text ke neche`) with glassmorphism elevation, beat-responsive equalizer bars, and spring kinetic auto-scroll.
+- **Side-by-Side Synced Lyrics Beside Cassette Tape:** Auto-reveals 2.0s after audio playback starts (or immediately if already past 2s) with 1-click manual toggle and responsive dual-column expansion.
+- **Beat-Synced 360° Chromatic Rainbow Visualizers with Delta-Time Physics:** Full 360-degree saturated chromatic spectrum across `AudioVisualizer` and `MiniVisualizer`, delta-time normalization (`performance.now()`) for micro-stutter-free 60/120/144Hz displays, and ambient equalizer wave during pauses.
+- **Cassette Tape Motion Physics:** Restored continuous physical spool rotation (`@keyframes cassetteSpoolRotate`), progressive magnetic tape spool radius dynamics, and soundwave expanding ping rings (`@keyframes soundwavePing`).
+- **High-Resolution Album Cover Art Auto-Import:** Multi-source cover art engine fetching up to 3000x3000px artwork from Cover Art Archive, MusicBrainz, and Deezer CDN.
+- **Picture Vault Complete Decommissioning:** Decommissioned legacy Picture Vault from all sidebar navigation, routes, and database models.
+
+---
+
 ## Version 1.2.0 • Media Integrity Monitor & Unified Dual-Tone Design
 
 <p align="center">
