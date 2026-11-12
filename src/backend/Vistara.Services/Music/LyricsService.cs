@@ -563,8 +563,10 @@ public class LyricsService : ILyricsService
 
     public async Task<TranslatedLyricsResultDto> TranslateLyricsAsync(TranslateLyricsRequest request, CancellationToken ct = default)
     {
-        var targetLang = string.IsNullOrWhiteSpace(request.TargetLanguage) ? "en" : request.TargetLanguage.ToLowerInvariant().Trim();
-        var cacheKey = $"{(request.TrackId.HasValue ? request.TrackId.Value.ToString() : "temp")}_{targetLang}_{request.Lyrics?.GetHashCode() ?? 0}";
+        var targetLang = string.IsNullOrWhiteSpace(request.TargetLanguage) ? "hi" : request.TargetLanguage.ToLowerInvariant().Trim();
+        var isHinglish = targetLang == "hi" || targetLang == "hinglish";
+        var apiTargetLang = isHinglish ? "hi" : targetLang;
+        var cacheKey = $"{(request.TrackId.HasValue ? request.TrackId.Value.ToString() : "temp")}_{targetLang}_{(isHinglish ? "hinglish_" : "")}_{request.Lyrics?.GetHashCode() ?? 0}";
 
         if (_translationCache.TryGetValue(cacheKey, out var cached))
         {
@@ -583,7 +585,7 @@ public class LyricsService : ILyricsService
             return new TranslatedLyricsResultDto
             {
                 TrackId = request.TrackId,
-                TargetLanguage = targetLang,
+                TargetLanguage = isHinglish ? "hinglish" : targetLang,
                 Lines = new List<TranslatedLyricLineDto>()
             };
         }
@@ -591,7 +593,7 @@ public class LyricsService : ILyricsService
         var result = new TranslatedLyricsResultDto
         {
             TrackId = request.TrackId,
-            TargetLanguage = targetLang
+            TargetLanguage = isHinglish ? "hinglish" : targetLang
         };
 
         try
@@ -617,8 +619,9 @@ public class LyricsService : ILyricsService
             }
 
             var textToTranslate = string.Join("\n", parsedList.Select(p => string.IsNullOrWhiteSpace(p.Text) ? "..." : p.Text));
-            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={Uri.EscapeDataString(targetLang)}&dt=t&q={Uri.EscapeDataString(textToTranslate)}";
+            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl={Uri.EscapeDataString(apiTargetLang)}&dt=t&q={Uri.EscapeDataString(textToTranslate)}";
 
+            string translatedAll = string.Empty;
             using var resp = await _httpClient.GetAsync(url, ct);
             if (resp.IsSuccessStatusCode)
             {
@@ -647,26 +650,57 @@ public class LyricsService : ILyricsService
                     result.SourceLanguage = root[2].GetString() ?? "auto";
                 }
 
-                var translatedAll = translatedBuilder.ToString();
-                var translatedLines = translatedAll.Split('\n');
-
-                for (int i = 0; i < parsedList.Count; i++)
+                translatedAll = translatedBuilder.ToString();
+            }
+            else
+            {
+                // Fallback to MyMemory Translation API
+                var fallbackUrl = $"https://api.mymemory.translated.net/get?q={Uri.EscapeDataString(textToTranslate.Length > 400 ? textToTranslate[..400] : textToTranslate)}&langpair=auto|{apiTargetLang}";
+                using var fbResp = await _httpClient.GetAsync(fallbackUrl, ct);
+                if (fbResp.IsSuccessStatusCode)
                 {
-                    var orig = parsedList[i].Text;
-                    var trans = i < translatedLines.Length ? translatedLines[i].Trim() : string.Empty;
-                    if (trans == "...") trans = string.Empty;
-
-                    result.Lines.Add(new TranslatedLyricLineDto
+                    var fbJson = await fbResp.Content.ReadAsStringAsync(ct);
+                    using var fbDoc = JsonDocument.Parse(fbJson);
+                    if (fbDoc.RootElement.TryGetProperty("responseData", out var respData) &&
+                        respData.TryGetProperty("translatedText", out var tText))
                     {
-                        Time = parsedList[i].Time,
-                        Original = orig,
-                        Translated = trans
-                    });
+                        translatedAll = tText.GetString() ?? string.Empty;
+                    }
+                }
+            }
+
+            var translatedLines = translatedAll.Split('\n');
+
+            for (int i = 0; i < parsedList.Count; i++)
+            {
+                var orig = parsedList[i].Text;
+                var trans = i < translatedLines.Length ? translatedLines[i].Trim() : string.Empty;
+                if (trans == "...") trans = string.Empty;
+
+                // If Hinglish is requested, convert Hindi Devanagari translation to Romanized Hinglish
+                if (isHinglish)
+                {
+                    if (!string.IsNullOrWhiteSpace(trans))
+                    {
+                        trans = DevanagariToHinglish(trans);
+                    }
+                    else if (orig.Any(c => c >= '\u0900' && c <= '\u097F'))
+                    {
+                        // If original lyric is in Devanagari Hindi, transliterate directly to Hinglish
+                        trans = DevanagariToHinglish(orig);
+                    }
                 }
 
-                _translationCache[cacheKey] = result;
-                return result;
+                result.Lines.Add(new TranslatedLyricLineDto
+                {
+                    Time = parsedList[i].Time,
+                    Original = orig,
+                    Translated = trans
+                });
             }
+
+            _translationCache[cacheKey] = result;
+            return result;
         }
         catch (Exception ex)
         {
@@ -674,6 +708,152 @@ public class LyricsService : ILyricsService
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Converts Devanagari Hindi text to natural, readable Romanized Hinglish.
+    /// </summary>
+    public static string DevanagariToHinglish(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return string.Empty;
+
+        // If string contains no Devanagari characters, return as is
+        if (!text.Any(c => c >= '\u0900' && c <= '\u097F'))
+        {
+            return text;
+        }
+
+        var consonants = new Dictionary<string, string>
+        {
+            ["क"] = "k", ["ख"] = "kh", ["ग"] = "g", ["घ"] = "gh", ["ङ"] = "ng",
+            ["च"] = "ch", ["छ"] = "chh", ["ज"] = "j", ["झ"] = "jh", ["ञ"] = "ny",
+            ["ट"] = "t", ["ठ"] = "th", ["ड"] = "d", ["ढ"] = "dh", ["ण"] = "n",
+            ["त"] = "t", ["थ"] = "th", ["द"] = "d", ["ध"] = "dh", ["न"] = "n",
+            ["प"] = "p", ["फ"] = "f", ["ब"] = "b", ["भ"] = "bh", ["म"] = "m",
+            ["य"] = "y", ["र"] = "r", ["ल"] = "l", ["व"] = "v",
+            ["श"] = "sh", ["ष"] = "sh", ["स"] = "s", ["ह"] = "h",
+            ["क़"] = "q", ["ख़"] = "kh", ["ग़"] = "g", ["ज़"] = "z", ["ड़"] = "r", ["ढ़"] = "rh", ["फ़"] = "f"
+        };
+
+        var vowels = new Dictionary<char, string>
+        {
+            ['अ'] = "a", ['आ'] = "aa", ['इ'] = "i", ['ई'] = "ee", ['उ'] = "u", ['ऊ'] = "oo", ['ऋ'] = "ri",
+            ['ए'] = "e", ['ऐ'] = "ai", ['ओ'] = "o", ['औ'] = "au"
+        };
+
+        var matras = new Dictionary<char, string>
+        {
+            ['ा'] = "a", ['ि'] = "i", ['ी'] = "i", ['ु'] = "u", ['ू'] = "u", ['ृ'] = "ri",
+            ['े'] = "e", ['ै'] = "ai", ['ो'] = "o", ['ौ'] = "au"
+        };
+
+        const char virama = '्';
+        const char anusvara = 'ं';
+        const char candrabindu = 'ँ';
+        const char visarga = 'ः';
+        const char nukta = '़';
+
+        var wordOverrides = new Dictionary<string, string>(StringComparer.Ordinal)
+        {
+            ["है"] = "hai", ["हैं"] = "hain", ["हो"] = "ho", ["हूँ"] = "hoon", ["हूं"] = "hoon",
+            ["था"] = "tha", ["थी"] = "thee", ["थे"] = "the",
+            ["मैं"] = "main", ["हम"] = "hum", ["तुम"] = "tum", ["तू"] = "tu", ["आप"] = "aap",
+            ["का"] = "ka", ["की"] = "ki", ["के"] = "ke", ["को"] = "ko", ["से"] = "se", ["में"] = "mein",
+            ["पर"] = "par", ["तक"] = "tak", ["और"] = "aur", ["या"] = "ya", ["भी"] = "bhi",
+            ["नहीं"] = "nahi", ["नही"] = "nahi", ["ना"] = "na", ["हाँ"] = "haan", ["हां"] = "haan",
+            ["प्यार"] = "pyar", ["दिल"] = "dil", ["जिंदगी"] = "zindagi", ["ज़िंदगी"] = "zindagi",
+            ["मोहब्बत"] = "mohabbat", ["इश्क"] = "ishq", ["यार"] = "yaar", ["दोस्त"] = "dost",
+            ["बात"] = "baat", ["रात"] = "raat", ["दिन"] = "din", ["आंखें"] = "aankhein", ["आँखें"] = "aankhein",
+            ["चेहरा"] = "chehra", ["तेरा"] = "tera", ["मेरी"] = "meri", ["मेरा"] = "mera", ["मेरे"] = "mere",
+            ["तुझे"] = "tujhe", ["मुझे"] = "mujhe", ["उसे"] = "use", ["हमे"] = "hume", ["हमें"] = "humein",
+            ["जान"] = "jaan", ["सनम"] = "sanam", ["सफर"] = "safar", ["रास्ता"] = "raasta", ["मंजिल"] = "manzil",
+            ["खुदा"] = "khuda", ["दुआ"] = "dua", ["करूं"] = "karoon", ["करूँ"] = "karoon", ["करता"] = "karta",
+            ["करती"] = "karti", ["करते"] = "karte", ["रहा"] = "raha", ["रही"] = "rahi", ["रहे"] = "rahe",
+            ["नमस्ते"] = "namaste", ["खुशी"] = "khushi", ["गाना"] = "gaana", ["गीत"] = "geet",
+            ["आवाज"] = "aawaaz", ["आवाज़"] = "aawaaz", ["पास"] = "paas", ["दूर"] = "door", ["साथ"] = "saath"
+        };
+
+        var tokens = Regex.Split(text, @"(\s+|[.,!?:;""'()\[\]]+)");
+        var sbResult = new System.Text.StringBuilder();
+
+        foreach (var tok in tokens)
+        {
+            if (string.IsNullOrEmpty(tok)) continue;
+
+            if (wordOverrides.TryGetValue(tok.Trim(), out var overrideWord))
+            {
+                sbResult.Append(overrideWord);
+                continue;
+            }
+
+            for (int i = 0; i < tok.Length; i++)
+            {
+                char ch = tok[i];
+                char next = (i + 1 < tok.Length) ? tok[i + 1] : '\0';
+
+                // Check for nukta (e.g. क + ़ = क़)
+                string charStr = ch.ToString();
+                if (next == nukta)
+                {
+                    charStr = ch.ToString() + nukta.ToString();
+                    i++;
+                    next = (i + 1 < tok.Length) ? tok[i + 1] : '\0';
+                }
+
+                if (vowels.TryGetValue(ch, out var vowelStr))
+                {
+                    sbResult.Append(vowelStr);
+                }
+                else if (consonants.TryGetValue(charStr, out var consStr))
+                {
+                    if (next == virama)
+                    {
+                        sbResult.Append(consStr);
+                        i++; // skip virama
+                    }
+                    else if (matras.TryGetValue(next, out var matraStr))
+                    {
+                        sbResult.Append(consStr).Append(matraStr);
+                        i++; // skip matra
+                    }
+                    else
+                    {
+                        bool isAtEnd = (i == tok.Length - 1);
+                        char afterNext = (i + 2 < tok.Length) ? tok[i + 2] : '\0';
+                        if (isAtEnd)
+                        {
+                            sbResult.Append(consStr);
+                        }
+                        else if (consonants.ContainsKey(next.ToString()) && (afterNext == '\0' || matras.ContainsKey(afterNext)))
+                        {
+                            sbResult.Append(consStr); // e.g. karta
+                        }
+                        else
+                        {
+                            sbResult.Append(consStr).Append('a');
+                        }
+                    }
+                }
+                else if (matras.TryGetValue(ch, out var mStr))
+                {
+                    sbResult.Append(mStr);
+                }
+                else if (ch == anusvara || ch == candrabindu)
+                {
+                    sbResult.Append('n');
+                }
+                else if (ch == visarga)
+                {
+                    sbResult.Append('h');
+                }
+                else
+                {
+                    sbResult.Append(ch);
+                }
+            }
+        }
+
+        return sbResult.ToString();
     }
 
     public static List<string> GenerateSearchQueries(string rawTitle, string? rawArtist)

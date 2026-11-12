@@ -200,7 +200,7 @@ export const NowPlayingModal: React.FC = () => {
     return localStorage.getItem('vistara_lyrics_translate_active') === 'true';
   });
   const [targetLanguage, setTargetLanguage] = useState<string>(() => {
-    return localStorage.getItem('vistara_lyrics_target_lang') || 'en';
+    return localStorage.getItem('vistara_lyrics_target_lang') || 'hi';
   });
   const [translationLoading, setTranslationLoading] = useState(false);
   const [translatedLinesMap, setTranslatedLinesMap] = useState<Record<string, string>>({});
@@ -998,6 +998,28 @@ export const NowPlayingModal: React.FC = () => {
                     </div>
 
                     <div className="flex items-center space-x-1.5">
+                      {/* Quick Hinglish Translation Toggle */}
+                      <button
+                        onClick={() => {
+                          if (isTranslationActive) {
+                            setIsTranslationActive(false);
+                            localStorage.setItem('vistara_lyrics_translate_active', 'false');
+                          } else {
+                            handleTranslateLyrics(targetLanguage);
+                          }
+                        }}
+                        disabled={translationLoading}
+                        className={`px-2 py-0.5 rounded-md border text-[10px] font-mono font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
+                          isTranslationActive
+                            ? 'bg-accent text-white border-accent shadow-[0_0_8px_rgba(56,189,248,0.4)]'
+                            : 'bg-white/[0.04] hover:bg-white/[0.08] text-[#94A3B8] hover:text-white border-white/[0.08]'
+                        }`}
+                        title="Toggle real-time bilingual Hinglish lyrics translation"
+                      >
+                        <Languages className={`w-2.5 h-2.5 ${translationLoading ? 'animate-spin' : ''}`} />
+                        <span>{translationLoading ? '...' : isTranslationActive ? 'Hinglish: On' : 'Hinglish'}</span>
+                      </button>
+
                       {!parsedLyrics && (
                         <button
                           onClick={handleAutoFetchSyncedLyrics}
@@ -1071,15 +1093,24 @@ export const NowPlayingModal: React.FC = () => {
                                 : 'text-[#94A3B8] text-xs hover:text-white'
                             }`}
                           >
-                            <div className="flex items-center space-x-2 truncate">
-                              {isCurrent && (
-                                <span className="flex items-end space-x-0.5 h-3 flex-shrink-0">
-                                  <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
-                                  <span className="w-0.5 bg-white rounded-full animate-bounce h-2" />
-                                  <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                            <div className="flex flex-col truncate">
+                              <div className="flex items-center space-x-2 truncate">
+                                {isCurrent && (
+                                  <span className="flex items-end space-x-0.5 h-3 flex-shrink-0">
+                                    <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                                    <span className="w-0.5 bg-white rounded-full animate-bounce h-2" />
+                                    <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                                  </span>
+                                )}
+                                <span className="truncate leading-relaxed">{item.text || '♪'}</span>
+                              </div>
+                              {isTranslationActive && (translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]) && (
+                                <span className={`text-[11px] font-normal leading-normal italic truncate mt-0.5 ${
+                                  isCurrent ? 'text-accent font-medium' : isPast ? 'text-[#64748B]' : 'text-accent/80'
+                                }`}>
+                                  {translatedLinesMap[item.text] || translatedLinesMap[`idx_${idx}`]}
                                 </span>
                               )}
-                              <span className="truncate leading-relaxed">{item.text || '♪'}</span>
                             </div>
                             <span className="text-[9px] font-mono text-[#64748B] flex-shrink-0">
                               {formatTime(item.time)}
@@ -1265,7 +1296,15 @@ export const NowPlayingModal: React.FC = () => {
                       title="Toggle bilingual real-time lyrics translation"
                     >
                       <Languages className={`w-3 h-3 ${translationLoading ? 'animate-spin' : ''}`} />
-                      <span>{translationLoading ? 'Translating...' : isTranslationActive ? 'Translate: On' : 'Translate'}</span>
+                      <span>
+                        {translationLoading
+                          ? 'Translating...'
+                          : isTranslationActive
+                          ? targetLanguage === 'hi' || targetLanguage === 'hinglish'
+                            ? 'Hinglish: On'
+                            : `Translate: ${targetLanguage.toUpperCase()}`
+                          : 'Translate (Hinglish)'}
+                      </span>
                     </button>
                     <select
                       value={targetLanguage}
@@ -1280,8 +1319,8 @@ export const NowPlayingModal: React.FC = () => {
                       className="py-1 px-1 rounded-r-lg border border-l-0 text-[10px] font-mono font-bold bg-[#10141d] text-accent border-[#242c3d] hover:border-accent cursor-pointer focus:outline-none"
                       title="Choose target translation language"
                     >
+                      <option value="hi">HINGLISH</option>
                       <option value="en">EN</option>
-                      <option value="hi">HI</option>
                       <option value="es">ES</option>
                       <option value="ja">JA</option>
                       <option value="fr">FR</option>
