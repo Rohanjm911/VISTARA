@@ -18,6 +18,8 @@ public class LyricsService : ILyricsService
     private readonly ILogger<LyricsService> _logger;
 
     private const string LrcLibBaseUrl = "https://lrclib.net/api";
+    private const string LyricsOvhBaseUrl = "https://api.lyrics.ovh/v1";
+    private const string ItunesSearchBaseUrl = "https://itunes.apple.com/search";
     private static readonly ConcurrentDictionary<string, TranslatedLyricsResultDto> _translationCache = new();
 
     public LyricsService(
@@ -81,87 +83,11 @@ public class LyricsService : ILyricsService
         var trackTitle = !string.IsNullOrWhiteSpace(request?.TrackTitle) ? request.TrackTitle.Trim() : track.Title;
         var artistName = !string.IsNullOrWhiteSpace(request?.ArtistName) ? request.ArtistName.Trim() : (track.Artist?.Name ?? string.Empty);
         var albumName = !string.IsNullOrWhiteSpace(request?.AlbumName) ? request.AlbumName.Trim() : (track.Album?.Title ?? string.Empty);
-        var duration = track.DurationSeconds;
 
-        LrcLibResponse? bestMatch = null;
+        var (chosenLyrics, source) = await ResolveFromMultipleSourcesAsync(track, trackTitle, artistName, albumName, ct);
 
-        try
+        if (!string.IsNullOrWhiteSpace(chosenLyrics))
         {
-            // 1. Attempt exact match via /api/get
-            var getUrl = $"{LrcLibBaseUrl}/get?track_name={Uri.EscapeDataString(trackTitle)}&artist_name={Uri.EscapeDataString(artistName)}";
-            if (!string.IsNullOrWhiteSpace(albumName))
-                getUrl += $"&album_name={Uri.EscapeDataString(albumName)}";
-            if (duration > 0)
-                getUrl += $"&duration={Math.Round(duration)}";
-
-            using var resp = await _httpClient.GetAsync(getUrl, ct);
-            if (resp.IsSuccessStatusCode)
-            {
-                bestMatch = await resp.Content.ReadFromJsonAsync<LrcLibResponse>(cancellationToken: ct);
-            }
-        }
-        catch (Exception ex)
-        {
-            _logger.LogWarning(ex, "LRCLIB exact get failed for '{Title}' by '{Artist}'", trackTitle, artistName);
-        }
-
-        // 2. If exact get didn't return lyrics or had null plain & synced lyrics, try filtered search
-        if (bestMatch == null || (string.IsNullOrWhiteSpace(bestMatch.SyncedLyrics) && string.IsNullOrWhiteSpace(bestMatch.PlainLyrics)))
-        {
-            try
-            {
-                var cleanTitle = CleanTrackTitle(trackTitle);
-                var searchUrl = $"{LrcLibBaseUrl}/search?track_name={Uri.EscapeDataString(cleanTitle)}";
-                if (!string.IsNullOrWhiteSpace(artistName))
-                    searchUrl += $"&artist_name={Uri.EscapeDataString(artistName)}";
-
-                using var searchResp = await _httpClient.GetAsync(searchUrl, ct);
-                if (searchResp.IsSuccessStatusCode)
-                {
-                    var results = await searchResp.Content.ReadFromJsonAsync<List<LrcLibResponse>>(cancellationToken: ct);
-                    if (results != null && results.Count > 0)
-                    {
-                        bestMatch = PickBestMatch(results, duration);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "LRCLIB track/artist search failed for '{Title}'", trackTitle);
-            }
-        }
-
-        // 3. Fallback: General text query search
-        if (bestMatch == null || (string.IsNullOrWhiteSpace(bestMatch.SyncedLyrics) && string.IsNullOrWhiteSpace(bestMatch.PlainLyrics)))
-        {
-            try
-            {
-                var cleanTitle = CleanTrackTitle(trackTitle);
-                var generalQuery = string.IsNullOrWhiteSpace(artistName) ? cleanTitle : $"{cleanTitle} {artistName}";
-                var generalUrl = $"{LrcLibBaseUrl}/search?q={Uri.EscapeDataString(generalQuery)}";
-
-                using var qResp = await _httpClient.GetAsync(generalUrl, ct);
-                if (qResp.IsSuccessStatusCode)
-                {
-                    var results = await qResp.Content.ReadFromJsonAsync<List<LrcLibResponse>>(cancellationToken: ct);
-                    if (results != null && results.Count > 0)
-                    {
-                        bestMatch = PickBestMatch(results, duration);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "LRCLIB general search failed for '{Title}'", trackTitle);
-            }
-        }
-
-        if (bestMatch != null && (!string.IsNullOrWhiteSpace(bestMatch.SyncedLyrics) || !string.IsNullOrWhiteSpace(bestMatch.PlainLyrics)))
-        {
-            var chosenLyrics = !string.IsNullOrWhiteSpace(bestMatch.SyncedLyrics)
-                ? bestMatch.SyncedLyrics
-                : bestMatch.PlainLyrics;
-
             track.Lyrics = chosenLyrics;
             await _context.SaveChangesAsync(ct);
 
@@ -174,7 +100,7 @@ public class LyricsService : ILyricsService
                 DurationSeconds = track.DurationSeconds,
                 Lyrics = chosenLyrics,
                 IsSynced = IsSyncedLrc(chosenLyrics),
-                Source = "lrclib"
+                Source = source
             };
         }
 
@@ -292,6 +218,271 @@ public class LyricsService : ILyricsService
             .FirstOrDefaultAsync(t => t.Id == trackOrMediaItemId || t.MediaItemId == trackOrMediaItemId, ct);
     }
 
+    /// <summary>
+    /// Resolves lyrics across multiple ordered sources:
+    /// 1. Local sidecar .lrc / .txt file next to the audio file
+    /// 2. LRCLIB (exact match, artist+title search, multi-query search)
+    /// 3. iTunes canonical metadata normalization -> LRCLIB retry
+    /// 4. Lyrics.ovh public REST API (raw, primary artist, and iTunes-normalized)
+    /// </summary>
+    private async Task<(string? Lyrics, string Source)> ResolveFromMultipleSourcesAsync(
+        Track track,
+        string trackTitle,
+        string artistName,
+        string albumName,
+        CancellationToken ct)
+    {
+        // 1. Local Sidecar .lrc / .txt file (100% offline, instant)
+        var localSidecar = await TryReadLocalSidecarLyricsAsync(track, ct);
+        if (!string.IsNullOrWhiteSpace(localSidecar))
+        {
+            return (localSidecar, "local_lrc");
+        }
+
+        var duration = track.DurationSeconds;
+        var cleanTitle = CleanTrackTitle(trackTitle);
+        var primaryArtist = CleanPrimaryArtist(artistName);
+
+        // 2. LRCLIB (Exact -> Filtered -> Multi-Query)
+        var lrclibMatch = await TryFetchFromLrcLibAsync(trackTitle, artistName, albumName, duration, ct)
+            ?? (!string.IsNullOrWhiteSpace(primaryArtist) && !string.Equals(primaryArtist, artistName, StringComparison.OrdinalIgnoreCase)
+                ? await TryFetchFromLrcLibAsync(cleanTitle, primaryArtist, albumName, duration, ct)
+                : null)
+            ?? await TrySearchLrcLibMultiQueryAsync(trackTitle, artistName, duration, ct);
+
+        if (lrclibMatch != null)
+        {
+            var chosen = !string.IsNullOrWhiteSpace(lrclibMatch.SyncedLyrics)
+                ? lrclibMatch.SyncedLyrics
+                : lrclibMatch.PlainLyrics;
+            if (!string.IsNullOrWhiteSpace(chosen))
+            {
+                return (chosen, "lrclib");
+            }
+        }
+
+        // 3. iTunes Search Canonical Metadata Normalization + LRCLIB Retry
+        var canonical = await TryResolveCanonicalMetadataViaItunesAsync(cleanTitle, primaryArtist, ct);
+        if (canonical != null)
+        {
+            var normMatch = await TryFetchFromLrcLibAsync(canonical.Value.Title, canonical.Value.Artist, string.Empty, duration, ct)
+                ?? await TrySearchLrcLibMultiQueryAsync(canonical.Value.Title, canonical.Value.Artist, duration, ct);
+
+            if (normMatch != null)
+            {
+                var chosen = !string.IsNullOrWhiteSpace(normMatch.SyncedLyrics)
+                    ? normMatch.SyncedLyrics
+                    : normMatch.PlainLyrics;
+                if (!string.IsNullOrWhiteSpace(chosen))
+                {
+                    return (chosen, "lrclib");
+                }
+            }
+        }
+
+        // 4. Lyrics.ovh Fallback (Primary Artist + Clean Title -> Raw -> iTunes Canonical)
+        var ovhCandidates = new List<(string Artist, string Title)>();
+        if (!string.IsNullOrWhiteSpace(primaryArtist) && !string.IsNullOrWhiteSpace(cleanTitle))
+            ovhCandidates.Add((primaryArtist, cleanTitle));
+        if (!string.IsNullOrWhiteSpace(artistName) && !string.IsNullOrWhiteSpace(trackTitle))
+            ovhCandidates.Add((artistName, trackTitle));
+        if (canonical != null)
+            ovhCandidates.Add((CleanPrimaryArtist(canonical.Value.Artist), CleanTrackTitle(canonical.Value.Title)));
+
+        foreach (var (candArtist, candTitle) in ovhCandidates.Distinct())
+        {
+            var ovhLyrics = await TryFetchFromLyricsOvhAsync(candArtist, candTitle, ct);
+            if (!string.IsNullOrWhiteSpace(ovhLyrics))
+            {
+                return (ovhLyrics, "lyrics.ovh");
+            }
+        }
+
+        return (null, "not_found");
+    }
+
+    private async Task<string?> TryReadLocalSidecarLyricsAsync(Track track, CancellationToken ct)
+    {
+        var filePath = await _context.MediaFiles
+            .Where(f => f.MediaItemId == track.MediaItemId)
+            .Select(f => f.AbsolutePath)
+            .FirstOrDefaultAsync(ct);
+        if (string.IsNullOrWhiteSpace(filePath)) return null;
+
+        foreach (var ext in new[] { ".lrc", ".txt" })
+        {
+            try
+            {
+                var sidecarPath = Path.ChangeExtension(filePath, ext);
+                if (File.Exists(sidecarPath))
+                {
+                    var content = await File.ReadAllTextAsync(sidecarPath, ct);
+                    if (!string.IsNullOrWhiteSpace(content))
+                        return content.Trim();
+                }
+            }
+            catch
+            {
+                // Ignore inaccessible local sidecar files
+            }
+        }
+
+        return null;
+    }
+
+    private async Task<LrcLibResponse?> TryFetchFromLrcLibAsync(
+        string trackTitle,
+        string artistName,
+        string albumName,
+        double duration,
+        CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(trackTitle)) return null;
+
+        try
+        {
+            var getUrl = $"{LrcLibBaseUrl}/get?track_name={Uri.EscapeDataString(trackTitle)}&artist_name={Uri.EscapeDataString(artistName)}";
+            if (!string.IsNullOrWhiteSpace(albumName))
+                getUrl += $"&album_name={Uri.EscapeDataString(albumName)}";
+            if (duration > 0)
+                getUrl += $"&duration={Math.Round(duration)}";
+
+            using var resp = await _httpClient.GetAsync(getUrl, ct);
+            if (resp.IsSuccessStatusCode)
+            {
+                var exact = await resp.Content.ReadFromJsonAsync<LrcLibResponse>(cancellationToken: ct);
+                if (exact != null && (!string.IsNullOrWhiteSpace(exact.SyncedLyrics) || !string.IsNullOrWhiteSpace(exact.PlainLyrics)))
+                    return exact;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "LRCLIB exact get failed for '{Title}'", trackTitle);
+        }
+
+        try
+        {
+            var cleanTitle = CleanTrackTitle(trackTitle);
+            var searchUrl = $"{LrcLibBaseUrl}/search?track_name={Uri.EscapeDataString(cleanTitle)}";
+            if (!string.IsNullOrWhiteSpace(artistName))
+                searchUrl += $"&artist_name={Uri.EscapeDataString(artistName)}";
+
+            using var searchResp = await _httpClient.GetAsync(searchUrl, ct);
+            if (searchResp.IsSuccessStatusCode)
+            {
+                var results = await searchResp.Content.ReadFromJsonAsync<List<LrcLibResponse>>(cancellationToken: ct);
+                if (results != null && results.Count > 0)
+                    return PickBestMatch(results, duration);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "LRCLIB filtered search failed for '{Title}'", trackTitle);
+        }
+
+        return null;
+    }
+
+    private async Task<LrcLibResponse?> TrySearchLrcLibMultiQueryAsync(
+        string rawTitle,
+        string? rawArtist,
+        double duration,
+        CancellationToken ct)
+    {
+        var queries = GenerateSearchQueries(rawTitle, rawArtist);
+        LrcLibResponse? bestPlainMatch = null;
+
+        foreach (var query in queries)
+        {
+            try
+            {
+                var searchUrl = $"{LrcLibBaseUrl}/search?q={Uri.EscapeDataString(query)}";
+                using var resp = await _httpClient.GetAsync(searchUrl, ct);
+                if (!resp.IsSuccessStatusCode) continue;
+
+                var results = await resp.Content.ReadFromJsonAsync<List<LrcLibResponse>>(cancellationToken: ct);
+                if (results == null || results.Count == 0) continue;
+
+                var syncedMatch = results
+                    .Where(r => !string.IsNullOrWhiteSpace(r.SyncedLyrics))
+                    .OrderBy(r => duration > 0 ? Math.Abs(r.Duration - duration) : 0)
+                    .FirstOrDefault();
+
+                if (syncedMatch != null)
+                    return syncedMatch;
+
+                bestPlainMatch ??= PickBestMatch(results, duration);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogDebug(ex, "LRCLIB query failed for '{Query}'", query);
+            }
+        }
+
+        return bestPlainMatch;
+    }
+
+    private async Task<(string Title, string Artist)?> TryResolveCanonicalMetadataViaItunesAsync(
+        string title,
+        string artist,
+        CancellationToken ct)
+    {
+        var term = string.IsNullOrWhiteSpace(artist) ? title : $"{artist} {title}";
+        if (string.IsNullOrWhiteSpace(term)) return null;
+
+        try
+        {
+            var url = $"{ItunesSearchBaseUrl}?term={Uri.EscapeDataString(term.Trim())}&entity=song&limit=1";
+            using var resp = await _httpClient.GetAsync(url, ct);
+            if (!resp.IsSuccessStatusCode) return null;
+
+            using var doc = await JsonDocument.ParseAsync(await resp.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+            if (doc.RootElement.TryGetProperty("results", out var results) &&
+                results.ValueKind == JsonValueKind.Array &&
+                results.GetArrayLength() > 0)
+            {
+                var first = results[0];
+                var trackName = first.TryGetProperty("trackName", out var tn) ? tn.GetString() : null;
+                var artistName = first.TryGetProperty("artistName", out var an) ? an.GetString() : null;
+                if (!string.IsNullOrWhiteSpace(trackName) && !string.IsNullOrWhiteSpace(artistName))
+                    return (trackName, artistName);
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "iTunes metadata lookup failed for '{Term}'", term);
+        }
+
+        return null;
+    }
+
+    private async Task<string?> TryFetchFromLyricsOvhAsync(string artist, string title, CancellationToken ct)
+    {
+        if (string.IsNullOrWhiteSpace(artist) || string.IsNullOrWhiteSpace(title)) return null;
+
+        try
+        {
+            var url = $"{LyricsOvhBaseUrl}/{Uri.EscapeDataString(artist.Trim())}/{Uri.EscapeDataString(title.Trim())}";
+            using var resp = await _httpClient.GetAsync(url, ct);
+            if (!resp.IsSuccessStatusCode) return null;
+
+            using var doc = await JsonDocument.ParseAsync(await resp.Content.ReadAsStreamAsync(ct), cancellationToken: ct);
+            if (doc.RootElement.TryGetProperty("lyrics", out var lyricsProp) &&
+                lyricsProp.ValueKind == JsonValueKind.String)
+            {
+                var text = lyricsProp.GetString()?.Trim();
+                if (!string.IsNullOrWhiteSpace(text))
+                    return text;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Lyrics.ovh lookup failed for '{Artist} - {Title}'", artist, title);
+        }
+
+        return null;
+    }
+
     private static LrcLibResponse? PickBestMatch(List<LrcLibResponse> candidates, double trackDuration)
     {
         // 1. Try finding candidates with SyncedLyrics that match duration within +/- 15 seconds
@@ -332,70 +523,29 @@ public class LyricsService : ILyricsService
             return new LyricsResultDto { TrackId = trackOrMediaItemId, Source = "not_found" };
         }
 
-        var queries = GenerateSearchQueries(track.Title, track.Artist?.Name);
-        var duration = track.DurationSeconds;
-        LrcLibResponse? bestSyncedMatch = null;
-        LrcLibResponse? bestPlainMatch = null;
+        var (chosenLyrics, source) = await ResolveFromMultipleSourcesAsync(
+            track,
+            track.Title,
+            track.Artist?.Name ?? string.Empty,
+            track.Album?.Title ?? string.Empty,
+            ct);
 
-        foreach (var query in queries)
+        if (!string.IsNullOrWhiteSpace(chosenLyrics))
         {
-            try
+            track.Lyrics = chosenLyrics;
+            await _context.SaveChangesAsync(ct);
+
+            return new LyricsResultDto
             {
-                var searchUrl = $"{LrcLibBaseUrl}/search?q={Uri.EscapeDataString(query)}";
-                using var resp = await _httpClient.GetAsync(searchUrl, ct);
-                if (resp.IsSuccessStatusCode)
-                {
-                    var results = await resp.Content.ReadFromJsonAsync<List<LrcLibResponse>>(cancellationToken: ct);
-                    if (results != null && results.Count > 0)
-                    {
-                        var syncedMatch = results
-                            .Where(r => !string.IsNullOrWhiteSpace(r.SyncedLyrics))
-                            .OrderBy(r => duration > 0 ? Math.Abs(r.Duration - duration) : 0)
-                            .FirstOrDefault();
-
-                        if (syncedMatch != null)
-                        {
-                            bestSyncedMatch = syncedMatch;
-                            break; // Perfect synced match found!
-                        }
-
-                        if (bestPlainMatch == null)
-                        {
-                            bestPlainMatch = results.FirstOrDefault(r => !string.IsNullOrWhiteSpace(r.PlainLyrics));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex, "LRCLIB query failed for '{Query}'", query);
-            }
-        }
-
-        var chosenMatch = bestSyncedMatch ?? bestPlainMatch;
-        if (chosenMatch != null)
-        {
-            var chosenLyrics = !string.IsNullOrWhiteSpace(chosenMatch.SyncedLyrics)
-                ? chosenMatch.SyncedLyrics
-                : chosenMatch.PlainLyrics;
-
-            if (!string.IsNullOrWhiteSpace(chosenLyrics))
-            {
-                track.Lyrics = chosenLyrics;
-                await _context.SaveChangesAsync(ct);
-
-                return new LyricsResultDto
-                {
-                    TrackId = track.Id,
-                    TrackTitle = track.Title,
-                    ArtistName = track.Artist?.Name,
-                    AlbumName = track.Album?.Title,
-                    DurationSeconds = track.DurationSeconds,
-                    Lyrics = chosenLyrics,
-                    IsSynced = IsSyncedLrc(chosenLyrics),
-                    Source = "lrclib"
-                };
-            }
+                TrackId = track.Id,
+                TrackTitle = track.Title,
+                ArtistName = track.Artist?.Name,
+                AlbumName = track.Album?.Title,
+                DurationSeconds = track.DurationSeconds,
+                Lyrics = chosenLyrics,
+                IsSynced = IsSyncedLrc(chosenLyrics),
+                Source = source
+            };
         }
 
         return new LyricsResultDto

@@ -183,7 +183,7 @@ export const NowPlayingModal: React.FC = () => {
   // Open-Source Lyrics (LRCLIB) State & Auto-Fetch
   const [lyricsLoading, setLyricsLoading] = useState(false);
   const [isAutoFetching, setIsAutoFetching] = useState(false);
-  const [lyricsSource, setLyricsSource] = useState<'embedded' | 'lrclib' | null>(null);
+  const [lyricsSource, setLyricsSource] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<LrcLibSearchResultDto[]>([]);
@@ -995,12 +995,24 @@ export const NowPlayingModal: React.FC = () => {
                       <Sparkles className="w-2.5 h-2.5 text-accent animate-pulse" /> Synced Karaoke
                     </span>
                   ) : activeTrack.lyrics ? (
-                    <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-indigo-950/70 text-indigo-300 border border-indigo-500/40 flex items-center gap-1 shadow-sm">
-                      <AlignLeft className="w-2.5 h-2.5" /> Formatted Stanzas
+                    <span className="text-[9px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#1B222B] text-[#F4F7F8] border border-[#2A3442] flex items-center gap-1 shadow-sm">
+                      <AlignLeft className="w-2.5 h-2.5 text-accent" /> Formatted Stanzas
                     </span>
                   ) : null}
-                  <span className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-emerald-950/60 text-emerald-400 border border-emerald-500/30 flex items-center gap-1" title="Powered by LRCLIB Open-Source Community Archive">
-                    <Globe className="w-2.5 h-2.5" /> LRCLIB
+                  <span
+                    className="text-[9px] font-mono px-2 py-0.5 rounded-full bg-[#1B222B] text-accent border border-accent/35 flex items-center gap-1 uppercase"
+                    title="Multi-Source Lyrics Pipeline (Local LRC • LRCLIB • iTunes • Lyrics.ovh)"
+                  >
+                    <Globe className="w-2.5 h-2.5" />{' '}
+                    {lyricsSource === 'local_lrc'
+                      ? 'LOCAL LRC'
+                      : lyricsSource === 'lyrics.ovh'
+                      ? 'LYRICS.OVH'
+                      : lyricsSource === 'embedded'
+                      ? 'EMBEDDED'
+                      : lyricsSource === 'lrclib'
+                      ? 'LRCLIB'
+                      : 'MULTI-SOURCE'}
                   </span>
                 </div>
 
