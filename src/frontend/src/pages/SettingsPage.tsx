@@ -304,18 +304,18 @@ export const SettingsPage: React.FC = () => {
                           <Moon className="w-4 h-4" />
                         </div>
                         <div>
-                          <div className="font-bold text-sm text-white">Cinematic Dark</div>
-                          <div className="text-[11px] text-[#9ca3af]">Obsidian & OLED matte</div>
+                          <div className="font-bold text-sm text-white">Deep Slate</div>
+                          <div className="text-[11px] text-[#9ca3af]">Cool Slate & OLED matte</div>
                         </div>
                       </div>
                       <CheckCircle2 className="w-5 h-5 text-accent shrink-0" />
                     </div>
                     {/* Live Preview Swatch */}
-                    <div className="h-12 w-full rounded-lg bg-[#0b0d11] border border-[#202736] p-2 flex items-center space-x-2">
+                    <div className="h-12 w-full rounded-lg bg-[#0F141B] border border-[#243040] p-2 flex items-center space-x-2">
                       <div className="w-3.5 h-3.5 rounded-full bg-accent" />
                       <div className="flex-1 space-y-1">
-                        <div className="h-2 w-3/4 rounded bg-[#181c24]" />
-                        <div className="h-1.5 w-1/2 rounded bg-[#242a36]" />
+                        <div className="h-2 w-3/4 rounded bg-[#161D27]" />
+                        <div className="h-1.5 w-1/2 rounded bg-[#243040]" />
                       </div>
                     </div>
                   </div>
@@ -327,17 +327,17 @@ export const SettingsPage: React.FC = () => {
                   Accent Color
                 </label>
                 <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-accent ring-2 ring-accent/30 bg-[#181c24] text-white font-bold text-xs shadow-md select-none">
+                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-accent ring-2 ring-accent/30 bg-[#161D27] text-white font-bold text-xs shadow-md select-none">
                     <div
                       className="w-3.5 h-3.5 rounded-full ring-1 ring-white/20 shrink-0"
-                      style={{ backgroundColor: '#35C6B0' }}
+                      style={{ backgroundColor: '#38BDF8' }}
                     />
-                    <span>Electric Teal</span>
+                    <span>Glacier Blue</span>
                     <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 ml-0.5" />
                   </div>
                 </div>
                 <p className="text-[11px] text-[#9ca3af] mt-2">
-                  Unified Dual-Tone: VISTARA strictly uses Electric Teal (#35C6B0) as the exclusive signature accent color across the universe.
+                  Unified Dual-Tone: VISTARA strictly uses Deep Slate (#0F141B) & Glacier Blue (#38BDF8) across the universe.
                 </p>
               </div>
             </div>

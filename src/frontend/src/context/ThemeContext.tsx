@@ -10,7 +10,7 @@ export interface AccentColorOption {
 }
 
 export const ACCENT_COLORS: AccentColorOption[] = [
-  { id: 'teal', name: 'Electric Teal', hex: '#35C6B0', hover: '#2ba895', value: '#35C6B0' },
+  { id: 'glacier', name: 'Glacier Blue', hex: '#38BDF8', hover: '#0EA5E9', value: '#38BDF8' },
 ];
 
 interface ThemeContextType {
@@ -31,8 +31,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [accentColor, setAccent] = useState<AccentColorOption>(() => {
-    // VISTARA strictly enforces the unified Electric Teal (#35C6B0) accent
-    localStorage.setItem('vistara_accent', '#35C6B0');
+    // VISTARA strictly enforces the unified Glacier Blue (#38BDF8) accent
+    localStorage.setItem('vistara_accent', '#38BDF8');
     return ACCENT_COLORS[0];
   });
 

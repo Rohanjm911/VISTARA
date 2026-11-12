@@ -83,7 +83,7 @@ export const MiniPlayer: React.FC = () => {
             else setIsNowPlayingOpen(true);
           }}
           className={`relative cursor-pointer transition-all duration-300 flex-shrink-0 group ${
-            isPlaying && activeTrack ? 'shadow-[0_0_15px_rgba(53,198,176,0.35)]' : 'hover:opacity-90'
+            isPlaying && activeTrack ? 'shadow-[0_0_15px_rgba(56, 189, 248,0.35)]' : 'hover:opacity-90'
           }`}
           title="Open Now Playing Screen"
         >
@@ -131,7 +131,7 @@ export const MiniPlayer: React.FC = () => {
             onClick={() => setIsNowPlayingOpen(true)}
             className={`flex items-center justify-center w-20 sm:w-24 h-8 px-1.5 py-0.5 rounded-lg cursor-pointer transition-all duration-300 group flex-shrink-0 shadow-inner ml-1 ${
               isPlaying
-                ? 'bg-[#0e121a] border border-accent/50 shadow-[0_0_14px_rgba(53,198,176,0.25)] hover:scale-105 hover:border-accent'
+                ? 'bg-[#0e121a] border border-accent/50 shadow-[0_0_14px_rgba(56, 189, 248,0.25)] hover:scale-105 hover:border-accent'
                 : 'bg-[#0d1017]/90 hover:bg-[#151a24] border border-[#222938] hover:border-accent/40'
             }`}
             title="Now Playing Spectrum • Click to open Now Playing"
@@ -169,7 +169,7 @@ export const MiniPlayer: React.FC = () => {
           <button
             onClick={togglePlayPause}
             className={`w-8 h-8 rounded-full bg-accent hover:bg-accent-hover text-[#10151B] flex items-center justify-center transition-all duration-200 hover:scale-110 active:scale-95 shadow-md ${
-              isPlaying ? 'shadow-[0_0_16px_rgba(53,198,176,0.5)] ring-2 ring-accent/40' : ''
+              isPlaying ? 'shadow-[0_0_16px_rgba(56, 189, 248,0.5)] ring-2 ring-accent/40' : ''
             }`}
           >
             {isPlaying ? <Pause className="w-4 h-4 fill-[#10151B]" /> : <Play className="w-4 h-4 fill-[#10151B] ml-0.5" />}

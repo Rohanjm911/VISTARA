@@ -41,7 +41,7 @@ export const LyricsBeatVisualizer: React.FC<LyricsBeatVisualizerProps> = ({
   analyserRef,
   isPlaying,
   className = '',
-  accentColor = '#35C6B0',
+  accentColor = '#38BDF8',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const particlesRef = useRef<Particle[]>([]);
@@ -224,7 +224,7 @@ export const LyricsBeatVisualizer: React.FC<LyricsBeatVisualizerProps> = ({
       const auraScale = 0.35 + bassEnergy * 0.25 + beatShock * 0.15;
       const auraRadius = Math.min(width, height) * auraScale;
 
-      ctx.fillStyle = `rgba(53, 198, 176, ${0.05 + bassEnergy * 0.06})`;
+      ctx.fillStyle = `rgba(56, 189, 248, ${0.05 + bassEnergy * 0.06})`;
       ctx.beginPath();
       ctx.arc(cx, cy, auraRadius, 0, Math.PI * 2);
       ctx.fill();
@@ -278,7 +278,7 @@ export const LyricsBeatVisualizer: React.FC<LyricsBeatVisualizerProps> = ({
       ctx.lineTo(width, height);
       ctx.closePath();
 
-      ctx.fillStyle = `rgba(53, 198, 176, ${0.05 + bassEnergy * 0.07})`;
+      ctx.fillStyle = `rgba(56, 189, 248, ${0.05 + bassEnergy * 0.07})`;
       ctx.fill();
 
       // WAVE 2: Middle Rhythm Wave (Mid & Beat Bounce Reactive)

@@ -9,17 +9,17 @@ export default {
     extend: {
       colors: {
         accent: {
-          DEFAULT: 'var(--accent-color, #35c6b0)',
-          hover: 'var(--accent-hover, #2ba895)',
+          DEFAULT: 'var(--accent-color, #38bdf8)',
+          hover: 'var(--accent-hover, #0ea5e9)',
         },
         surface: {
-          DEFAULT: 'var(--surface-color, #12151b)',
-          secondary: 'var(--surface-secondary, #181c24)',
-          border: 'var(--border-color, #242a36)',
-          hover: 'var(--hover-color, #1f242f)',
+          DEFAULT: 'var(--surface-color, #161d27)',
+          secondary: 'var(--surface-secondary, #121821)',
+          border: 'var(--border-color, #243040)',
+          hover: 'var(--hover-color, #1d2633)',
         },
         bg: {
-          DEFAULT: 'var(--bg-color, #0b0d11)',
+          DEFAULT: 'var(--bg-color, #0f141b)',
         }
       },
       fontFamily: {

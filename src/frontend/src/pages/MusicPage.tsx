@@ -801,7 +801,7 @@ export const MusicPage: React.FC = () => {
                             src={t.artworkUrl}
                             alt={t.title}
                             className={`w-8 h-8 rounded object-cover flex-shrink-0 bg-[#0e1118] border border-[#202736] group-hover:scale-105 transition-transform duration-200 ${
-                              isCurrent && isPlaying ? 'shadow-[0_0_8px_rgba(53,198,176,0.4)] border-accent/40' : ''
+                              isCurrent && isPlaying ? 'shadow-[0_0_8px_rgba(56, 189, 248,0.4)] border-accent/40' : ''
                             }`}
                           />
                         ) : (
@@ -853,7 +853,7 @@ export const MusicPage: React.FC = () => {
               <div
                 key={album.id}
                 onClick={() => openAlbumDetails(album.id)}
-                className="group bg-[#12151b] border border-[#242a36] hover:border-accent/70 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_28px_rgba(53,198,176,0.18)] shadow-md"
+                className="group bg-[#12151b] border border-[#242a36] hover:border-accent/70 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_28px_rgba(56, 189, 248,0.18)] shadow-md"
               >
                 <div className="aspect-square bg-[#181c24] rounded-lg overflow-hidden relative mb-2.5 shadow-inner">
                   {album.artworkUrl ? (

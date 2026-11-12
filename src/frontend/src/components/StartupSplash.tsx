@@ -129,7 +129,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
       color: string;
     }> = [];
 
-    const colors = ['#35C6B0', '#2ba895', '#5eead4', '#151A21', '#F4F7F8'];
+    const colors = ['#38BDF8', '#0EA5E9', '#5eead4', '#151A21', '#F4F7F8'];
 
     for (let i = 0; i < 45; i++) {
       particles.push({
@@ -248,7 +248,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
           ].map((bar, i) => (
             <div
               key={i}
-              className="absolute top-0 bottom-0 bg-[#35C6B0]/20 transition-all duration-1000"
+              className="absolute top-0 bottom-0 bg-[#38BDF8]/20 transition-all duration-1000"
               style={{
                 width: `${bar.w}px`,
                 transform: `translateX(${bar.offset}px) scaleY(${isDiving ? 4.0 : 1.0})`,
@@ -266,18 +266,18 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
       <div
         className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none rounded-full transition-all duration-1000 ${
           stage >= 2
-            ? 'w-[750px] h-[750px] bg-[#35C6B0]/15 blur-[130px] opacity-100'
+            ? 'w-[750px] h-[750px] bg-[#38BDF8]/15 blur-[130px] opacity-100'
             : stage >= 1
-            ? 'w-[450px] h-[450px] bg-[#35C6B0]/10 blur-[90px] opacity-60'
-            : 'w-20 h-20 bg-[#35C6B0]/10 blur-[40px] opacity-20'
+            ? 'w-[450px] h-[450px] bg-[#38BDF8]/10 blur-[90px] opacity-60'
+            : 'w-20 h-20 bg-[#38BDF8]/10 blur-[40px] opacity-20'
         }`}
       />
 
       {/* 4. Shockwave Ring (Triggers on Stage 2 "Ta-Dum" Impact) */}
       {stage >= 2 && (
         <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-10">
-          <div className="w-[320px] h-[320px] rounded-full border border-[#35C6B0]/80 shadow-[0_0_50px_rgba(53,198,176,0.6)] animate-cinematic-shockwave" />
-          <div className="w-[320px] h-[320px] rounded-full border border-[#35C6B0]/40 animate-cinematic-shockwave [animation-delay:120ms]" />
+          <div className="w-[320px] h-[320px] rounded-full border border-[#38BDF8]/80 shadow-[0_0_50px_rgba(56, 189, 248,0.6)] animate-cinematic-shockwave" />
+          <div className="w-[320px] h-[320px] rounded-full border border-[#38BDF8]/40 animate-cinematic-shockwave [animation-delay:120ms]" />
         </div>
       )}
 
@@ -299,7 +299,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
           <div
             className={`absolute inset-0 rounded-2xl border transition-all duration-1000 ease-out ${
               stage >= 2
-                ? 'border-[#35C6B0]/70 rotate-45 scale-100 shadow-[0_0_35px_rgba(53,198,176,0.35)]'
+                ? 'border-[#38BDF8]/70 rotate-45 scale-100 shadow-[0_0_35px_rgba(56, 189, 248,0.35)]'
                 : stage >= 1
                 ? 'border-[#2e3748] rotate-45 scale-90'
                 : 'border-transparent scale-50 opacity-0 rotate-0'
@@ -310,7 +310,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
           <div
             className={`absolute inset-2.5 rounded-xl bg-[#0f1219]/90 border transition-all duration-700 rotate-45 ${
               stage >= 2
-                ? 'border-[#35C6B0]/60 shadow-[inset_0_0_20px_rgba(53,198,176,0.3)]'
+                ? 'border-[#38BDF8]/60 shadow-[inset_0_0_20px_rgba(56, 189, 248,0.3)]'
                 : 'border-[#1e2430]'
             }`}
           />
@@ -324,7 +324,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
             <path
               d="M 18 20 L 50 84 L 82 20 L 66 20 L 50 56 L 34 20 Z"
               fill="none"
-              stroke="#35C6B0"
+              stroke="#38BDF8"
               strokeWidth="1.5"
               strokeDasharray="260"
               strokeDashoffset={stage >= 1 ? 0 : 260}
@@ -334,7 +334,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
             {/* Left Facet Wing */}
             <path
               d="M 18 20 L 50 84 L 50 56 L 34 20 Z"
-              fill="#2ba895"
+              fill="#0EA5E9"
               className={`transition-opacity duration-700 ${
                 stage >= 1 ? 'opacity-100' : 'opacity-0'
               }`}
@@ -343,7 +343,7 @@ export const StartupSplash: React.FC<StartupSplashProps> = ({
             {/* Right Facet Wing with Chrome Sheen */}
             <path
               d="M 50 84 L 82 20 L 66 20 L 50 56 Z"
-              fill="#35C6B0"
+              fill="#38BDF8"
               className={`transition-opacity duration-700 ${
                 stage >= 1 ? 'opacity-100' : 'opacity-0'
               }`}

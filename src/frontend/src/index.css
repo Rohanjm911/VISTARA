@@ -3,25 +3,25 @@
 @tailwind utilities;
 
 :root {
-  --bg-color: #10151b;
-  --surface-color: #151a21;
-  --surface-secondary: #1b222b;
-  --surface-tertiary: #222b35;
-  --border-color: #242a36;
-  --border-secondary: #303a45;
-  --hover-color: #222b35;
+  --bg-color: #0f141b;
+  --surface-color: #161d27;
+  --surface-secondary: #121821;
+  --surface-tertiary: #1d2633;
+  --border-color: #243040;
+  --border-secondary: #2e3c4f;
+  --hover-color: #1d2633;
   --text-primary: #f4f7f8;
   --text-secondary: #a4afb9;
   --text-muted: #6b7885;
-  --input-bg: #151a21;
-  --input-border: #303a45;
+  --input-bg: #161d27;
+  --input-border: #2e3c4f;
   --input-text: #f4f7f8;
   --input-placeholder: #6b7885;
   --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.45);
   --dropdown-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-  --accent-color: #35c6b0;
-  --color-accent: #35c6b0;
-  --accent-hover: #2ba895;
+  --accent-color: #38bdf8;
+  --color-accent: #38bdf8;
+  --accent-hover: #0ea5e9;
   color-scheme: dark;
 }
 

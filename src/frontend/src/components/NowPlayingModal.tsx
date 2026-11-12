@@ -780,7 +780,7 @@ export const NowPlayingModal: React.FC = () => {
                           isMaximized
                             ? 'w-64 h-64 sm:w-72 sm:h-72'
                             : 'w-44 h-44 sm:w-48 sm:h-48'
-                        } ${isPlaying ? 'scale-100 shadow-[0_15px_45px_rgba(53,198,176,0.25)]' : 'scale-[0.98]'}`}
+                        } ${isPlaying ? 'scale-100 shadow-[0_15px_45px_rgba(56, 189, 248,0.25)]' : 'scale-[0.98]'}`}
                       >
                         {artworkUrl ? (
                           <img
@@ -1048,7 +1048,7 @@ export const NowPlayingModal: React.FC = () => {
                       disabled={translationLoading}
                       className={`px-2 py-1 rounded-l-lg border text-[11px] font-semibold flex items-center space-x-1 transition-all cursor-pointer ${
                         isTranslationActive
-                          ? 'bg-accent text-white border-accent shadow-[0_0_12px_rgba(53,198,176,0.4)]'
+                          ? 'bg-accent text-white border-accent shadow-[0_0_12px_rgba(56, 189, 248,0.4)]'
                           : 'bg-[#141822] hover:bg-[#1e2433] text-[#9ca3af] hover:text-white border-[#242c3d]'
                       }`}
                       title="Toggle bilingual real-time lyrics translation"
@@ -1288,14 +1288,14 @@ export const NowPlayingModal: React.FC = () => {
                           isCurrent && isPlaying
                             ? {
                                 transform: `scale(${1.02 + beatData.beatPulse * 0.025})`,
-                                boxShadow: `0 0 ${12 + beatData.bassLevel * 24}px rgba(53, 198, 176, ${0.3 + beatData.bassLevel * 0.45})`,
-                                borderColor: `rgba(53, 198, 176, ${0.45 + beatData.bassLevel * 0.5})`,
+                                boxShadow: `0 0 ${12 + beatData.bassLevel * 24}px rgba(56, 189, 248, ${0.3 + beatData.bassLevel * 0.45})`,
+                                borderColor: `rgba(56, 189, 248, ${0.45 + beatData.bassLevel * 0.5})`,
                               }
                             : isCurrent
                             ? {
                                 transform: 'scale(1.02)',
-                                boxShadow: '0 0 16px rgba(53, 198, 176, 0.35)',
-                                borderColor: 'rgba(53, 198, 176, 0.5)',
+                                boxShadow: '0 0 16px rgba(56, 189, 248, 0.35)',
+                                borderColor: 'rgba(56, 189, 248, 0.5)',
                               }
                             : undefined
                         }
@@ -1362,8 +1362,8 @@ export const NowPlayingModal: React.FC = () => {
                         style={
                           isChorus && isPlaying
                             ? {
-                                boxShadow: `0 0 ${12 + beatData.bassLevel * 20}px rgba(53, 198, 176, ${0.2 + beatData.bassLevel * 0.3})`,
-                                borderColor: `rgba(53, 198, 176, ${0.35 + beatData.bassLevel * 0.3})`,
+                                boxShadow: `0 0 ${12 + beatData.bassLevel * 20}px rgba(56, 189, 248, ${0.2 + beatData.bassLevel * 0.3})`,
+                                borderColor: `rgba(56, 189, 248, ${0.35 + beatData.bassLevel * 0.3})`,
                               }
                             : undefined
                         }

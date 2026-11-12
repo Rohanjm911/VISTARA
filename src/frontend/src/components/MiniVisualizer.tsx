@@ -12,7 +12,7 @@ export const MiniVisualizer: React.FC<MiniVisualizerProps> = ({
   analyserRef,
   isPlaying,
   className = '',
-  accentColor = '#35C6B0',
+  accentColor = '#38BDF8',
   bars = 8,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

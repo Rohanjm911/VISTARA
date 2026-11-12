@@ -141,7 +141,7 @@ export const CassetteTape: React.FC<CassetteTapeProps> = ({
             backfaceVisibility: 'hidden',
             WebkitBackfaceVisibility: 'hidden',
             boxShadow: isPlaying
-              ? `0 20px 50px rgba(0,0,0,0.9), 0 0 ${16 + (bassLevel || 0) * 24}px rgba(53, 198, 176, ${0.2 + (bassLevel || 0) * 0.35})`
+              ? `0 20px 50px rgba(0,0,0,0.9), 0 0 ${16 + (bassLevel || 0) * 24}px rgba(56, 189, 248, ${0.2 + (bassLevel || 0) * 0.35})`
               : '0 20px 50px rgba(0,0,0,0.9)',
           }}
         >

@@ -27,7 +27,7 @@ export const AudioVisualizer: React.FC<AudioVisualizerProps> = ({
   isPlaying,
   mode,
   className = '',
-  accentColor = '#35C6B0',
+  accentColor = '#38BDF8',
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 

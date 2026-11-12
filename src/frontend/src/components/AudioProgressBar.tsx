@@ -135,7 +135,7 @@ export const AudioProgressBar: React.FC<AudioProgressBarProps> = ({
 
         {/* Clean Solid Track Background with Smooth Expand & Ambient Teal Glow */}
         <div
-          className={`w-full ${trackHeight} bg-[#222b35] border border-[#303a45]/60 rounded-full overflow-hidden relative transition-all duration-200 ease-out group-hover:shadow-[0_0_10px_rgba(53,198,176,0.2)]`}
+          className={`w-full ${trackHeight} bg-[#222b35] border border-[#303a45]/60 rounded-full overflow-hidden relative transition-all duration-200 ease-out group-hover:shadow-[0_0_10px_rgba(56, 189, 248,0.2)]`}
         >
           {/* Hover Ghost Seek Preview */}
           {hoverPercent !== null && (
@@ -175,8 +175,8 @@ export const AudioProgressBar: React.FC<AudioProgressBarProps> = ({
 
           {/* Core Scrubber Thumb */}
           <div
-            className={`${thumbSize} rounded-full bg-white ring-2 ring-accent shadow-[0_0_10px_rgba(53,198,176,0.8)] transition-all duration-150 ease-out ${
-              isDragging ? 'scale-125 ring-4 shadow-[0_0_14px_rgba(53,198,176,1)]' : 'group-hover:scale-135'
+            className={`${thumbSize} rounded-full bg-white ring-2 ring-accent shadow-[0_0_10px_rgba(56, 189, 248,0.8)] transition-all duration-150 ease-out ${
+              isDragging ? 'scale-125 ring-4 shadow-[0_0_14px_rgba(56, 189, 248,1)]' : 'group-hover:scale-135'
             }`}
           />
         </div>

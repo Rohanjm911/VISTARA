@@ -203,8 +203,8 @@ export const FirstRunWizard: React.FC<FirstRunWizardProps> = ({ isOpen, onClose 
                   <Moon className="w-5 h-5" />
                 </div>
                 <div>
-                  <div className="font-bold text-sm text-white">Cinematic Dark</div>
-                  <div className="text-[11px] text-[#9ca3af]">Obsidian & OLED matte with Electric Teal (#35C6B0)</div>
+                  <div className="font-bold text-sm text-white">Deep Slate</div>
+                  <div className="text-[11px] text-[#9ca3af]">Cool Slate (#0F141B) with Glacier Blue (#38BDF8)</div>
                 </div>
               </div>
               <div className="flex items-center space-x-2">

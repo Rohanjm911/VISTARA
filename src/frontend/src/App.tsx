@@ -153,7 +153,7 @@ export const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-[#0b0d11] text-[#f3f4f6] overflow-hidden select-none">
+    <div className="flex flex-col h-screen w-screen bg-[#0f141b] text-[#f4f7f8] overflow-hidden select-none">
       {/* Title Bar with Search, Status, and Controls */}
       <div
         className={`transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
@@ -173,7 +173,7 @@ export const AppContent: React.FC = () => {
       >
         <Sidebar currentTab={currentTab} onSelectTab={setCurrentTab} />
 
-        <main className="flex-1 flex flex-col overflow-hidden bg-[#0b0d11] relative">
+        <main className="flex-1 flex flex-col overflow-hidden bg-[#0f141b] relative">
           {renderActivePage()}
         </main>
       </div>
