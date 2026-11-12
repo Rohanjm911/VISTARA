@@ -168,6 +168,12 @@ export const NowPlayingModal: React.FC = () => {
   // Default ALWAYS to cassette tape per user request
   const [playerDisplayMode, setPlayerDisplayMode] = useState<'cassette' | 'vinyl'>('cassette');
 
+  // Side-by-side lyrics state (reveals 2-3 seconds after audio starts playing)
+  const [sideLyricsRevealed, setSideLyricsRevealed] = useState(false);
+  const [userDismissedSideLyrics, setUserDismissedSideLyrics] = useState(false);
+  const sideActiveLyricRef = React.useRef<HTMLDivElement | null>(null);
+  const sideLyricsContainerRef = React.useRef<HTMLDivElement | null>(null);
+
   const togglePlayerDisplayMode = () => {
     setPlayerDisplayMode((prev) => (prev === 'cassette' ? 'vinyl' : 'cassette'));
   };
@@ -335,12 +341,12 @@ export const NowPlayingModal: React.FC = () => {
     return parsePlainLyrics(activeTrack?.lyrics);
   }, [activeTrack?.lyrics]);
 
-  // Full automatic smart-sync: auto-fetch synced lyrics when Lyrics tab is viewed
+  // Full automatic smart-sync: auto-fetch synced lyrics when Lyrics tab is viewed OR when side lyrics reveal
   useEffect(() => {
-    if (activeTab === 'lyrics' && activeTrack && !parsedLyrics && !lyricsLoading && !isAutoFetching) {
+    if ((activeTab === 'lyrics' || (activeTab === 'player' && sideLyricsRevealed)) && activeTrack && !parsedLyrics && !lyricsLoading && !isAutoFetching) {
       handleAutoFetchSyncedLyrics();
     }
-  }, [activeTab, activeTrack?.id, parsedLyrics]);
+  }, [activeTab, sideLyricsRevealed, activeTrack?.id, parsedLyrics]);
 
   // Auto-translate if user has translation enabled
   useEffect(() => {
@@ -403,6 +409,45 @@ export const NowPlayingModal: React.FC = () => {
       });
     }
   }, [currentLyricIndex, activeTab]);
+
+  // Reveal side lyrics 2-3 seconds after audio starts playing
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    if (currentTime >= 2.5) {
+      setSideLyricsRevealed(true);
+      return;
+    }
+
+    const remainingDelay = Math.max(0, (2.5 - currentTime) * 1000);
+    const timer = setTimeout(() => {
+      setSideLyricsRevealed(true);
+    }, remainingDelay);
+
+    return () => clearTimeout(timer);
+  }, [isPlaying, activeTrack?.id, Math.floor(currentTime)]);
+
+  // Reset side lyrics state whenever track changes
+  useEffect(() => {
+    setSideLyricsRevealed(false);
+    setUserDismissedSideLyrics(false);
+  }, [activeTrack?.id]);
+
+  // Auto-scroll side lyrics smoothly to active lyric line
+  React.useEffect(() => {
+    if (sideActiveLyricRef.current && sideLyricsContainerRef.current && activeTab === 'player' && sideLyricsRevealed && !userDismissedSideLyrics) {
+      const container = sideLyricsContainerRef.current;
+      const activeEl = sideActiveLyricRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const activeRect = activeEl.getBoundingClientRect();
+      const relativeTop = activeRect.top - containerRect.top + container.scrollTop;
+      const targetScroll = relativeTop - container.clientHeight / 2 + activeRect.height / 2;
+      container.scrollTo({
+        top: Math.max(0, targetScroll),
+        behavior: 'smooth',
+      });
+    }
+  }, [currentLyricIndex, activeTab, sideLyricsRevealed, userDismissedSideLyrics]);
 
   const handleVisualizerChange = (mode: VisualizerMode) => {
     setVisualizerMode(mode);
@@ -536,7 +581,9 @@ export const NowPlayingModal: React.FC = () => {
             ? 'w-full h-full bg-[#06080d] rounded-none'
             : activeTab === 'lyrics' || activeTab === 'queue'
             ? 'w-full max-w-2xl md:max-w-3xl lg:max-w-4xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] animate-in zoom-in-95 duration-200'
-            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] animate-in zoom-in-95 duration-200'
+            : sideLyricsRevealed && !userDismissedSideLyrics
+            ? 'w-full max-w-2xl md:max-w-4xl lg:max-w-5xl xl:max-w-6xl h-[92vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-500'
+            : 'w-full max-w-xl md:max-w-2xl h-[90vh] max-h-[calc(100vh-1rem)] sm:max-h-[calc(100vh-2rem)] bg-[#0c1017] border border-[#202736] rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.85)] transition-all duration-500'
         }`}
       >
         {/* 1. Subtle Ambient Album Aura in Background */}
@@ -681,222 +728,386 @@ export const NowPlayingModal: React.FC = () => {
         >
           {activeTab === 'player' ? (
             /* ============================================================= */
-            /* MODE A: THE GRAND CASSETTE TAPE PLAYER EXPERIENCE             */
+            /* MODE A: THE GRAND CASSETTE TAPE & SIDE-BY-SIDE LYRICS         */
             /* ============================================================= */
-            <div className="flex flex-col items-center max-w-lg w-full mx-auto space-y-3.5 text-center">
-              {/* Grand Album Cover Container: Cassette Tape vs Vinyl Showcase */}
-              <div className="relative flex flex-col items-center justify-center my-1.5 sm:my-2 w-full">
-                {playerDisplayMode === 'cassette' ? (
-                  <div className="relative flex flex-col items-center justify-center">
-                    <CassetteTape
-                      artworkUrl={artworkUrl}
-                      title={activeTrack.title}
-                      artist={activeTrack.artistName || 'Unknown Artist'}
-                      album={activeTrack.albumTitle || undefined}
-                      isPlaying={isPlaying}
-                      progress={duration > 0 ? currentTime / duration : 0}
-                      bassLevel={beatData.bassLevel}
-                      beatPulse={beatData.beatPulse}
-                      audioFormat={activeTrack.audioFormat}
-                      audioCodec={activeTrack.audioCodec}
-                      bitrateKbps={activeTrack.bitrateKbps}
-                      sampleRate={activeTrack.sampleRate}
-                      channels={activeTrack.channels}
-                      fileSizeBytes={activeTrack.fileSizeBytes}
-                      durationSeconds={duration || activeTrack.durationSeconds}
-                      year={activeTrack.year}
-                      genre={activeTrack.genre}
-                      trackNumber={activeTrack.trackNumber}
-                      discNumber={activeTrack.discNumber}
-                      onPlayPauseToggle={togglePlayPause}
-                    />
+            <div
+              className={`w-full flex ${
+                sideLyricsRevealed && !userDismissedSideLyrics
+                  ? 'flex-col lg:flex-row items-center justify-center gap-6 lg:gap-8 max-w-6xl'
+                  : 'flex-col items-center max-w-lg'
+              } mx-auto transition-all duration-700 ease-out`}
+            >
+              {/* Left Column: Cassette / Vinyl Player Experience */}
+              <div className="flex flex-col items-center max-w-lg w-full space-y-3.5 text-center flex-shrink-0">
+                {/* Grand Album Cover Container: Cassette Tape vs Vinyl Showcase */}
+                <div className="relative flex flex-col items-center justify-center my-1.5 sm:my-2 w-full">
+                  {playerDisplayMode === 'cassette' ? (
+                    <div className="relative flex flex-col items-center justify-center">
+                      <CassetteTape
+                        artworkUrl={artworkUrl}
+                        title={activeTrack.title}
+                        artist={activeTrack.artistName || 'Unknown Artist'}
+                        album={activeTrack.albumTitle || undefined}
+                        isPlaying={isPlaying}
+                        progress={duration > 0 ? currentTime / duration : 0}
+                        bassLevel={beatData.bassLevel}
+                        beatPulse={beatData.beatPulse}
+                        audioFormat={activeTrack.audioFormat}
+                        audioCodec={activeTrack.audioCodec}
+                        bitrateKbps={activeTrack.bitrateKbps}
+                        sampleRate={activeTrack.sampleRate}
+                        channels={activeTrack.channels}
+                        fileSizeBytes={activeTrack.fileSizeBytes}
+                        durationSeconds={duration || activeTrack.durationSeconds}
+                        year={activeTrack.year}
+                        genre={activeTrack.genre}
+                        trackNumber={activeTrack.trackNumber}
+                        discNumber={activeTrack.discNumber}
+                        onPlayPauseToggle={togglePlayPause}
+                      />
 
-                    {/* Mode Switcher Pill */}
-                    <div className="mt-2.5 flex items-center space-x-2">
-                      <button
-                        onClick={togglePlayerDisplayMode}
-                        className="px-2.5 py-0.5 rounded-full bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border border-[#232c3d] text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm"
-                        title="Switch to Vinyl Record View"
-                      >
-                        <span className="text-accent font-semibold">📼 Cassette Tape</span>
-                        <span className="text-[#64748b]">⇄</span>
-                        <span>💿 Vinyl</span>
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="relative group flex flex-col items-center justify-center">
-                    <div className="relative flex items-center justify-center my-2">
-                      {/* Ambient Dynamic Breathing Aura */}
-                      {isPlaying && (
-                        <div className="absolute -inset-8 sm:-inset-12 rounded-full bg-accent/15 blur-2xl pointer-events-none -z-10" />
-                      )}
+                      {/* Mode Switcher Pill & Side Lyrics Toggle */}
+                      <div className="mt-2.5 flex items-center space-x-2">
+                        <button
+                          onClick={togglePlayerDisplayMode}
+                          className="px-2.5 py-0.5 rounded-full bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border border-[#232c3d] text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm"
+                          title="Switch to Vinyl Record View"
+                        >
+                          <span className="text-accent font-semibold">📼 Cassette Tape</span>
+                          <span className="text-[#64748b]">⇄</span>
+                          <span>💿 Vinyl</span>
+                        </button>
 
-                      {/* Soundwave expanding ripple ring */}
-                      {isPlaying && (
-                        <div className="absolute inset-0 rounded-2xl border border-accent/40 pointer-events-none animate-soundwave-ping -z-10" />
-                      )}
-
-                      {/* 360-Degree Radial Halo Spectrum behind artwork */}
-                      {visualizerMode === 'halo' && (
-                        <div className="absolute -inset-10 sm:-inset-12 pointer-events-none z-0">
-                          <AudioVisualizer
-                            analyser={analyserRef.current}
-                            analyserRef={analyserRef}
-                            isPlaying={isPlaying}
-                            mode="halo"
-                          />
-                        </div>
-                      )}
-
-                      {/* Realistic Spinning Audiophile Vinyl Record Disc */}
-                      <div
-                        className={`absolute top-0 bottom-0 aspect-square rounded-full vinyl-grooves shadow-2xl border border-[#2b3348] flex items-center justify-center pointer-events-none transition-all duration-700 ease-out z-0 ${
-                          isPlaying
-                            ? 'translate-x-14 sm:translate-x-20 rotate-[15deg]'
-                            : 'translate-x-0 rotate-0 opacity-0 group-hover:opacity-60 group-hover:translate-x-6'
-                        }`}
-                        style={{
-                          animation: isPlaying ? 'spinSlow 16s linear infinite' : 'none',
-                          transformOrigin: 'center center',
-                        }}
-                      >
-                        {/* Vinyl center spindle & label sticker */}
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#10141d] border-2 border-accent/60 p-1 flex items-center justify-center shadow-lg relative overflow-hidden">
-                          {artworkUrl ? (
-                            <img src={artworkUrl} alt="" className="w-full h-full object-cover rounded-full opacity-85" />
-                          ) : (
-                            <div className="text-[8px] font-mono text-accent font-bold uppercase tracking-wider">VISTARA</div>
-                          )}
-                          {/* Spindle hole */}
-                          <div className="absolute w-3.5 h-3.5 rounded-full bg-[#0a0c12] border border-[#2b3548] shadow-inner" />
-                        </div>
+                        <button
+                          onClick={() => setUserDismissedSideLyrics((prev) => !prev)}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm border ${
+                            sideLyricsRevealed && !userDismissedSideLyrics
+                              ? 'bg-accent/20 text-accent border-accent/40'
+                              : 'bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border-[#232c3d]'
+                          }`}
+                          title={sideLyricsRevealed && !userDismissedSideLyrics ? 'Hide side lyrics' : 'Show lyrics beside cassette tape'}
+                        >
+                          <AlignLeft className="w-3 h-3 text-accent" />
+                          <span>{sideLyricsRevealed && !userDismissedSideLyrics ? 'Lyrics: Beside Tape' : 'Show Lyrics'}</span>
+                        </button>
                       </div>
+                    </div>
+                  ) : (
+                    <div className="relative group flex flex-col items-center justify-center">
+                      <div className="relative flex items-center justify-center my-2">
+                        {/* Ambient Dynamic Breathing Aura */}
+                        {isPlaying && (
+                          <div className="absolute -inset-8 sm:-inset-12 rounded-full bg-accent/15 blur-2xl pointer-events-none -z-10" />
+                        )}
 
-                      {/* Outer Decorative Vinyl Jacket Cover */}
-                      <div
-                        onClick={togglePlayPause}
-                        className={`relative z-10 rounded-2xl p-1 bg-[#181d28] shadow-2xl border border-[#2b3548] transition-all duration-300 cursor-pointer ${
-                          isMaximized
-                            ? 'w-64 h-64 sm:w-72 sm:h-72'
-                            : 'w-44 h-44 sm:w-48 sm:h-48'
-                        } ${isPlaying ? 'scale-100 shadow-[0_15px_45px_rgba(56, 189, 248,0.25)]' : 'scale-[0.98]'}`}
-                      >
-                        {artworkUrl ? (
-                          <img
-                            src={artworkUrl}
-                            alt={activeTrack.title}
-                            className="w-full h-full object-cover rounded-xl shadow-inner bg-[#0e1118]"
-                          />
-                        ) : (
-                          <div className="w-full h-full rounded-xl bg-[#121620] flex flex-col items-center justify-center space-y-2 border border-[#222938]">
-                            <div className="w-14 h-14 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent shadow-lg animate-pulse">
-                              <Disc className="w-8 h-8" />
-                            </div>
-                            <span className="text-[10px] font-mono tracking-widest text-[#9ca3af] uppercase">
-                              VISTARA HI-FI
-                            </span>
+                        {/* Soundwave expanding ripple ring */}
+                        {isPlaying && (
+                          <div className="absolute inset-0 rounded-2xl border border-accent/40 pointer-events-none animate-soundwave-ping -z-10" />
+                        )}
+
+                        {/* 360-Degree Radial Halo Spectrum behind artwork */}
+                        {visualizerMode === 'halo' && (
+                          <div className="absolute -inset-10 sm:-inset-12 pointer-events-none z-0">
+                            <AudioVisualizer
+                              analyser={analyserRef.current}
+                              analyserRef={analyserRef}
+                              isPlaying={isPlaying}
+                              mode="halo"
+                            />
                           </div>
                         )}
+
+                        {/* Realistic Spinning Audiophile Vinyl Record Disc */}
+                        <div
+                          className={`absolute top-0 bottom-0 aspect-square rounded-full vinyl-grooves shadow-2xl border border-[#2b3348] flex items-center justify-center pointer-events-none transition-all duration-700 ease-out z-0 ${
+                            isPlaying
+                              ? 'translate-x-14 sm:translate-x-20 rotate-[15deg]'
+                              : 'translate-x-0 rotate-0 opacity-0 group-hover:opacity-60 group-hover:translate-x-6'
+                          }`}
+                          style={{
+                            animation: isPlaying ? 'spinSlow 16s linear infinite' : 'none',
+                            transformOrigin: 'center center',
+                          }}
+                        >
+                          {/* Vinyl center spindle & label sticker */}
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#10141d] border-2 border-accent/60 p-1 flex items-center justify-center shadow-lg relative overflow-hidden">
+                            {artworkUrl ? (
+                              <img src={artworkUrl} alt="" className="w-full h-full object-cover rounded-full opacity-85" />
+                            ) : (
+                              <div className="text-[8px] font-mono text-accent font-bold uppercase tracking-wider">VISTARA</div>
+                            )}
+                            {/* Spindle hole */}
+                            <div className="absolute w-3.5 h-3.5 rounded-full bg-[#0a0c12] border border-[#2b3548] shadow-inner" />
+                          </div>
+                        </div>
+
+                        {/* Outer Decorative Vinyl Jacket Cover */}
+                        <div
+                          onClick={togglePlayPause}
+                          className={`relative z-10 rounded-2xl p-1 bg-[#181d28] shadow-2xl border border-[#2b3548] transition-all duration-300 cursor-pointer ${
+                            isMaximized
+                              ? 'w-64 h-64 sm:w-72 sm:h-72'
+                              : 'w-44 h-44 sm:w-48 sm:h-48'
+                          } ${isPlaying ? 'scale-100 shadow-[0_15px_45px_rgba(56, 189, 248,0.25)]' : 'scale-[0.98]'}`}
+                        >
+                          {artworkUrl ? (
+                            <img
+                              src={artworkUrl}
+                              alt={activeTrack.title}
+                              className="w-full h-full object-cover rounded-xl shadow-inner bg-[#0e1118]"
+                            />
+                          ) : (
+                            <div className="w-full h-full rounded-xl bg-[#121620] flex flex-col items-center justify-center space-y-2 border border-[#222938]">
+                              <div className="w-14 h-14 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent shadow-lg animate-pulse">
+                                <Disc className="w-8 h-8" />
+                              </div>
+                              <span className="text-[10px] font-mono tracking-widest text-[#9ca3af] uppercase">
+                                VISTARA HI-FI
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Mode Switcher Pill & Side Lyrics Toggle */}
+                      <div className="mt-1 flex items-center space-x-2">
+                        <button
+                          onClick={togglePlayerDisplayMode}
+                          className="px-2.5 py-0.5 rounded-full bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border border-[#232c3d] text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm"
+                          title="Switch to Cassette Tape View"
+                        >
+                          <span>📼 Cassette</span>
+                          <span className="text-[#64748b]">⇄</span>
+                          <span className="text-accent font-semibold">💿 Vinyl Record</span>
+                        </button>
+
+                        <button
+                          onClick={() => setUserDismissedSideLyrics((prev) => !prev)}
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm border ${
+                            sideLyricsRevealed && !userDismissedSideLyrics
+                              ? 'bg-accent/20 text-accent border-accent/40'
+                              : 'bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border-[#232c3d]'
+                          }`}
+                          title={sideLyricsRevealed && !userDismissedSideLyrics ? 'Hide side lyrics' : 'Show lyrics beside cassette tape'}
+                        >
+                          <AlignLeft className="w-3 h-3 text-accent" />
+                          <span>{sideLyricsRevealed && !userDismissedSideLyrics ? 'Lyrics: Beside Tape' : 'Show Lyrics'}</span>
+                        </button>
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    {/* Mode Switcher Pill */}
-                    <div className="mt-1 flex items-center space-x-2">
+                {/* Track Metadata & Badges */}
+                <div className="w-full space-y-1">
+                  <div className="flex items-center justify-center space-x-2">
+                    <h1
+                      className="text-lg sm:text-xl font-bold text-white tracking-tight line-clamp-1 max-w-md"
+                      title={activeTrack.title}
+                    >
+                      {activeTrack.title}
+                    </h1>
+                    {/* Favourite Heart Toggle Button */}
+                    <button
+                      onClick={handleToggleFavourite}
+                      disabled={favLoading}
+                      title={isFav ? 'Remove from Favourites' : 'Add to Favourites'}
+                      className="p-1 rounded-full hover:bg-[#1f2533] transition-colors cursor-pointer group"
+                    >
+                      <Heart
+                        className={`w-4 h-4 transition-transform group-hover:scale-110 ${
+                          isFav ? 'fill-rose-500 text-rose-500' : 'text-[#6b7280] group-hover:text-rose-400'
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {/* Artist & Album */}
+                  <div className="text-xs sm:text-sm text-accent font-medium line-clamp-1">
+                    {activeTrack.artistName || 'Unknown Artist'}
+                    {activeTrack.albumTitle && (
+                      <span className="text-[#9ca3af] font-normal">
+                        {' '}
+                        — {activeTrack.albumTitle}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Sleek Format Badges Row */}
+                  <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
+                    <span className="text-[9px] font-mono tracking-wider px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-emerald-400 font-semibold shadow-sm">
+                      HI-FI AUDIO
+                    </span>
+                    {crossfadeSeconds > 0 ? (
+                      <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-accent/40 text-accent font-semibold shadow-sm flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        CROSSFADE {crossfadeSeconds}S
+                      </span>
+                    ) : isGapless ? (
+                      <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-accent/40 text-accent font-semibold shadow-sm flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                        GAPLESS
+                      </span>
+                    ) : null}
+                    {activeTrack.year && (
+                      <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-[#9ca3af]">
+                        {activeTrack.year}
+                      </span>
+                    )}
+                    {activeTrack.genre && (
+                      <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-accent">
+                        {activeTrack.genre}
+                      </span>
+                    )}
+                    {activeTrack.trackNumber && (
+                      <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-[#9ca3af]">
+                        Track {activeTrack.trackNumber}
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Real-time Frequency / Waveform Visualizer Display Stage */}
+                  {visualizerMode !== 'off' && visualizerMode !== 'halo' && visualizerMode !== 'embers' && (
+                    <div className="w-full h-16 sm:h-20 max-w-md mx-auto mt-2 rounded-xl bg-[#0b0e14]/75 border border-[#1e2536] p-1.5 overflow-hidden shadow-inner flex items-center justify-center backdrop-blur-sm">
+                      <AudioVisualizer
+                        analyser={analyserRef.current}
+                        analyserRef={analyserRef}
+                        isPlaying={isPlaying}
+                        mode={visualizerMode}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Right Column: Dynamic Synced Lyrics Beside Cassette Tape */}
+              {sideLyricsRevealed && !userDismissedSideLyrics && (
+                <div className="w-full lg:w-[380px] xl:w-[440px] h-[360px] sm:h-[420px] lg:h-[480px] flex flex-col bg-[#0b0e15]/95 border border-white/[0.08] rounded-2xl p-3.5 sm:p-4 shadow-2xl relative overflow-hidden backdrop-blur-md animate-in fade-in slide-in-from-right-8 duration-700 flex-shrink-0">
+                  {/* Side Lyrics Header */}
+                  <div className="relative z-10 flex items-center justify-between pb-2 mb-2 border-b border-white/[0.06] flex-shrink-0">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                      <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#F8FAFC]">
+                        SYNCED LYRICS
+                      </span>
+                      {lyricsSource && (
+                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-accent/15 text-accent border border-accent/30 uppercase font-semibold">
+                          {lyricsSource === 'local_lrc' ? 'LOCAL LRC' : lyricsSource === 'lrclib' ? 'LRCLIB' : 'MULTI-SOURCE'}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center space-x-1.5">
+                      {!parsedLyrics && (
+                        <button
+                          onClick={handleAutoFetchSyncedLyrics}
+                          disabled={lyricsLoading || isAutoFetching}
+                          className="px-2 py-0.5 rounded-md bg-accent/20 hover:bg-accent text-accent hover:text-white border border-accent/40 text-[10px] font-semibold flex items-center space-x-1 transition-colors cursor-pointer"
+                          title="Auto fetch synced lyrics"
+                        >
+                          <Sparkles className="w-2.5 h-2.5" />
+                          <span>Sync</span>
+                        </button>
+                      )}
                       <button
-                        onClick={togglePlayerDisplayMode}
-                        className="px-2.5 py-0.5 rounded-full bg-[#111520] hover:bg-[#182030] text-[#9ca3af] hover:text-white border border-[#232c3d] text-[10px] font-mono flex items-center space-x-1.5 transition-colors cursor-pointer shadow-sm"
-                        title="Switch to Cassette Tape View"
+                        onClick={() => setActiveTab('lyrics')}
+                        className="p-1 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors text-[10px] font-mono font-medium"
+                        title="Open Full Lyrics Screen"
                       >
-                        <span>📼 Cassette</span>
-                        <span className="text-[#64748b]">⇄</span>
-                        <span className="text-accent font-semibold">💿 Vinyl Record</span>
+                        Expand ↗
+                      </button>
+                      <button
+                        onClick={() => setUserDismissedSideLyrics(true)}
+                        className="p-1 rounded-md text-[#64748B] hover:text-[#F8FAFC] hover:bg-white/[0.05] transition-colors"
+                        title="Hide side lyrics"
+                      >
+                        <X className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </div>
-                )}
-              </div>
 
-              {/* Track Metadata & Badges */}
-              <div className="w-full space-y-1">
-                <div className="flex items-center justify-center space-x-2">
-                  <h1
-                    className="text-lg sm:text-xl font-bold text-white tracking-tight line-clamp-1 max-w-md"
-                    title={activeTrack.title}
+                  {/* Real-time beat responsive frequency line */}
+                  {isPlaying && (
+                    <div className="w-full h-0.5 mb-2 bg-white/[0.04] rounded-full overflow-hidden flex items-center gap-0.5">
+                      {[...Array(20)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="flex-1 bg-accent/80 transition-all duration-75 rounded-full"
+                          style={{
+                            height: `${Math.min(100, Math.max(20, beatData.bassLevel * 100 * (0.7 + (i % 2) * 0.4)))}%`,
+                            opacity: 0.4 + beatData.bassLevel * 0.6,
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Side Lyrics Scrollable Stream */}
+                  <div
+                    ref={sideLyricsContainerRef}
+                    className="relative flex-1 min-h-0 overflow-y-auto no-scrollbar space-y-2 py-2 px-1 scroll-smooth"
+                    style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                   >
-                    {activeTrack.title}
-                  </h1>
-                  {/* Favourite Heart Toggle Button */}
-                  <button
-                    onClick={handleToggleFavourite}
-                    disabled={favLoading}
-                    title={isFav ? 'Remove from Favourites' : 'Add to Favourites'}
-                    className="p-1 rounded-full hover:bg-[#1f2533] transition-colors cursor-pointer group"
-                  >
-                    <Heart
-                      className={`w-4 h-4 transition-transform group-hover:scale-110 ${
-                        isFav ? 'fill-rose-500 text-rose-500' : 'text-[#6b7280] group-hover:text-rose-400'
-                      }`}
-                    />
-                  </button>
-                </div>
+                    {lyricsLoading && !activeTrack.lyrics ? (
+                      <div className="h-full flex flex-col items-center justify-center text-center space-y-2 py-8">
+                        <Sparkles className="w-5 h-5 text-accent animate-spin" />
+                        <span className="text-xs text-[#94A3B8] font-medium">Auto-fetching lyrics...</span>
+                      </div>
+                    ) : parsedLyrics && parsedLyrics.length > 0 ? (
+                      parsedLyrics.map((item, idx) => {
+                        const isCurrent = idx === currentLyricIndex;
+                        const isPast = idx < currentLyricIndex;
 
-                {/* Artist & Album */}
-                <div className="text-xs sm:text-sm text-accent font-medium line-clamp-1">
-                  {activeTrack.artistName || 'Unknown Artist'}
-                  {activeTrack.albumTitle && (
-                    <span className="text-[#9ca3af] font-normal">
-                      {' '}
-                      — {activeTrack.albumTitle}
-                    </span>
-                  )}
-                </div>
-
-                {/* Sleek Format Badges Row */}
-                <div className="flex flex-wrap items-center justify-center gap-1.5 pt-1">
-                  <span className="text-[9px] font-mono tracking-wider px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-emerald-400 font-semibold shadow-sm">
-                    HI-FI AUDIO
-                  </span>
-                  {crossfadeSeconds > 0 ? (
-                    <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-accent/40 text-accent font-semibold shadow-sm flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                      CROSSFADE {crossfadeSeconds}S
-                    </span>
-                  ) : isGapless ? (
-                    <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-accent/40 text-accent font-semibold shadow-sm flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                      GAPLESS
-                    </span>
-                  ) : null}
-                  {activeTrack.year && (
-                    <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-[#9ca3af]">
-                      {activeTrack.year}
-                    </span>
-                  )}
-                  {activeTrack.genre && (
-                    <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-accent">
-                      {activeTrack.genre}
-                    </span>
-                  )}
-                  {activeTrack.trackNumber && (
-                    <span className="text-[9px] font-mono px-2 py-0.2 rounded-full bg-[#151924] border border-[#262e40] text-[#9ca3af]">
-                      Track {activeTrack.trackNumber}
-                    </span>
-                  )}
-                </div>
-
-                {/* Real-time Frequency / Waveform Visualizer Display Stage */}
-                {visualizerMode !== 'off' && visualizerMode !== 'halo' && visualizerMode !== 'embers' && (
-                  <div className="w-full h-16 sm:h-20 max-w-md mx-auto mt-2 rounded-xl bg-[#0b0e14]/75 border border-[#1e2536] p-1.5 overflow-hidden shadow-inner flex items-center justify-center backdrop-blur-sm">
-                    <AudioVisualizer
-                      analyser={analyserRef.current}
-                      analyserRef={analyserRef}
-                      isPlaying={isPlaying}
-                      mode={visualizerMode}
-                    />
+                        return (
+                          <div
+                            key={idx}
+                            ref={isCurrent ? sideActiveLyricRef : null}
+                            onClick={() => seek(item.time)}
+                            className={`py-2 px-3 rounded-xl cursor-pointer transition-all duration-150 select-none flex items-center justify-between gap-2 ${
+                              isCurrent
+                                ? 'text-white font-extrabold text-sm sm:text-base bg-accent/20 border border-accent/60 shadow-[0_0_16px_rgba(56,189,248,0.35)] scale-[1.02]'
+                                : isPast
+                                ? 'text-[#64748B] text-xs hover:text-white/80'
+                                : 'text-[#94A3B8] text-xs hover:text-white'
+                            }`}
+                          >
+                            <div className="flex items-center space-x-2 truncate">
+                              {isCurrent && (
+                                <span className="flex items-end space-x-0.5 h-3 flex-shrink-0">
+                                  <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                                  <span className="w-0.5 bg-white rounded-full animate-bounce h-2" />
+                                  <span className="w-0.5 bg-accent rounded-full animate-pulse h-3" />
+                                </span>
+                              )}
+                              <span className="truncate leading-relaxed">{item.text || '♪'}</span>
+                            </div>
+                            <span className="text-[9px] font-mono text-[#64748B] flex-shrink-0">
+                              {formatTime(item.time)}
+                            </span>
+                          </div>
+                        );
+                      })
+                    ) : activeTrack.lyrics ? (
+                      <div className="space-y-3 py-2 text-xs text-[#94A3B8] leading-relaxed whitespace-pre-wrap">
+                        {activeTrack.lyrics}
+                      </div>
+                    ) : (
+                      <div className="h-full flex flex-col items-center justify-center text-center space-y-2.5 py-8">
+                        <Music className="w-7 h-7 text-[#64748B] opacity-60" />
+                        <span className="text-xs text-[#94A3B8]">No synced lyrics available</span>
+                        <button
+                          onClick={handleAutoFetchSyncedLyrics}
+                          disabled={lyricsLoading || isAutoFetching}
+                          className="px-3 py-1.5 bg-accent/20 hover:bg-accent text-accent hover:text-white border border-accent/40 rounded-lg text-xs font-semibold cursor-pointer transition-colors flex items-center space-x-1.5"
+                        >
+                          <Sparkles className="w-3.5 h-3.5" />
+                          <span>⚡ Auto-Sync Lyrics</span>
+                        </button>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ) : activeTab === 'queue' ? (
             /* ============================================================= */
