@@ -1,5 +1,46 @@
 # VISTARA — Release Notes
 
+## Version 1.4.1 • Cyber-Horizon Acoustic Identity & Startup Customization
+
+<p align="center">
+  <img src="../assets/banner-animated.svg" alt="VISTARA Live Engine & Audio Spectrum" width="100%" />
+</p>
+
+<p align="center">
+  <img src="../assets/soundwave-divider.svg" alt="VISTARA Audio Waveform" width="100%" />
+</p>
+
+---
+
+### 1. Release Overview
+
+**VISTARA — Personal Media Universe (v1.4.1)** elevates the app's acoustic identity and startup sequence with an all-new default sound signature and user-customizable audio profiles:
+
+- **Cyber-Horizon Default Startup Sound (PlayStation / Sci-Fi Synthwave):**
+  - **Futuristic Shimmer Riser:** Swept bandpass filter rising from 120Hz to 2400Hz (Q=3.2) building anticipation into the visual monolith lock-in.
+  - **Dmaj9 / F#sus Warm Poly-Synth Chord:** Lush multi-voice detuned sawtooth and triangle oscillators with dynamic 24dB resonant lowpass sweep.
+  - **Deep Orbital Sub-Drop:** Resonant 96Hz to 36Hz exponential sub-harmonic rumble with smooth saturation shaping.
+  - **Crystalline High Bells:** Sparkle glass chimes at 1480Hz, 2217Hz, and 2960Hz.
+  - **Studio Soft Female Whisper ("Vistara"):** Air-filtered studio female voice whisper floating smoothly over the chord decay.
+
+- **Startup Sound Profile Selector (Settings > Appearance):**
+  - Choice of **5 curated Web Audio acoustic profiles** with 1-click live preview:
+    1. **Cyber-Horizon (Default):** PlayStation / Sci-Fi Synthwave warmth with orbital sub-drop and whisper.
+    2. **Cinema Ta-Dum:** Dolby / Netflix theatrical dual sub-bass slam and orchestral brass.
+    3. **Acoustic Zen:** Apple / Mac harmonic glass chime chord with warm wooden mallet transient.
+    4. **Retro Cyberpunk:** Blade Runner / 80s Moog detuned sawtooth brass blast with tape echo.
+    5. **Cosmic Ambient:** Interstellar / Deep Space binaural celestial drone and planetary rumble.
+  - Complete state persistence across reloads via `vistara_intro_sound_profile`.
+
+- **Startup Screen Visual Polish:**
+  - **Horizontal Side Orbital Flanks:** Repositioned the cybernetic HUD telemetry rings from top/bottom to horizontal side orbital flanks (`translateX(-260px)` and `translateX(260px)`).
+  - **Laser Bead Flare & Warp Dive Outward Spread:** Expanded dive mechanics (`±480px`) plunging smoothly through the monolith emblem into the dashboard.
+
+- **High-Definition Vector Squircle Brand Emblem:**
+  - Integrated the redesigned vector emblem into `assets/logo.svg`, `assets/logo-512.png`, the `index.html` favicon, the `README.md` header, and the Now Playing status pill.
+
+---
+
 ## Version 1.4.0 • Apple Music Experience & Precision Artwork Engine
 
 <p align="center">

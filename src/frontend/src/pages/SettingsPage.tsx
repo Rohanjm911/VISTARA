@@ -32,7 +32,7 @@ import {
   Moon,
   MousePointerClick,
 } from 'lucide-react';
-import { cinematicSound } from '../utils/cinematicSound';
+import { cinematicSound, INTRO_SOUND_PROFILES, IntroSoundProfile } from '../utils/cinematicSound';
 import { ambientSound, AmbientPreset } from '../utils/ambientSound';
 import { uiSound } from '../utils/uiSound';
 import { VistaraLogo } from '../components/VistaraLogo';
@@ -88,6 +88,9 @@ export const SettingsPage: React.FC = () => {
   });
   const [startupSoundEnabled, setStartupSoundEnabled] = useState<boolean>(() => {
     return cinematicSound.isSoundEnabled();
+  });
+  const [introSoundProfile, setIntroSoundProfile] = useState<IntroSoundProfile>(() => {
+    return cinematicSound.getProfile();
   });
 
   // Soothing Ambient Soundscape state
@@ -778,30 +781,89 @@ export const SettingsPage: React.FC = () => {
                 />
               </div>
 
-              <div className="flex items-center justify-between pt-4 border-t border-[#1e232d]">
-                <div>
-                  <h3 className="text-sm font-semibold text-white">Intro Sound Effect ("Ta-Dum")</h3>
-                  <p className="text-xs text-gray-400">Synthesize deep sub-bass punch and orchestral brass harmonics on app launch</p>
+              <div className="pt-4 border-t border-[#1e232d] space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-semibold text-white">Startup Sound Effect</h3>
+                    <p className="text-xs text-gray-400">
+                      Synthesized Web Audio chords, orbital sub-drop, and soft studio female voice whisper
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => cinematicSound.playTaDum(introSoundProfile)}
+                      className="px-3 py-1 bg-[#1e2430] hover:bg-[#283040] border border-[#2e3748] text-xs font-semibold text-gray-200 rounded-md transition-colors cursor-pointer flex items-center gap-1.5"
+                      title="Test currently selected startup sound profile"
+                    >
+                      <Volume2 className="w-3.5 h-3.5 text-[var(--color-accent)]" />
+                      Test Sound
+                    </button>
+                    <input
+                      type="checkbox"
+                      checked={startupSoundEnabled}
+                      onChange={(e) => {
+                        const val = e.target.checked;
+                        setStartupSoundEnabled(val);
+                        cinematicSound.setSoundEnabled(val);
+                      }}
+                      className="w-4 h-4 accent-[var(--color-accent)] cursor-pointer"
+                    />
+                  </div>
                 </div>
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => cinematicSound.playTaDum()}
-                    className="px-3 py-1 bg-[#1e2430] hover:bg-[#283040] border border-[#2e3748] text-xs font-semibold text-gray-200 rounded-md transition-colors cursor-pointer"
-                    title="Test synthesized Ta-Dum sound effect"
-                  >
-                    Test Sound
-                  </button>
-                  <input
-                    type="checkbox"
-                    checked={startupSoundEnabled}
-                    onChange={(e) => {
-                      const val = e.target.checked;
-                      setStartupSoundEnabled(val);
-                      cinematicSound.setSoundEnabled(val);
-                    }}
-                    className="w-4 h-4 accent-[var(--color-accent)] cursor-pointer"
-                  />
+
+                {/* Sound Profile Selector */}
+                <div>
+                  <div className="text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">
+                    Startup Sound Profile
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2.5">
+                    {INTRO_SOUND_PROFILES.map((prof) => {
+                      const isSelected = introSoundProfile === prof.id;
+                      return (
+                        <div
+                          key={prof.id}
+                          onClick={() => {
+                            setIntroSoundProfile(prof.id);
+                            cinematicSound.setProfile(prof.id);
+                            cinematicSound.playTaDum(prof.id);
+                          }}
+                          className={`p-3 rounded-lg border cursor-pointer transition-all flex flex-col justify-between ${
+                            isSelected
+                              ? 'bg-[var(--color-accent)]/10 border-[var(--color-accent)] shadow-[0_0_15px_rgba(56,189,248,0.15)]'
+                              : 'bg-[#181c24] border-[#252c3a] hover:border-[#384357]'
+                          }`}
+                        >
+                          <div>
+                            <div className="flex items-center justify-between mb-1">
+                              <span className={`text-xs font-bold ${isSelected ? 'text-[var(--color-accent)]' : 'text-white'}`}>
+                                {prof.name}
+                              </span>
+                              {prof.badge && (
+                                <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-[var(--color-accent)]/20 text-[var(--color-accent)]">
+                                  {prof.badge}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] font-medium text-gray-400 mb-1.5">
+                              {prof.category}
+                            </div>
+                            <div className="text-[10px] text-gray-500 line-clamp-2 leading-relaxed">
+                              {prof.description}
+                            </div>
+                          </div>
+                          <div className="mt-2.5 flex items-center justify-between pt-2 border-t border-white/5">
+                            <span className="text-[10px] text-gray-400 font-mono">
+                              {isSelected ? '● Active' : 'Click to preview'}
+                            </span>
+                            <span className="text-xs text-[var(--color-accent)]">
+                              <Play className="w-3 h-3 fill-current" />
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 

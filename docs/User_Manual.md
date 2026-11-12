@@ -169,6 +169,23 @@ VISTARA protects your media library against silent bit-rot, unreadable disks, un
   * Offers 1-click candidate relinking or secure manual path entry.
 - **Export Health Reports:** Export your complete library health assessment in CSV or JSON format with a single click.
 
+### 4.6 Startup Experience & Sound Profile Customization
+
+VISTARA features an interactive cinematic intro sequence on application boot, combining a 3D mouse parallax particle field, laser emblem forging, and a synthesized Web Audio signature:
+
+- **Startup Sound Engine & Voice Whisper:**
+  - Upon startup, VISTARA synthesizes a rich acoustic chord followed by an airy studio female voice whisper saying *"Vistara"*.
+  - Runs 100% offline via the native Web Audio API with zero external network audio streaming required.
+- **Curated Sound Profiles (Settings > Appearance):**
+  - **Cyber-Horizon (Default):** Warm PlayStation / sci-fi poly-synth chord (Dmaj9/F#sus), deep orbital sub-drop, crystalline bells, and ethereal whisper.
+  - **Cinema Ta-Dum:** Dolby / Netflix theatrical dual sub-bass slam, analog brass chord, and chimes.
+  - **Acoustic Zen:** Apple / Mac harmonic glass chime chord with warm wooden mallet transient.
+  - **Retro Cyberpunk:** Blade Runner / 80s Moog detuned sawtooth brass blast with vintage tape echo.
+  - **Cosmic Ambient:** Interstellar / Deep Space binaural celestial drone and planetary sub-harmonic rumble.
+- **Live Preview & Controls:**
+  - In **Settings > Appearance**, click any sound profile card or the **Test Sound** button to preview that profile immediately.
+  - Toggle the entire cinematic startup intro or the startup sound effect on/off at any time.
+
 ---
 
 ## 5. Library Management & File Scanning

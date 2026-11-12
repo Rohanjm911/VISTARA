@@ -9,6 +9,50 @@
 
 export type AmbientPreset = 'cosmic' | 'ethereal' | 'zen';
 
+export type IntroSoundProfile = 'cyber_horizon' | 'cinema_tadum' | 'acoustic_zen' | 'retro_cyberpunk' | 'cosmic_ambient';
+
+export interface IntroSoundProfileOption {
+  id: IntroSoundProfile;
+  name: string;
+  category: string;
+  description: string;
+  badge?: string;
+}
+
+export const INTRO_SOUND_PROFILES: IntroSoundProfileOption[] = [
+  {
+    id: 'cyber_horizon',
+    name: 'Cyber-Horizon',
+    category: 'PlayStation / Sci-Fi Synthwave',
+    description: 'Warm poly-synth chord with orbital sub-drop, crystalline bells, and ethereal whisper',
+    badge: 'Default',
+  },
+  {
+    id: 'cinema_tadum',
+    name: 'Cinema Ta-Dum',
+    category: 'Dolby / Netflix Theatrical',
+    description: 'Heavy dual sub-bass slam, analog brass chord, and theatrical orchestral chimes',
+  },
+  {
+    id: 'acoustic_zen',
+    name: 'Acoustic Zen',
+    category: 'Apple / Mac Harmonic Glass',
+    description: 'Pure harmonic glass chime chord, warm wooden acoustic transient, and delicate resonance',
+  },
+  {
+    id: 'retro_cyberpunk',
+    name: 'Retro Cyberpunk',
+    category: 'Blade Runner / 80s Moog',
+    description: 'Detuned analog sawtooth brass sweep, warm stereo chorus, and retro arpeggiator flutter',
+  },
+  {
+    id: 'cosmic_ambient',
+    name: 'Cosmic Ambient',
+    category: 'Interstellar / Deep Space',
+    description: 'Vast binaural celestial drone, sub-harmonic resonance, and shimmering planetary twinkle',
+  },
+];
+
 export type UISoundType =
   | 'click'
   | 'hover'
@@ -29,6 +73,7 @@ class AudioMasterEngine {
 
   // --- Intro Settings ---
   private introSoundEnabled: boolean = true;
+  private introSoundProfile: IntroSoundProfile = 'cyber_horizon';
   private isIntroActive: boolean = false;
   private introMasterGain: GainNode | null = null;
   private voiceBuffer: AudioBuffer | null = null;
@@ -55,6 +100,19 @@ class AudioMasterEngine {
     if (typeof window !== 'undefined') {
       // Load stored preferences
       this.introSoundEnabled = localStorage.getItem('vistara_startup_sound') !== 'false';
+
+      const savedIntroProfile = localStorage.getItem('vistara_intro_sound_profile') as IntroSoundProfile;
+      if (
+        savedIntroProfile &&
+        ['cyber_horizon', 'cinema_tadum', 'acoustic_zen', 'retro_cyberpunk', 'cosmic_ambient'].includes(
+          savedIntroProfile
+        )
+      ) {
+        this.introSoundProfile = savedIntroProfile;
+      } else {
+        this.introSoundProfile = 'cyber_horizon';
+      }
+
       this.ambientEnabled = localStorage.getItem('vistara_ambient_enabled') !== 'false';
       this.uiSoundEnabled = localStorage.getItem('vistara_ui_sound_enabled') !== 'false';
 
@@ -178,19 +236,26 @@ class AudioMasterEngine {
     }
   }
 
+  public getIntroSoundProfile(): IntroSoundProfile {
+    return this.introSoundProfile;
+  }
+
+  public setIntroSoundProfile(profile: IntroSoundProfile): void {
+    this.introSoundProfile = profile;
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('vistara_intro_sound_profile', profile);
+    }
+  }
+
   /**
-   * Pre-starts audio right as the laser contours finish,
-   * so the deep "TA-DUM" impact lands at EXACTLY the target timestamp.
-   * 
-   * Timing Map:
-   *  t0 + 0.00s: Pre-impact atmospheric suction riser
-   *  t0 + 0.35s: First Hit ("TA-")
-   *  t0 + 0.50s: The Massive Bass Impact ("-DUM") -> Exactly matches the visual Stage 2 detonation!
-   *  t0 + 0.50s to t0 + 2.20s: Rich cinematic brass chord & sub-bass sustain hold
-   *  t0 + 2.20s: Seamless cross-fade directly into the Hyper-Dive transition!
+   * Dispatches to the active or requested intro sound profile.
    */
-  public playIntroTaDum(): void {
-    if (!this.introSoundEnabled) return;
+  public playIntroTaDum(overrideProfile?: IntroSoundProfile): void {
+    this.playIntroSound(overrideProfile);
+  }
+
+  public playIntroSound(overrideProfile?: IntroSoundProfile): void {
+    if (!this.introSoundEnabled && !overrideProfile) return;
 
     const ctx = this.getContext();
     if (!ctx) return;
@@ -204,7 +269,7 @@ class AudioMasterEngine {
       try {
         const t0 = ctx.currentTime;
 
-        // Dynamics Compressor for rich, punchy cinematic master
+        // Dynamics Compressor for rich, punchy cinematic master bus
         const compressor = ctx.createDynamicsCompressor();
         compressor.threshold.setValueAtTime(-14, t0);
         compressor.knee.setValueAtTime(8, t0);
@@ -217,6 +282,224 @@ class AudioMasterEngine {
         master.gain.setValueAtTime(0.9, t0);
         master.connect(compressor);
         this.introMasterGain = master;
+
+        const profile = overrideProfile || this.introSoundProfile;
+
+        switch (profile) {
+          case 'cyber_horizon':
+            this.playCyberHorizon(ctx, master, t0);
+            break;
+          case 'acoustic_zen':
+            this.playAcousticZen(ctx, master, t0);
+            break;
+          case 'retro_cyberpunk':
+            this.playRetroCyberpunk(ctx, master, t0);
+            break;
+          case 'cosmic_ambient':
+            this.playCosmicAmbient(ctx, master, t0);
+            break;
+          case 'cinema_tadum':
+          default:
+            this.playCinemaTaDum(ctx, master, t0);
+            break;
+        }
+      } catch (err) {
+        console.warn('Intro sound playback note:', err);
+      }
+    };
+
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(execute).catch(() => {});
+    } else {
+      execute();
+    }
+  }
+
+  /**
+   * Helper to play the soft female whisper "Vistara" seamlessly over any intro profile.
+   */
+  private playVoiceWhisper(ctx: AudioContext, master: GainNode, triggerTime: number): void {
+    this.preloadVoiceBuffer()
+      .then((buffer) => {
+        if (!buffer) {
+          this.speakVistaraFallback();
+          return;
+        }
+        if (!this.isIntroActive) return;
+
+        try {
+          const voiceSource = ctx.createBufferSource();
+          voiceSource.buffer = buffer;
+
+          let voiceNode: AudioNode = voiceSource;
+          if (ctx.createStereoPanner) {
+            const panner = ctx.createStereoPanner();
+            panner.pan.setValueAtTime(0, triggerTime);
+            voiceSource.connect(panner);
+            voiceNode = panner;
+          }
+
+          // Gentle high-shelf filter for silky, breathy clarity
+          const airFilter = ctx.createBiquadFilter();
+          airFilter.type = 'highshelf';
+          airFilter.frequency.setValueAtTime(3200, triggerTime);
+          airFilter.gain.setValueAtTime(2.8, triggerTime);
+
+          const voiceGain = ctx.createGain();
+          voiceGain.gain.setValueAtTime(0.001, triggerTime);
+          voiceGain.gain.linearRampToValueAtTime(0.85, triggerTime + 0.08);
+          voiceGain.gain.setValueAtTime(0.85, triggerTime + buffer.duration - 0.25);
+          voiceGain.gain.exponentialRampToValueAtTime(0.0001, triggerTime + buffer.duration);
+
+          voiceNode.connect(airFilter);
+          airFilter.connect(voiceGain);
+          voiceGain.connect(master);
+
+          voiceSource.start(triggerTime);
+        } catch {
+          this.speakVistaraFallback();
+        }
+      })
+      .catch(() => {
+        this.speakVistaraFallback();
+      });
+  }
+
+  /**
+   * PROFILE 1: Cyber-Horizon (PlayStation / Sci-Fi Synthwave) — DEFAULT
+   * Futuristic shimmer riser -> Dmaj9/F#sus poly-synth chord -> Orbital sub-drop -> Crystalline bells -> Ethereal whisper
+   */
+  private playCyberHorizon(ctx: AudioContext, master: GainNode, t0: number): void {
+    // 1. Shimmer Riser (t0 -> t0 + 0.44s)
+    const riserTri = ctx.createOscillator();
+    const riserSaw = ctx.createOscillator();
+    const riserBp = ctx.createBiquadFilter();
+    const riserGain = ctx.createGain();
+
+    riserTri.type = 'triangle';
+    riserTri.frequency.setValueAtTime(120, t0);
+    riserTri.frequency.exponentialRampToValueAtTime(780, t0 + 0.44);
+
+    riserSaw.type = 'sawtooth';
+    riserSaw.frequency.setValueAtTime(180, t0);
+    riserSaw.frequency.exponentialRampToValueAtTime(1170, t0 + 0.44);
+
+    riserBp.type = 'bandpass';
+    riserBp.Q.setValueAtTime(3.2, t0);
+    riserBp.frequency.setValueAtTime(220, t0);
+    riserBp.frequency.exponentialRampToValueAtTime(2400, t0 + 0.44);
+
+    riserGain.gain.setValueAtTime(0.001, t0);
+    riserGain.gain.linearRampToValueAtTime(0.28, t0 + 0.40);
+    riserGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.48);
+
+    riserTri.connect(riserBp);
+    riserSaw.connect(riserBp);
+    riserBp.connect(riserGain);
+    riserGain.connect(master);
+
+    riserTri.start(t0);
+    riserSaw.start(t0);
+    riserTri.stop(t0 + 0.50);
+    riserSaw.stop(t0 + 0.50);
+
+    const hitTime = t0 + 0.50; // Aligns perfectly with Stage 2 visual detonation!
+
+    // 2. Orbital Sub-Drop (96Hz -> 48Hz -> 36Hz)
+    const subOsc = ctx.createOscillator();
+    const subGain = ctx.createGain();
+    const subShaper = ctx.createWaveShaper();
+    subShaper.curve = this.makeSaturationCurve(16) as any;
+    subShaper.oversample = '2x';
+
+    subOsc.type = 'sine';
+    subOsc.frequency.setValueAtTime(96, hitTime);
+    subOsc.frequency.exponentialRampToValueAtTime(48, hitTime + 0.12);
+    subOsc.frequency.exponentialRampToValueAtTime(36, hitTime + 1.2);
+
+    subGain.gain.setValueAtTime(0.001, hitTime);
+    subGain.gain.linearRampToValueAtTime(0.95, hitTime + 0.02);
+    subGain.gain.exponentialRampToValueAtTime(0.40, hitTime + 0.35);
+    subGain.gain.linearRampToValueAtTime(0.22, hitTime + 1.45);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.15);
+
+    subOsc.connect(subShaper);
+    subShaper.connect(subGain);
+    subGain.connect(master);
+
+    subOsc.start(hitTime);
+    subOsc.stop(hitTime + 2.2);
+
+    // 3. Warm Poly-Synth Chord (Dmaj9 / F#sus Warmth)
+    const polyNotes = [146.83, 220.0, 277.18, 329.63, 369.99, 440.0];
+    polyNotes.forEach((freq, idx) => {
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const lpf = ctx.createBiquadFilter();
+      const noteGain = ctx.createGain();
+
+      osc1.type = 'sawtooth';
+      osc2.type = 'triangle';
+
+      osc1.frequency.setValueAtTime(freq * 0.997, hitTime);
+      osc2.frequency.setValueAtTime(freq * 1.003, hitTime);
+
+      lpf.type = 'lowpass';
+      lpf.Q.setValueAtTime(3.2, hitTime);
+      lpf.frequency.setValueAtTime(3600, hitTime);
+      lpf.frequency.exponentialRampToValueAtTime(440, hitTime + 1.4);
+
+      const amp = idx === 0 ? 0.24 : 0.16;
+      noteGain.gain.setValueAtTime(0.001, hitTime);
+      noteGain.gain.linearRampToValueAtTime(amp, hitTime + 0.035);
+      noteGain.gain.exponentialRampToValueAtTime(amp * 0.45, hitTime + 0.45);
+      noteGain.gain.linearRampToValueAtTime(amp * 0.20, hitTime + 1.45);
+      noteGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.15);
+
+      osc1.connect(lpf);
+      osc2.connect(lpf);
+      lpf.connect(noteGain);
+      noteGain.connect(master);
+
+      osc1.start(hitTime);
+      osc2.start(hitTime);
+      osc1.stop(hitTime + 2.2);
+      osc2.stop(hitTime + 2.2);
+    });
+
+    // 4. Crystalline Glass Bells
+    const bellFreqs = [1479.98, 2217.46, 2959.96];
+    bellFreqs.forEach((freq, i) => {
+      const bell = ctx.createOscillator();
+      const bellGain = ctx.createGain();
+      const bellHp = ctx.createBiquadFilter();
+
+      bell.type = 'sine';
+      bell.frequency.setValueAtTime(freq, hitTime + 0.01);
+
+      bellHp.type = 'highpass';
+      bellHp.frequency.setValueAtTime(1200, hitTime);
+
+      bellGain.gain.setValueAtTime(0.001, hitTime);
+      bellGain.gain.linearRampToValueAtTime(0.05 / (i + 1), hitTime + 0.03);
+      bellGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 1.95);
+
+      bell.connect(bellHp);
+      bellHp.connect(bellGain);
+      bellGain.connect(master);
+
+      bell.start(hitTime + 0.01);
+      bell.stop(hitTime + 2.0);
+    });
+
+    // 5. Soft Female Vocal Whisper ("Vistara") floating over chord tail
+    this.playVoiceWhisper(ctx, master, hitTime + 0.38);
+  }
+
+  /**
+   * PROFILE 2: Cinema Ta-Dum (Dolby / Netflix Theatrical)
+   */
+  private playCinemaTaDum(ctx: AudioContext, master: GainNode, t0: number): void {
 
         // --- LAYER 1: The Rising Suction (t0 -> t0 + 0.40s) ---
         const riserOsc = ctx.createOscillator();
@@ -340,60 +623,266 @@ class AudioMasterEngine {
         });
 
         // --- LAYER 6: Soft Cinematic Female Voice whisper saying "Vistara" ---
-        // Lands gracefully as the bass impact and chimes hold (t0 + 0.95s)
-        const voiceDelay = hit2Time + 0.42;
-        this.preloadVoiceBuffer().then((buffer) => {
-          if (!buffer) {
-            this.speakVistaraFallback();
-            return;
-          }
-          if (!this.isIntroActive) return;
-          try {
-            const voiceSource = ctx.createBufferSource();
-            voiceSource.buffer = buffer;
+        this.playVoiceWhisper(ctx, master, hit2Time + 0.42);
+  }
 
-            // Stereo panner for spacious ambient stereo field
-            let voiceNode: AudioNode = voiceSource;
-            if (ctx.createStereoPanner) {
-              const panner = ctx.createStereoPanner();
-              panner.pan.setValueAtTime(0, voiceDelay);
-              voiceSource.connect(panner);
-              voiceNode = panner;
-            }
+  /**
+   * PROFILE 3: Acoustic Zen (Apple / Mac Harmonic Glass)
+   * Warm wooden mallet transient -> Pentatonic glass chime resonance -> Delicate decay -> Whisper
+   */
+  private playAcousticZen(ctx: AudioContext, master: GainNode, t0: number): void {
+    const hitTime = t0 + 0.50;
 
-            // Gentle high-shelf filter for silky, breathy clarity
-            const airFilter = ctx.createBiquadFilter();
-            airFilter.type = 'highshelf';
-            airFilter.frequency.setValueAtTime(3200, voiceDelay);
-            airFilter.gain.setValueAtTime(2.5, voiceDelay);
+    // 1. Acoustic Wood / Mallet Transient
+    const malletOsc = ctx.createOscillator();
+    const malletGain = ctx.createGain();
+    malletOsc.type = 'sine';
+    malletOsc.frequency.setValueAtTime(520, hitTime);
+    malletOsc.frequency.exponentialRampToValueAtTime(75, hitTime + 0.045);
 
-            const voiceGain = ctx.createGain();
-            voiceGain.gain.setValueAtTime(0.001, voiceDelay);
-            voiceGain.gain.linearRampToValueAtTime(0.85, voiceDelay + 0.08);
-            voiceGain.gain.setValueAtTime(0.85, voiceDelay + buffer.duration - 0.25);
-            voiceGain.gain.exponentialRampToValueAtTime(0.0001, voiceDelay + buffer.duration);
+    malletGain.gain.setValueAtTime(0.001, hitTime);
+    malletGain.gain.linearRampToValueAtTime(0.55, hitTime + 0.008);
+    malletGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 0.09);
 
-            voiceNode.connect(airFilter);
-            airFilter.connect(voiceGain);
-            voiceGain.connect(master);
+    malletOsc.connect(malletGain);
+    malletGain.connect(master);
+    malletOsc.start(hitTime);
+    malletOsc.stop(hitTime + 0.1);
 
-            voiceSource.start(voiceDelay);
-          } catch {
-            this.speakVistaraFallback();
-          }
-        }).catch(() => {
-          this.speakVistaraFallback();
-        });
-      } catch (err) {
-        console.warn('Intro Ta-Dum playback note:', err);
-      }
-    };
+    // 2. Warm Acoustic Sub/Body (C2 65.4Hz & C3 130.8Hz)
+    const bodyOsc = ctx.createOscillator();
+    const bodyLpf = ctx.createBiquadFilter();
+    const bodyGain = ctx.createGain();
+    bodyOsc.type = 'triangle';
+    bodyOsc.frequency.setValueAtTime(65.41, hitTime);
 
-    if (ctx.state === 'suspended') {
-      ctx.resume().then(execute).catch(() => {});
-    } else {
-      execute();
-    }
+    bodyLpf.type = 'lowpass';
+    bodyLpf.frequency.setValueAtTime(260, hitTime);
+
+    bodyGain.gain.setValueAtTime(0.001, hitTime);
+    bodyGain.gain.linearRampToValueAtTime(0.42, hitTime + 0.04);
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.2);
+
+    bodyOsc.connect(bodyLpf);
+    bodyLpf.connect(bodyGain);
+    bodyGain.connect(master);
+    bodyOsc.start(hitTime);
+    bodyOsc.stop(hitTime + 2.25);
+
+    // 3. Pure Harmonic Pentatonic Glass Chimes
+    const zenNotes = [261.63, 329.63, 392.0, 493.88, 587.33, 783.99];
+    zenNotes.forEach((freq, idx) => {
+      const chime = ctx.createOscillator();
+      const overtone = ctx.createOscillator();
+      const chimeGain = ctx.createGain();
+
+      chime.type = 'sine';
+      overtone.type = 'triangle';
+
+      chime.frequency.setValueAtTime(freq, hitTime + 0.005);
+      overtone.frequency.setValueAtTime(freq * 2.01, hitTime + 0.005);
+
+      const amp = 0.12 / Math.sqrt(idx + 1);
+      chimeGain.gain.setValueAtTime(0.001, hitTime);
+      chimeGain.gain.linearRampToValueAtTime(amp, hitTime + 0.025);
+      chimeGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.4);
+
+      chime.connect(chimeGain);
+      overtone.connect(chimeGain);
+      chimeGain.connect(master);
+
+      chime.start(hitTime + 0.005);
+      overtone.start(hitTime + 0.005);
+      chime.stop(hitTime + 2.45);
+      overtone.stop(hitTime + 2.45);
+    });
+
+    // 4. Soft Female Vocal Whisper ("Vistara")
+    this.playVoiceWhisper(ctx, master, hitTime + 0.35);
+  }
+
+  /**
+   * PROFILE 4: Retro Cyberpunk (Blade Runner / 80s Moog)
+   * 16th-note arpeggiator flutter -> Moog detuned sawtooth brass chord -> Deep analog sub -> Tape delay
+   */
+  private playRetroCyberpunk(ctx: AudioContext, master: GainNode, t0: number): void {
+    // 1. Retro Arpeggio Riser Flutter (4 steps)
+    const arpSteps = [110, 220, 440, 880];
+    arpSteps.forEach((freq, i) => {
+      const stepTime = t0 + 0.12 + i * 0.08;
+      const arpOsc = ctx.createOscillator();
+      const arpFilter = ctx.createBiquadFilter();
+      const arpGain = ctx.createGain();
+
+      arpOsc.type = 'square';
+      arpOsc.frequency.setValueAtTime(freq, stepTime);
+
+      arpFilter.type = 'lowpass';
+      arpFilter.frequency.setValueAtTime(1400, stepTime);
+
+      arpGain.gain.setValueAtTime(0.001, stepTime);
+      arpGain.gain.linearRampToValueAtTime(0.12, stepTime + 0.01);
+      arpGain.gain.exponentialRampToValueAtTime(0.0001, stepTime + 0.07);
+
+      arpOsc.connect(arpFilter);
+      arpFilter.connect(arpGain);
+      arpGain.connect(master);
+
+      arpOsc.start(stepTime);
+      arpOsc.stop(stepTime + 0.08);
+    });
+
+    const hitTime = t0 + 0.50;
+
+    // 2. Analog Moog Sub Bass (55Hz Square with heavy saturation)
+    const subOsc = ctx.createOscillator();
+    const subLpf = ctx.createBiquadFilter();
+    const subGain = ctx.createGain();
+    const shaper = ctx.createWaveShaper();
+    shaper.curve = this.makeSaturationCurve(24) as any;
+
+    subOsc.type = 'sawtooth';
+    subOsc.frequency.setValueAtTime(55, hitTime);
+    subLpf.type = 'lowpass';
+    subLpf.frequency.setValueAtTime(180, hitTime);
+
+    subGain.gain.setValueAtTime(0.001, hitTime);
+    subGain.gain.linearRampToValueAtTime(0.75, hitTime + 0.025);
+    subGain.gain.exponentialRampToValueAtTime(0.35, hitTime + 0.45);
+    subGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.15);
+
+    subOsc.connect(subLpf);
+    subLpf.connect(shaper);
+    shaper.connect(subGain);
+    subGain.connect(master);
+    subOsc.start(hitTime);
+    subOsc.stop(hitTime + 2.2);
+
+    // 3. Thick Detuned Moog Sawtooth Brass Chord (A2, E3, A3, C#4, E4)
+    const moogNotes = [110.0, 164.81, 220.0, 277.18, 329.63];
+    moogNotes.forEach((freq, idx) => {
+      const saw1 = ctx.createOscillator();
+      const saw2 = ctx.createOscillator();
+      const lpf = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+
+      saw1.type = 'sawtooth';
+      saw2.type = 'sawtooth';
+      saw1.frequency.setValueAtTime(freq * 0.993, hitTime);
+      saw2.frequency.setValueAtTime(freq * 1.007, hitTime);
+
+      lpf.type = 'lowpass';
+      lpf.Q.setValueAtTime(5.5, hitTime);
+      lpf.frequency.setValueAtTime(4800, hitTime);
+      lpf.frequency.exponentialRampToValueAtTime(380, hitTime + 1.2);
+
+      const amp = idx === 0 ? 0.28 : 0.18;
+      gain.gain.setValueAtTime(0.001, hitTime);
+      gain.gain.linearRampToValueAtTime(amp, hitTime + 0.03);
+      gain.gain.exponentialRampToValueAtTime(amp * 0.4, hitTime + 0.5);
+      gain.gain.linearRampToValueAtTime(amp * 0.2, hitTime + 1.4);
+      gain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.1);
+
+      saw1.connect(lpf);
+      saw2.connect(lpf);
+      lpf.connect(gain);
+      gain.connect(master);
+
+      saw1.start(hitTime);
+      saw2.start(hitTime);
+      saw1.stop(hitTime + 2.15);
+      saw2.stop(hitTime + 2.15);
+    });
+
+    // 4. Soft Female Vocal Whisper ("Vistara")
+    this.playVoiceWhisper(ctx, master, hitTime + 0.40);
+  }
+
+  /**
+   * PROFILE 5: Cosmic Ambient (Interstellar / Deep Space)
+   * Binaural drone -> Ethereal celestial pad -> Planetary rumble -> Soft whisper
+   */
+  private playCosmicAmbient(ctx: AudioContext, master: GainNode, t0: number): void {
+    // 1. Celestial Ambient Riser
+    const riserOsc = ctx.createOscillator();
+    const riserFilter = ctx.createBiquadFilter();
+    const riserGain = ctx.createGain();
+
+    riserOsc.type = 'sine';
+    riserOsc.frequency.setValueAtTime(110, t0);
+    riserOsc.frequency.exponentialRampToValueAtTime(660, t0 + 0.45);
+
+    riserFilter.type = 'bandpass';
+    riserFilter.Q.setValueAtTime(5.0, t0);
+    riserFilter.frequency.setValueAtTime(180, t0);
+    riserFilter.frequency.exponentialRampToValueAtTime(1800, t0 + 0.45);
+
+    riserGain.gain.setValueAtTime(0.001, t0);
+    riserGain.gain.linearRampToValueAtTime(0.25, t0 + 0.42);
+    riserGain.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.49);
+
+    riserOsc.connect(riserFilter);
+    riserFilter.connect(riserGain);
+    riserGain.connect(master);
+
+    riserOsc.start(t0);
+    riserOsc.stop(t0 + 0.5);
+
+    const hitTime = t0 + 0.50;
+
+    // 2. Binaural Cosmic Drone (55.0Hz & 55.75Hz for 0.75Hz celestial beating)
+    const drone1 = ctx.createOscillator();
+    const drone2 = ctx.createOscillator();
+    const droneGain = ctx.createGain();
+
+    drone1.type = 'sine';
+    drone2.type = 'sine';
+    drone1.frequency.setValueAtTime(55.0, hitTime);
+    drone2.frequency.setValueAtTime(55.75, hitTime);
+
+    droneGain.gain.setValueAtTime(0.001, hitTime);
+    droneGain.gain.linearRampToValueAtTime(0.55, hitTime + 0.15);
+    droneGain.gain.linearRampToValueAtTime(0.40, hitTime + 1.4);
+    droneGain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.3);
+
+    drone1.connect(droneGain);
+    drone2.connect(droneGain);
+    droneGain.connect(master);
+
+    drone1.start(hitTime);
+    drone2.start(hitTime);
+    drone1.stop(hitTime + 2.35);
+    drone2.stop(hitTime + 2.35);
+
+    // 3. Ethereal Celestial Pad Swell
+    const padNotes = [220.0, 277.18, 329.63, 415.3, 554.37];
+    padNotes.forEach((freq, idx) => {
+      const osc = ctx.createOscillator();
+      const lpf = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(freq, hitTime);
+
+      lpf.type = 'lowpass';
+      lpf.frequency.setValueAtTime(1200, hitTime);
+
+      const amp = 0.14 / Math.sqrt(idx + 1);
+      gain.gain.setValueAtTime(0.001, hitTime);
+      gain.gain.linearRampToValueAtTime(amp, hitTime + 0.22);
+      gain.gain.exponentialRampToValueAtTime(amp * 0.35, hitTime + 1.2);
+      gain.gain.exponentialRampToValueAtTime(0.0001, hitTime + 2.3);
+
+      osc.connect(lpf);
+      lpf.connect(gain);
+      gain.connect(master);
+
+      osc.start(hitTime);
+      osc.stop(hitTime + 2.35);
+    });
+
+    // 4. Soft Female Vocal Whisper ("Vistara")
+    this.playVoiceWhisper(ctx, master, hitTime + 0.45);
   }
 
   /**
@@ -1090,8 +1579,11 @@ export const audioMaster = new AudioMasterEngine();
 export const cinematicSound = {
   isSoundEnabled: () => audioMaster.isIntroSoundEnabled(),
   setSoundEnabled: (en: boolean) => audioMaster.setIntroSoundEnabled(en),
+  getProfile: () => audioMaster.getIntroSoundProfile(),
+  setProfile: (p: IntroSoundProfile) => audioMaster.setIntroSoundProfile(p),
   prepare: () => audioMaster.unlock(),
-  playTaDum: () => audioMaster.playIntroTaDum(),
+  playTaDum: (overrideProfile?: IntroSoundProfile) => audioMaster.playIntroSound(overrideProfile),
+  playSound: (overrideProfile?: IntroSoundProfile) => audioMaster.playIntroSound(overrideProfile),
   playDive: () => audioMaster.playIntroDive(),
   stop: () => audioMaster.stopIntroSound(),
 };
