@@ -1,132 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" fill="none">
   <defs>
-    <!-- Deep Obsidian Acrylic Squircle Gradient -->
-    <linearGradient id="sqBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0e131d" />
-      <stop offset="50%" stop-color="#0a0d14" />
-      <stop offset="100%" stop-color="#05070a" />
-    </linearGradient>
-
-    <!-- Hairline Border Gradient -->
-    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.45" />
-      <stop offset="50%" stop-color="#1e293b" stop-opacity="0.6" />
-      <stop offset="100%" stop-color="#0284c7" stop-opacity="0.2" />
-    </linearGradient>
-
-    <!-- Left Wing Gradient: Deep Cyan to Vivid Glacier Blue -->
-    <linearGradient id="leftWing" x1="16%" y1="20%" x2="48%" y2="86%">
-      <stop offset="0%" stop-color="#0284C7" />
-      <stop offset="55%" stop-color="#0EA5E9" />
-      <stop offset="100%" stop-color="#38BDF8" />
-    </linearGradient>
-
-    <!-- Right Wing Gradient: Vivid Glacier Blue to Specular Sheen -->
-    <linearGradient id="rightWing" x1="84%" y1="20%" x2="52%" y2="86%">
-      <stop offset="0%" stop-color="#38BDF8" />
-      <stop offset="60%" stop-color="#7DD3FC" />
-      <stop offset="100%" stop-color="#E0F2FE" />
-    </linearGradient>
-
-    <!-- Inner Chamber Facet Shadow -->
-    <linearGradient id="innerFacet" x1="50%" y1="52%" x2="50%" y2="86%">
-      <stop offset="0%" stop-color="#0369A1" stop-opacity="0.8" />
-      <stop offset="100%" stop-color="#082F49" stop-opacity="0.95" />
-    </linearGradient>
-
-    <!-- Center Pulsar Core Glow -->
-    <radialGradient id="coreGlow" cx="50%" cy="28%" r="45%">
-      <stop offset="0%" stop-color="#FFFFFF" />
-      <stop offset="45%" stop-color="#38BDF8" />
-      <stop offset="100%" stop-color="#0284C7" stop-opacity="0" />
+    <radialGradient id="dBg" cx="50%" cy="30%" r="90%">
+      <stop offset="0%" stop-color="#0c0f1e"/>
+      <stop offset="100%" stop-color="#030507"/>
     </radialGradient>
-
-    <!-- Specular Edge Highlight -->
-    <linearGradient id="edgeHighlight" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85" />
-      <stop offset="60%" stop-color="#38BDF8" stop-opacity="0.45" />
-      <stop offset="100%" stop-color="#0284C7" stop-opacity="0.1" />
+    <linearGradient id="dHolo1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f472b6"/>
+      <stop offset="25%" stop-color="#818cf8"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="75%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
     </linearGradient>
-
-    <!-- Ambient Glow Filter -->
-    <filter id="ambientGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="16" result="blur" />
-      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    <linearGradient id="dHolo2" x1="100%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="33%" stop-color="#06b6d4"/>
+      <stop offset="66%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#f472b6"/>
+    </linearGradient>
+    <linearGradient id="dCenter" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+    <linearGradient id="dRing" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f472b6" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#34d399" stop-opacity="0.6"/>
+    </linearGradient>
+    <filter id="dGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="dSoftGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="20"/>
     </filter>
   </defs>
 
-  <!-- Squircle Base Canvas (macOS / Modern App Icon Shape) -->
-  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#sqBg)" stroke="url(#borderGrad)" stroke-width="4" />
+  <!-- Background squircle -->
+  <rect x="12" y="12" width="488" height="488" rx="120" fill="url(#dBg)"/>
 
-  <!-- Ambient Internal Cyan Lighting -->
-  <circle cx="256" cy="245" r="160" fill="#38BDF8" opacity="0.16" filter="url(#ambientGlow)" />
+  <!-- Holographic border -->
+  <rect x="12" y="12" width="488" height="488" rx="120" fill="none" stroke="url(#dHolo1)" stroke-width="3" opacity="0.85"/>
 
-  <!-- Inner Vector Scaled Group (Center 256, 256; Scale factor 3.8, base 100x100 -> offset 66) -->
-  <g transform="translate(66, 66) scale(3.8)">
-    <!-- Orbit Ring: Cosmic Media Horizon -->
-    <ellipse
-      cx="50"
-      cy="48"
-      rx="40"
-      ry="13"
-      transform="rotate(-20 50 48)"
-      stroke="url(#edgeHighlight)"
-      stroke-width="1.2"
-      stroke-dasharray="4 8 26 10"
-      opacity="0.5"
-    />
+  <!-- Soft bg bloom -->
+  <ellipse cx="256" cy="220" rx="160" ry="120" fill="#818cf8" opacity="0.08" filter="url(#dSoftGlow)"/>
 
-    <!-- LEFT WING: Precision Aerodynamic Blade -->
-    <path
-      d="M 16 22 L 47 85 L 47 52 L 32 22 Z"
-      fill="url(#leftWing)"
-    />
+  <!-- Orbit rings -->
+  <ellipse cx="256" cy="270" rx="180" ry="45" stroke="url(#dRing)" stroke-width="1.5" fill="none" stroke-dasharray="8 6" transform="rotate(-10 256 270)" opacity="0.6"/>
+  <ellipse cx="256" cy="270" rx="210" ry="55" stroke="url(#dHolo2)" stroke-width="1" fill="none" stroke-dasharray="4 12" transform="rotate(10 256 270)" opacity="0.4"/>
 
-    <!-- RIGHT WING: Dynamic Specular Reflection Blade -->
-    <path
-      d="M 84 22 L 53 85 L 53 52 L 68 22 Z"
-      fill="url(#rightWing)"
-    />
+  <!-- V shape left -->
+  <path d="M 108 118 L 256 386 L 256 238 L 168 118 Z" fill="url(#dHolo1)" opacity="0.88" filter="url(#dGlow)"/>
 
-    <!-- INNER APEX NOTCH / KEYSTONE -->
-    <path
-      d="M 47 52 L 50 85 L 53 52 L 50 48 Z"
-      fill="url(#innerFacet)"
-    />
+  <!-- V shape right -->
+  <path d="M 404 118 L 256 386 L 256 238 L 344 118 Z" fill="url(#dHolo2)" opacity="0.88" filter="url(#dGlow)"/>
 
-    <!-- UPPER APERTURE STAR BEACON: Precision 4-Point Prismatic Core -->
-    <polygon
-      points="50,15 57,28 50,41 43,28"
-      fill="url(#coreGlow)"
-    />
-    <!-- Central Diamond Sparkle -->
-    <polygon
-      points="50,22 53,28 50,34 47,28"
-      fill="#FFFFFF"
-    />
+  <!-- Center ridge shine -->
+  <path d="M 256 238 L 256 386" stroke="url(#dCenter)" stroke-width="3" opacity="0.9"/>
 
-    <!-- Precision Chamfer Edge Highlights -->
-    <path
-      d="M 16 22 L 32 22 L 47 52"
-      stroke="url(#edgeHighlight)"
-      stroke-width="1.2"
-      stroke-linecap="round"
-    />
-    <path
-      d="M 84 22 L 68 22 L 53 52"
-      stroke="#FFFFFF"
-      stroke-width="1.2"
-      stroke-linecap="round"
-      opacity="0.8"
-    />
-    <line
-      x1="50"
-      y1="56"
-      x2="50"
-      y2="85"
-      stroke="#38BDF8"
-      stroke-width="1.2"
-      opacity="0.85"
-    />
-  </g>
+  <!-- Prismatic top highlight -->
+  <path d="M 168 118 L 200 118 L 256 200 L 312 118 L 344 118 L 256 238 Z" fill="url(#dHolo1)" opacity="0.4"/>
+
+  <!-- Top diamond gem -->
+  <polygon points="256,70 282,118 256,166 230,118" fill="url(#dHolo2)" filter="url(#dGlow)"/>
+  <polygon points="256,88 270,118 256,148 242,118" fill="#ffffff" opacity="0.95"/>
+
+  <!-- Scanlines -->
+  <line x1="80" y1="200" x2="432" y2="200" stroke="url(#dHolo1)" stroke-width="0.6" opacity="0.2"/>
+  <line x1="80" y1="250" x2="432" y2="250" stroke="url(#dHolo1)" stroke-width="0.6" opacity="0.15"/>
+  <line x1="80" y1="300" x2="432" y2="300" stroke="url(#dHolo1)" stroke-width="0.6" opacity="0.1"/>
+
+  <!-- Bottom flare -->
+  <ellipse cx="256" cy="390" rx="80" ry="10" fill="url(#dHolo1)" opacity="0.3" filter="url(#dSoftGlow)"/>
 </svg>
