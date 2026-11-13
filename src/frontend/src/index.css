@@ -570,3 +570,217 @@ dialog::backdrop {
 
 
 
+
+/* ========================================================================== */
+/* VISTARA MOTION SYSTEM v2 — Page Transitions, Micro-interactions, Stagger   */
+/* ========================================================================== */
+
+/* ── 1. PAGE TRANSITION: Cinematic fade-slide on tab switch ── */
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0px);
+  }
+}
+
+@keyframes pageExit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+  }
+}
+
+.page-enter {
+  animation: pageEnter 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── 2. STAGGERED FADE-IN for list items & cards ── */
+@keyframes staggerFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stagger-item {
+  animation: staggerFadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.stagger-item:nth-child(1)  { animation-delay: 0.04s; }
+.stagger-item:nth-child(2)  { animation-delay: 0.08s; }
+.stagger-item:nth-child(3)  { animation-delay: 0.12s; }
+.stagger-item:nth-child(4)  { animation-delay: 0.16s; }
+.stagger-item:nth-child(5)  { animation-delay: 0.20s; }
+.stagger-item:nth-child(6)  { animation-delay: 0.24s; }
+.stagger-item:nth-child(7)  { animation-delay: 0.28s; }
+.stagger-item:nth-child(8)  { animation-delay: 0.32s; }
+.stagger-item:nth-child(9)  { animation-delay: 0.36s; }
+.stagger-item:nth-child(10) { animation-delay: 0.40s; }
+.stagger-item:nth-child(n+11) { animation-delay: 0.44s; }
+
+/* ── 3. CARD HOVER LIFT + SHIMMER GLOW ── */
+.vistara-card {
+  transition:
+    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.vistara-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.07) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.vistara-card:hover {
+  transform: translateY(-4px) scale(1.012);
+  box-shadow:
+    0 12px 40px -8px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(56, 189, 248, 0.15),
+    0 0 24px -4px rgba(56, 189, 248, 0.12);
+}
+
+.vistara-card:hover::after {
+  transform: translateX(200%);
+}
+
+.vistara-card:active {
+  transform: translateY(-1px) scale(1.004);
+  transition-duration: 0.1s;
+}
+
+/* ── 4. SKELETON SHIMMER LOADER ── */
+@keyframes skeletonShimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 0%,
+    rgba(255,255,255,0.09) 40%,
+    rgba(255,255,255,0.04) 100%
+  );
+  background-size: 800px 100%;
+  animation: skeletonShimmer 1.6s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* ── 5. SIDEBAR NAV ITEM — Magnetic hover + active glow ── */
+.nav-item {
+  position: relative;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item:hover {
+  transform: translateX(2px);
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 3px;
+  height: 60%;
+  border-radius: 0 2px 2px 0;
+  background: #38bdf8;
+  box-shadow: 0 0 8px rgba(56,189,248,0.6);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-item.nav-active::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+/* ── 6. BUTTON PRESS EFFECT ── */
+.btn-press {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.12s ease;
+}
+.btn-press:active {
+  transform: scale(0.94);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+
+/* ── 7. FLOATING BADGE PULSE ── */
+@keyframes badgePop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.badge-pop {
+  animation: badgePop 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── 8. SPOTLIGHT SWEEP on modals/panels ── */
+@keyframes spotlightSweep {
+  from { background-position: -200% 0; }
+  to   { background-position: 300% 0; }
+}
+.spotlight-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.spotlight-sweep::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,0.03) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: spotlightSweep 3s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ── 9. ICON SPIN on loading state ── */
+@keyframes iconSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.icon-spin {
+  animation: iconSpin 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ── 10. TOOLTIP FADE-IN ── */
+@keyframes tooltipFadeIn {
+  from { opacity: 0; transform: translateY(4px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.tooltip-enter {
+  animation: tooltipFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+}

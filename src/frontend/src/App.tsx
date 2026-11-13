@@ -126,30 +126,39 @@ export const AppContent: React.FC = () => {
   }, []);
 
   const renderActivePage = () => {
-    switch (currentTab) {
-      case 'dashboard':
-        return <DashboardPage onNavigate={setCurrentTab} />;
-      case 'cinema':
-        return <CinemaPage />;
-      case 'tv':
-        return <TvShowsPage />;
-      case 'music':
-        return <MusicPage />;
-      case 'playlists':
-        return <PlaylistsPage />;
-      case 'watchlist':
-        return <WatchlistPage />;
-      case 'favourites':
-        return <FavouritesPage />;
-      case 'integrity':
-        return <IntegrityPage />;
-      case 'libraries':
-        return <LibrariesPage />;
-      case 'settings':
-        return <SettingsPage />;
-      default:
-        return <DashboardPage onNavigate={setCurrentTab} />;
-    }
+    // Page-enter animation key forces re-mount on tab change → triggers animation
+    const pageKey = currentTab;
+    const page = (() => {
+      switch (currentTab) {
+        case 'dashboard':
+          return <DashboardPage onNavigate={setCurrentTab} />;
+        case 'cinema':
+          return <CinemaPage />;
+        case 'tv':
+          return <TvShowsPage />;
+        case 'music':
+          return <MusicPage />;
+        case 'playlists':
+          return <PlaylistsPage />;
+        case 'watchlist':
+          return <WatchlistPage />;
+        case 'favourites':
+          return <FavouritesPage />;
+        case 'integrity':
+          return <IntegrityPage />;
+        case 'libraries':
+          return <LibrariesPage />;
+        case 'settings':
+          return <SettingsPage />;
+        default:
+          return <DashboardPage onNavigate={setCurrentTab} />;
+      }
+    })();
+    return (
+      <div key={pageKey} className="page-enter flex-1 flex flex-col overflow-hidden min-h-0">
+        {page}
+      </div>
+    );
   };
 
   return (

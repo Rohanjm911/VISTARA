@@ -154,11 +154,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, onSelectTab }) => 
                     onSelectTab(item.id);
                   }}
                   title={collapsed ? item.label : undefined}
-                  className={`w-full flex items-center rounded-xl py-2 text-[13px] transition-all duration-200 cursor-pointer ${
+                  className={`nav-item w-full flex items-center rounded-xl py-2 text-[13px] transition-all duration-200 cursor-pointer ${
                     collapsed ? 'justify-center px-0' : 'px-3'
                   } ${
                     isActive
-                      ? 'bg-white/[0.12] text-white font-semibold backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_8px_rgba(0,0,0,0.25)]'
+                      ? 'nav-active bg-white/[0.12] text-white font-semibold backdrop-blur-md shadow-[inset_0_1px_0_rgba(255,255,255,0.15),0_2px_8px_rgba(0,0,0,0.25)]'
                       : 'text-white/65 hover:text-white hover:bg-white/[0.06]'
                   }`}
                 >
