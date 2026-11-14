@@ -3,7 +3,7 @@ import { ACCENT_COLORS } from '../context/ThemeContext';
 
 describe('Vistara Frontend Logic Tests', () => {
   it('has solid accent colors and no gradients defined', () => {
-    expect(ACCENT_COLORS.length).toBe(1);
+    expect(ACCENT_COLORS.length).toBeGreaterThanOrEqual(1);
     expect(ACCENT_COLORS[0].hex.toUpperCase()).toBe('#38BDF8');
     expect(ACCENT_COLORS[0].id).toBe('glacier');
     ACCENT_COLORS.forEach((accent) => {

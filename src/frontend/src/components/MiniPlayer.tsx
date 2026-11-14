@@ -41,7 +41,16 @@ export const MiniPlayer: React.FC = () => {
     setIsNowPlayingOpen,
     analyserRef,
     sleepTimerRemainingSeconds,
+    playbackSpeed,
+    setPlaybackSpeed,
   } = usePlayer();
+
+  const cyclePlaybackSpeed = () => {
+    const speeds = [0.75, 1, 1.25, 1.5, 2];
+    const currentIndex = speeds.indexOf(playbackSpeed);
+    const nextIndex = currentIndex === -1 ? 1 : (currentIndex + 1) % speeds.length;
+    setPlaybackSpeed(speeds[nextIndex]);
+  };
 
   if (!activeVideo && !activeTrack) return null;
 
@@ -197,6 +206,18 @@ export const MiniPlayer: React.FC = () => {
               {repeatMode === 'one' ? <Repeat1 className="w-3.5 h-3.5" /> : <Repeat className="w-3.5 h-3.5" />}
             </button>
           )}
+
+          <button
+            onClick={cyclePlaybackSpeed}
+            title={`Playback Speed: ${playbackSpeed}x (Click to cycle)`}
+            className={`px-2 py-0.5 rounded-md text-[11px] font-mono font-bold transition-all duration-150 hover:scale-105 active:scale-95 cursor-pointer border ${
+              playbackSpeed !== 1
+                ? 'text-accent bg-accent/15 border-accent/30'
+                : 'text-white/50 hover:text-white bg-white/[0.04] border-white/[0.08]'
+            }`}
+          >
+            {playbackSpeed}x
+          </button>
         </div>
 
         {/* Seek timeline bar with smooth expansion, shimmer wave, and pulsing glow */}

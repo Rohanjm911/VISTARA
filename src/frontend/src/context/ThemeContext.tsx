@@ -10,7 +10,13 @@ export interface AccentColorOption {
 }
 
 export const ACCENT_COLORS: AccentColorOption[] = [
-  { id: 'glacier', name: 'Glacier Blue', hex: '#38BDF8', hover: '#0EA5E9', value: '#38BDF8' },
+  { id: 'glacier',  name: 'Glacier Blue',  hex: '#38BDF8', hover: '#0EA5E9', value: '#38BDF8' },
+  { id: 'violet',   name: 'Violet',        hex: '#A78BFA', hover: '#7C3AED', value: '#A78BFA' },
+  { id: 'rose',     name: 'Rose',          hex: '#FB7185', hover: '#E11D48', value: '#FB7185' },
+  { id: 'gold',     name: 'Gold',          hex: '#FBBF24', hover: '#D97706', value: '#FBBF24' },
+  { id: 'emerald',  name: 'Emerald',       hex: '#34D399', hover: '#059669', value: '#34D399' },
+  { id: 'orange',   name: 'Orange',        hex: '#FB923C', hover: '#EA580C', value: '#FB923C' },
+  { id: 'coral',    name: 'Coral Pink',    hex: '#F472B6', hover: '#DB2777', value: '#F472B6' },
 ];
 
 interface ThemeContextType {
@@ -31,8 +37,11 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [accentColor, setAccent] = useState<AccentColorOption>(() => {
-    // VISTARA strictly enforces the unified Glacier Blue (#38BDF8) accent
-    localStorage.setItem('vistara_accent', '#38BDF8');
+    const saved = localStorage.getItem('vistara_accent');
+    if (saved) {
+      const found = ACCENT_COLORS.find(a => a.hex.toLowerCase() === saved.toLowerCase() || a.id === saved);
+      if (found) return found;
+    }
     return ACCENT_COLORS[0];
   });
 
@@ -83,8 +92,12 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       chosen = accent;
     }
     if (!chosen) chosen = ACCENT_COLORS[0];
-
     setAccent(chosen);
+    const root = document.documentElement;
+    root.style.setProperty('--accent-color', chosen.hex);
+    root.style.setProperty('--color-accent', chosen.hex);
+    root.style.setProperty('--accent-hover', chosen.hover);
+    localStorage.setItem('vistara_accent', chosen.hex);
     apiRequest('/api/v1/settings', {
       method: 'PUT',
       body: JSON.stringify({ key: 'Appearance.AccentColor', value: chosen.hex }),

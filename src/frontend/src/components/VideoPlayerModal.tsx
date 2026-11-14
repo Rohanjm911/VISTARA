@@ -10,6 +10,7 @@ import {
   Maximize,
   Minimize,
   Pause,
+  PictureInPicture2,
   Play,
   RotateCcw,
   RotateCw,
@@ -97,6 +98,7 @@ export const VideoPlayerModal: React.FC = () => {
   const [bufferedEnd, setBufferedEnd] = useState(0);
   const [showControls, setShowControls] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isPipActive, setIsPipActive] = useState(false);
 
   // Menus & Calibration Modals
   const [showSubtitlesMenu, setShowSubtitlesMenu] = useState(false);
@@ -644,6 +646,33 @@ export const VideoPlayerModal: React.FC = () => {
       setIsFullscreen((prev) => !prev);
     }
   };
+
+  const togglePictureInPicture = async () => {
+    try {
+      if (document.pictureInPictureElement) {
+        await document.exitPictureInPicture();
+        setIsPipActive(false);
+      } else if (videoRef.current) {
+        await videoRef.current.requestPictureInPicture();
+        setIsPipActive(true);
+      }
+    } catch (err) {
+      console.warn('Picture-in-Picture toggle:', err);
+    }
+  };
+
+  useEffect(() => {
+    const vid = videoRef.current;
+    if (!vid) return;
+    const onEnterPip = () => setIsPipActive(true);
+    const onLeavePip = () => setIsPipActive(false);
+    vid.addEventListener('enterpictureinpicture', onEnterPip);
+    vid.addEventListener('leavepictureinpicture', onLeavePip);
+    return () => {
+      vid.removeEventListener('enterpictureinpicture', onEnterPip);
+      vid.removeEventListener('leavepictureinpicture', onLeavePip);
+    };
+  }, [activeVideo]);
 
   const handleVideoClick = () => {
     if (clickTimeoutRef.current) {
@@ -1428,6 +1457,24 @@ export const VideoPlayerModal: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {/* Picture-in-Picture Button */}
+            {typeof document !== 'undefined' && 'pictureInPictureEnabled' in document && document.pictureInPictureEnabled && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  togglePictureInPicture();
+                }}
+                title={isPipActive ? 'Exit Picture-in-Picture' : 'Picture-in-Picture'}
+                className={`p-2 rounded transition-colors cursor-pointer ${
+                  isPipActive
+                    ? 'text-accent bg-accent/20'
+                    : 'text-[#9ca3af] hover:text-white hover:bg-[#181c24]'
+                }`}
+              >
+                <PictureInPicture2 className="w-5 h-5" />
+              </button>
+            )}
 
             {/* Fullscreen Button */}
             <button

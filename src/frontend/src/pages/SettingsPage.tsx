@@ -334,17 +334,35 @@ export const SettingsPage: React.FC = () => {
                   Accent Color
                 </label>
                 <div className="flex flex-wrap gap-3">
-                  <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border border-accent ring-2 ring-accent/30 bg-[#161D27] text-white font-bold text-xs shadow-md select-none">
-                    <div
-                      className="w-3.5 h-3.5 rounded-full ring-1 ring-white/20 shrink-0"
-                      style={{ backgroundColor: '#38BDF8' }}
-                    />
-                    <span>Glacier Blue</span>
-                    <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 ml-0.5" />
-                  </div>
+                  {availableAccents.map((acc) => {
+                    const isSelected =
+                      accentColor.hex.toLowerCase() === acc.hex.toLowerCase() || accentColor.id === acc.id;
+                    return (
+                      <button
+                        key={acc.id || acc.hex}
+                        type="button"
+                        onClick={() => {
+                          uiSound.play('toggleOn');
+                          setAccentColor(acc);
+                        }}
+                        className={`flex items-center gap-2.5 px-4 py-2.5 rounded-lg border transition-all cursor-pointer font-bold text-xs shadow-md select-none ${
+                          isSelected
+                            ? 'border-accent ring-2 ring-accent/30 bg-[#161D27] text-white'
+                            : 'border-[#242a36] bg-[#12151b] text-gray-400 hover:text-white hover:border-[#374151]'
+                        }`}
+                      >
+                        <div
+                          className="w-3.5 h-3.5 rounded-full ring-1 ring-white/20 shrink-0"
+                          style={{ backgroundColor: acc.hex }}
+                        />
+                        <span>{acc.name}</span>
+                        {isSelected && <CheckCircle2 className="w-3.5 h-3.5 text-accent shrink-0 ml-0.5" />}
+                      </button>
+                    );
+                  })}
                 </div>
                 <p className="text-[11px] text-[#9ca3af] mt-2">
-                  Unified Dual-Tone: VISTARA strictly uses Deep Slate (#0F141B) & Glacier Blue (#38BDF8) across the universe.
+                  Select your signature accent color across UI highlights, active badges, and media glows.
                 </p>
               </div>
             </div>
