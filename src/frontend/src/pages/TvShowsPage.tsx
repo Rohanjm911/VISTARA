@@ -557,7 +557,7 @@ export const TvShowsPage: React.FC = () => {
                 <div
                   key={show.id}
                   onClick={() => openShowDetails(show.showId)}
-                  className="group relative bg-[#151A21] border border-[#242A36] hover:border-accent/70 rounded-xl overflow-hidden cursor-pointer transition-all duration-200 hover:shadow-xl hover:-translate-y-1"
+                  className="vistara-card stagger-item group relative bg-[#151A21] border border-[#242A36] hover:border-accent/70 rounded-xl overflow-hidden cursor-pointer"
                 >
                   <div className="aspect-[2/3] bg-[#10151B] relative overflow-hidden">
                     {show.posterUrl ? (

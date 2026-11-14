@@ -172,4 +172,23 @@ Covers:
 
 ---
 
+## 6. Motion System v2 & Animation Tokens
+
+When building or updating UI components, use the standard Motion System v2 classes defined in `src/frontend/src/index.css`:
+
+| Utility Class | Purpose & Timing | Usage Example |
+| :--- | :--- | :--- |
+| `.page-enter` | 420ms cubic-bezier translateY + blur entrance on tab switch | Attached to active page root element |
+| `.stagger-item` | Cascading 40ms interval entrance fade-up | Applied to grid card elements (`:nth-child(1..10)`) |
+| `.vistara-card` | Hover elevation lift (`translateY(-4px)`), cyan ring, and 600ms specular shimmer sweep | Applied to Movie, TV, Music, and Playlist card containers |
+| `.skeleton` | Infinite 1.6s shimmer gradient pulse | Applied to skeleton placeholder blocks during async fetches |
+| `.nav-item` / `.nav-active` | Magnetic left indicator bar expansion | Applied to sidebar navigation buttons |
+| `.btn-press` | Tactile 120ms scale-down (`0.94x`) on click | Applied to primary buttons and transport actions |
+| `.badge-pop` | 350ms elastic bounce scale entrance | Applied to resolution, codec, and tag badges |
+| `.spotlight-sweep` | Soft luminous wave traversing backgrounds | Applied to dialog backdrops and hero banners |
+| `.icon-spin` | Smooth 700ms 360-degree rotation | Applied to loader and refresh icons |
+| `.tooltip-enter` | 180ms subtle fade & slide-in | Applied to hover tooltips and floating dropdowns |
+
+---
+
 *VISTARA — Personal Media Universe © 2026. Built with precision for Windows.*

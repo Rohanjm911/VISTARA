@@ -117,7 +117,7 @@ export const WatchlistPage: React.FC = () => {
             movies.map((m) => (
               <div
                 key={m.id}
-                className="group relative bg-[#12151b] border border-[#242a36] hover:border-gray-500 rounded-xl overflow-hidden flex flex-col transition-all duration-200"
+                className="vistara-card stagger-item group relative bg-[#12151b] border border-[#242a36] hover:border-gray-500 rounded-xl overflow-hidden flex flex-col"
               >
                 {/* Poster */}
                 <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">
@@ -196,7 +196,7 @@ export const WatchlistPage: React.FC = () => {
             shows.map((s) => (
               <div
                 key={s.id}
-                className="group relative bg-[#12151b] border border-[#242a36] hover:border-gray-500 rounded-xl overflow-hidden flex flex-col transition-all duration-200"
+                className="vistara-card stagger-item group relative bg-[#12151b] border border-[#242a36] hover:border-gray-500 rounded-xl overflow-hidden flex flex-col"
               >
                 {/* Poster */}
                 <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">

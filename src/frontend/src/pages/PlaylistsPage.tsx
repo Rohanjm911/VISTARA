@@ -495,7 +495,7 @@ export const PlaylistsPage: React.FC = () => {
                   <div
                     key={mix.id}
                     onClick={() => loadSmartMixDetails(mix)}
-                    className="relative group rounded-xl p-4 bg-[#121620] border border-[#202737] hover:border-accent cursor-pointer transition-all duration-150 hover:-translate-y-0.5 flex flex-col justify-between overflow-hidden"
+                    className="vistara-card stagger-item relative group rounded-xl p-4 bg-[#121620] border border-[#202737] hover:border-accent cursor-pointer flex flex-col justify-between overflow-hidden"
                   >
                     <div className="relative z-10 space-y-2.5">
                       <div className="flex items-center justify-between">
@@ -588,7 +588,7 @@ export const PlaylistsPage: React.FC = () => {
                 <div
                   key={pl.id}
                   onClick={() => loadPlaylistDetails(pl.id)}
-                  className="bg-[#12151b] border border-[#242a36] hover:border-gray-600 rounded-xl overflow-hidden cursor-pointer transition-colors group flex flex-col"
+                  className="vistara-card stagger-item bg-[#12151b] border border-[#242a36] hover:border-gray-600 rounded-xl overflow-hidden cursor-pointer group flex flex-col"
                 >
                   <div className="aspect-video bg-[#181c24] relative flex items-center justify-center overflow-hidden">
                     {pl.coverUrl ? (

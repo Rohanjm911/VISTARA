@@ -1,5 +1,65 @@
 # VISTARA — Release Notes
 
+## Version 1.5.0 • Holographic Wave, Motion System v2 & Studio Player Suite
+
+<p align="center">
+  <img src="../assets/banner-animated.svg" alt="VISTARA Live Engine & Audio Spectrum" width="100%" />
+</p>
+
+<p align="center">
+  <img src="../assets/soundwave-divider.svg" alt="VISTARA Audio Waveform" width="100%" />
+</p>
+
+---
+
+### 1. Release Overview
+
+**VISTARA — Personal Media Universe (v1.5.0)** introduces a stunning aesthetic and sensory upgrade featuring the new **Holographic Wave** brand identity, the **Motion System v2** animation framework across all pages, the studio-mastered **Seductive French Siren** startup vocal, a **7-color Dynamic Accent Palette**, native **Picture-in-Picture (PiP)** video multitasking, and interactive **Playback Speed Cycling**:
+
+- **Holographic Wave Brand Emblem & Multi-Res Windows Icon:**
+  - **Prismatic Holographic Vector (`logo.svg`):** Redesigned signature logo featuring a rainbow iridescent V vector, concentric celestial orbit rings, aperture diamond beacon, and obsidian acrylic squircle canvas.
+  - **Multi-Tier Windows Icon (`VISTARA.ico`):** 7 embedded resolution layers (`16px`, `24px`, `32px`, `48px`, `64px`, `128px`, `256px`) with 1-click desktop and project root shortcuts (`VISTARA.lnk`).
+  - **Universal Favicon Integration:** Synchronized favicon ICO and SVG assets across all public and `wwwroot` endpoints.
+
+- **VISTARA Motion System v2 (Animations Across All Pages):**
+  - **10 GPU-Accelerated Micro-Animations:**
+    1. **Page Enter Transition (`.page-enter`):** 420ms spring fade-and-slide (`translateY(14px)` + scale + subtle blur clearance) on every navigation tab change.
+    2. **Staggered Item Cascade (`.stagger-item`):** Sequential `40ms` interval fade-up animations across media grids, ensuring natural visual hierarchy on page load.
+    3. **Card Shimmer & Elevation Lift (`.vistara-card`):** High-precision hover lift (`translateY(-4px)`), cyan border illumination, and reflective 600ms specular light-sweep across cards.
+    4. **Applied Universally Across the App:** Cinema movie cards, TV series cards, Music track & album items, Playlists & Smart Mixes, Dashboard stats & Continue Watching cards, Watchlist items, and Favourites.
+    5. **Skeleton Shimmer Loaders (`.skeleton`):** Smooth 1.6s shimmering pulse for zero-layout-shift data fetching states.
+    6. **Magnetic Sidebar Indicators (`.nav-item`, `.nav-active`):** Cyan luminescent left bar spring-expands smoothly on the active navigation destination.
+    7. **Tactile Button Feedback (`.btn-press`):** Micro scale-down snap (`0.94x`) on user clicks.
+    8. **Badge Pop Animation (`.badge-pop`):** Elastic entrance scale bounce for tags and resolution markers.
+    9. **Ambient Spotlight Sweep (`.spotlight-sweep`):** Soft luminous wave traversing modal backdrops and panels.
+    10. **Accessibility Guard:** Full `prefers-reduced-motion: reduce` compliance automatically clamps animation timings to 0.01ms.
+
+- **Studio Seductive French Siren Startup Vocal ("Vistara"):**
+  - **Studio Neural Mastering:** Mastered multilingual neural vocal synthesis (`fr-FR-VivienneMultilingualNeural`, rate `-22%`, pitch `-1Hz`) delivering a sensual, non-generic whisper.
+  - **Acoustic DSP Chain:** Conditioned with a 220Hz proximity warmth EQ (`+3.5dB`), silky 9kHz air highshelf (`+6dB`), and Haas stereo spatializer (`22ms` delay) with brickwall limiting.
+  - **Independent Voice Whisper Toggle (Settings > Appearance):** Dedicated toggle with a `French Siren` badge allowing users to enable or mute the vocal whisper independently from the synthesized chord profile, persisted in `localStorage` (`vistara_startup_voice`).
+
+- **Dynamic 7-Color Accent Palette (Settings > Appearance):**
+  - Expanded beyond Glacier Blue to include 7 vibrant, solid accent themes:
+    - ❄️ **Glacier Blue** (`#38BDF8`)
+    - 💜 **Violet** (`#A78BFA`)
+    - 🌹 **Rose** (`#FB7185`)
+    - 🌟 **Gold** (`#FBBF24`)
+    - 🌿 **Emerald** (`#34D399`)
+    - 🍊 **Orange** (`#FB923C`)
+    - 🌸 **Coral Pink** (`#F472B6`)
+  - Live interactive color pills with real-time CSS variable cascading (`--accent-color`, `--color-accent`, `--accent-hover`) and automatic settings persistence.
+
+- **Picture-in-Picture (PiP) Video Multitasking:**
+  - Added native HTML5 Picture-in-Picture toggle button to the Video Player Modal (`PictureInPicture2` icon).
+  - Enables floating video playback while continuing to browse libraries, explore music, or manage settings.
+
+- **Interactive Playback Speed Cycling (Audio & Video):**
+  - **MiniPlayer Audio Speed Badge:** 1-click speed button cycling through `0.75x`, `1x`, `1.25x`, `1.5x`, and `2x` speeds for audiobooks, podcasts, and songs.
+  - **Video Player Modal:** Dedicated speed calibration menu for fine-tuned viewing pacing.
+
+---
+
 ## Version 1.4.1 • Cyber-Horizon Acoustic Identity & Startup Customization
 
 <p align="center">

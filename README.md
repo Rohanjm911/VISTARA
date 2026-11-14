@@ -372,12 +372,36 @@ Unlike traditional media servers, VISTARA does not require usernames, passwords,
 * `LocalSecurityMiddleware` enforces strict loopback origin (`localhost`, `127.0.0.1`, `app://`) and host-header verification, completely preventing cross-site scripting from accessing the local API.
 
 ### Hyper-Dynamic Cinematic Startup Screen & Synthesized Soundscape
-* **Redesigned VISTARA Brand Logo:** The newly minted *"Prismatic Apex & Celestial Horizon"* vector emblem features dual interlocking aerodynamic blades, an orbital celestial ring, and an aperture star beacon.
+* **Holographic Wave Brand Logo:** The newly minted *"Holographic Wave"* vector emblem features a radiant rainbow iridescent V vector, dual concentric orbital celestial rings, an aperture diamond beacon, and an obsidian squircle foundation.
+* **Studio Seductive French Siren Vocal ("Vistara"):** Features a studio-mastered sensual whisper (`fr-FR-VivienneMultilingualNeural`, rate `-22%`, pitch `-1Hz`) conditioned with a 220Hz warmth EQ (`+3.5dB`), 9kHz air highshelf (`+6dB`), and Haas stereo spatialization (`22ms` delay).
+* **Independent Voice Whisper Toggle:** Dedicated toggle with a `French Siren` badge in Settings > Appearance to mute or activate the vocal whisper independently from synthesized chord profiles.
+* **5 Selectable Web Audio Startup Sound Profiles:**
+  1. **Cyber-Horizon (Default):** PlayStation / Sci-Fi Synthwave warmth with resonant orbital sub-drop and vocal whisper.
+  2. **Cinema Ta-Dum:** Dolby / Netflix theatrical dual sub-bass slam and orchestral brass.
+  3. **Acoustic Zen:** Apple / Mac harmonic glass chime chord with warm wooden mallet transient.
+  4. **Retro Cyberpunk:** Blade Runner / 80s Moog detuned sawtooth brass blast with tape echo.
+  5. **Cosmic Ambient:** Interstellar / Deep Space binaural celestial drone and planetary rumble.
 * **Interactive 3D Mouse Parallax:** Floating cosmic dust particles and deep space nebula react to cursor movement with dynamic depth parallax.
-* **Real-Time Cyber-HUD Telemetry:** Live top banner displaying kernel status (`VISTARA KERNEL // v1.0.0 · ONLINE`), lossless audio pipeline status, and real-time jumping equalizer telemetry bars.
+* **Real-Time Cyber-HUD Telemetry:** Live top banner displaying kernel status (`VISTARA KERNEL // v1.0.0 · ONLINE`), lossless audio pipeline status, and real-time jumping equalizer telemetry bars with horizontal side orbital flanks (`translateX(±260px)`).
 * **Multi-Stage Laser Assembly & "Ta-Dum" Shockwave:** Dynamic laser lines forge the Vistara emblem, followed by an acoustic shockwave blast, anamorphic lens flare flash, and a laser lead bead tracking smooth numerical loading percentage (0% to 100%).
-* **Pure Web Audio Synthesizer:** Features an ambient audio signature engineered directly using Web Audio API oscillators and gain nodes (sub-bass pitch dive, brass swell, and glistening harmonic chime chord) with zero external media files.
-* **Skip & Dive-In:** Instant skip with <kbd>Space</kbd>, <kbd>Esc</kbd>, or clicking `ENTER UNIVERSE`, smoothly triggering a hyper-dive camera warp transition into the dashboard.
+* **Skip & Dive-In:** Instant skip with <kbd>Space</kbd>, <kbd>Esc</kbd>, or clicking `ENTER UNIVERSE`, smoothly triggering a hyper-dive camera warp transition (`±480px`) into the dashboard.
+
+### VISTARA Motion System v2 (Universal Animation Framework)
+VISTARA features a GPU-accelerated motion system applied across every page, card, and interaction:
+* **Page Enter Transitions (`.page-enter`):** Smooth 420ms cubic-bezier translateY + subtle blur clearance whenever switching tabs.
+* **Cascading Stagger Entrances (`.stagger-item`):** Media items cascade sequentially with dynamic 40ms interval timing, eliminating jarring bulk renders.
+* **Interactive Card Shimmer Lift (`.vistara-card`):** Applied across all Movie, TV Show, Track, Album, Playlist, and Dashboard cards. Provides an elevation lift (`translateY(-4px)`), cyan border highlight, and reflective 600ms specular shimmer sweep on hover.
+* **Magnetic Sidebar Indicators (`.nav-item`, `.nav-active`):** Cyan luminescent left indicator bar that smoothly springs to life on the active navigation destination.
+* **Tactile Button Press Feedback (`.btn-press`):** Micro scale compression (`0.94x`) simulating physical hardware switches.
+* **Dynamic Accent Palette Engine:** 7 vibrant solid accent colors (Glacier Blue, Violet, Rose, Gold, Emerald, Orange, Coral Pink) selectable in Settings with instant live preview and CSS variable propagation.
+* **Zero Layout Shift Shimmer Skeletons (`.skeleton`):** Smooth 1.6s shimmering gradient pulses for clean loading states.
+* **Accessibility First:** Automatically honors `prefers-reduced-motion: reduce` by clamping transitions and animations to 0.01ms.
+
+### Video Multitasking & Playback Speed Controls
+* **Native Picture-in-Picture (PiP):** 1-click Picture-in-Picture mode in the video player modal allows continuous video playback in an operating-system floating window while browsing other libraries.
+* **Dual-Pacing Speed Controls:**
+  - **MiniPlayer Audio Speed Badge:** Fast 1-click cycle button (`0.75x`, `1x`, `1.25x`, `1.5x`, `2x`) right on the bottom audio player bar.
+  - **Video Speed Menu:** Granular playback rate selection from 0.5x to 2.0x within the video controls.
 
 ### Media Library Scanner & File Protection
 The scanning engine (`LibraryScannerService`) operates concurrently in background workers:

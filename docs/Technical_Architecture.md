@@ -335,4 +335,27 @@ VISTARA incorporates a modern, fluid Apple Music-inspired desktop design system:
 
 ---
 
+## 12. Motion System v2 & Studio Acoustic Architecture (v1.5.0)
+
+### 12.1 GPU-Accelerated Motion Pipeline
+The VISTARA Motion System v2 eliminates jerky state shifts and visual popping with a clean, CSS-native animation hierarchy:
+- **Tab Route Mounting (`.page-enter`):** Each page change triggers a 420ms cubic-bezier curve (`0.16, 1, 0.3, 1`) combining an 14px upward translation, 0.985 to 1.0 scale transition, and 4px blur fade-out, creating a native desktop fluidity.
+- **Cascading Grid Stagger (`.stagger-item`):** Grid items compute sequential delays via CSS `:nth-child` counters (`0.04s` to `0.44s`), allowing hundreds of movie/track cards to float into view organically without rendering freezes.
+- **Card Shimmer & Elevation Engine (`.vistara-card`):** Custom GPU-composited pseudo-elements (`::after`) execute a 600ms specular linear light sweep across card surfaces upon hover while simultaneously applying `translateY(-4px)`, shadow blooming, and accent border illumination.
+- **Magnetic Navigation Feedback (`.nav-item`, `.nav-active`):** Sidebar navigation elements incorporate active left border pill expansion via 250ms spring geometry transforms.
+
+### 12.2 Studio Seductive Vocal & Acoustic Synthesizer
+- **Neural Speech & DSP Conditioning:** Uses high-resolution multilingual edge neural audio (`fr-FR-VivienneMultilingualNeural`, rate `-22%`, pitch `-1Hz`) conditioned through a 3-stage mastering chain:
+  1. *Parametric Warmth:* Peaking filter centered at 220Hz (+3.5dB, Q=1.1) simulating large-diaphragm condenser microphone proximity effect.
+  2. *Air Highshelf:* Highshelf filter at 9000Hz (+6dB) delivering silky vocal breathiness.
+  3. *Haas Spatial Delay:* 22ms spatial difference channel offset with brickwall limiting (`alimiter`).
+- **Base64 Inline Ingestion:** Mastered vocal track is baked directly into `vistaraVoiceData.ts` as an inline Base64 data URI (~49KB), guaranteeing 0ms disk access latency and offline execution.
+- **Web Audio Startup Engine (`audioMaster.ts`):** 5 modular synthesizer engines (`playCyberHorizon`, `playCinemaTaDum`, `playAcousticZen`, `playRetroCyberpunk`, `playCosmicAmbient`) coupled with the `playVoiceWhisper()` helper and toggle state management.
+
+### 12.3 Dynamic Theming & Multitasking Runtime
+- **CSS Variable Cascading:** `ThemeContext` updates `:root` CSS variables (`--accent-color`, `--color-accent`, `--accent-hover`) across 7 solid color themes, immediately re-skinning active highlights and glows throughout the DOM without component re-renders.
+- **HTML5 Picture-in-Picture Controller:** Direct integration with `document.pictureInPictureEnabled`, `requestPictureInPicture()`, and `exitPictureInPicture()`, capturing browser window detachments and synchronizing UI button states seamlessly.
+
+---
+
 *VISTARA — Personal Media Universe © 2026. Built with precision for Windows.*

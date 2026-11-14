@@ -730,7 +730,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                   try { uiSound.play('click'); } catch {}
                   onNavigate(stat.tab);
                 }}
-                className="group relative p-4 rounded-xl bg-[#141C27] border border-white/[0.06] hover:border-accent/45 hover:bg-[#192331] cursor-pointer transition-all duration-150"
+                className="vistara-card stagger-item group relative p-4 rounded-xl bg-[#141C27] border border-white/[0.06] hover:border-accent/45 hover:bg-[#192331] cursor-pointer"
               >
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-accent flex items-center space-x-1.5">
@@ -884,7 +884,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                         openVideoPlayer(item.mediaFileId);
                       }
                     }}
-                    className="group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+                    className="vistara-card stagger-item group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer"
                   >
                     {/* Dismiss Button */}
                     <button
@@ -988,7 +988,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     onNavigate('cinema');
                   }}
-                  className="group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+                  className="vistara-card stagger-item group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer"
                 >
                   <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">
                     {m.posterUrl ? (
@@ -1064,7 +1064,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ onNavigate }) => {
                     try { uiSound.play('click'); } catch {}
                     onNavigate('tv');
                   }}
-                  className="group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer transition-all hover:shadow-lg hover:-translate-y-0.5"
+                  className="vistara-card stagger-item group relative bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl overflow-hidden cursor-pointer"
                 >
                   <div className="aspect-[2/3] bg-[#181c24] relative overflow-hidden">
                     {s.posterUrl ? (

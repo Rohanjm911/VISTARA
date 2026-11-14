@@ -552,7 +552,7 @@ export const MusicPage: React.FC = () => {
                     <div
                       key={t.id || idx}
                       onClick={() => playTrack(t, processedTracks)}
-                      className={`group bg-[#12151b] border rounded-xl p-3 flex flex-col justify-between cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
+                      className={`vistara-card stagger-item group bg-[#12151b] border rounded-xl p-3 flex flex-col justify-between cursor-pointer ${
                         isCurrent
                           ? 'border-accent bg-accent/10 shadow-md ring-1 ring-accent/40'
                           : 'border-[#242a36] hover:border-accent/40 hover:bg-[#181c24]'
@@ -907,7 +907,7 @@ export const MusicPage: React.FC = () => {
               <div
                 key={album.id}
                 onClick={() => openAlbumDetails(album.id)}
-                className="group bg-[#12151b] border border-[#242a36] hover:border-accent/70 rounded-xl p-3 cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_12px_28px_rgba(56, 189, 248,0.18)] shadow-md"
+                className="vistara-card stagger-item group bg-[#12151b] border border-[#242a36] hover:border-accent/70 rounded-xl p-3 cursor-pointer shadow-md"
               >
                 <div className="aspect-square bg-[#181c24] rounded-lg overflow-hidden relative mb-2.5 shadow-inner">
                   {album.artworkUrl ? (
@@ -954,7 +954,7 @@ export const MusicPage: React.FC = () => {
             {processedArtists.map((artist) => (
               <div
                 key={artist.id}
-                className="bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl p-4 text-center cursor-pointer transition-all hover:-translate-y-1 group shadow-md"
+                className="vistara-card stagger-item bg-[#12151b] border border-[#242a36] hover:border-accent rounded-xl p-4 text-center cursor-pointer group shadow-md"
               >
                 <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-full bg-[#181c24] border border-[#242a36] overflow-hidden flex items-center justify-center mb-3 shadow-inner">
                   {artist.artworkUrl ? (
